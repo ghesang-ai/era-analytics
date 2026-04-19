@@ -323,21 +323,40 @@ body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); 
 .overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:80; }
 .overlay.show { display:block; }
 
+/* ── MOBILE TAB BAR (separate sticky row) ── */
+.mobile-tabbar {
+  display: none;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  position: sticky; top: 56px; z-index: 39;
+  padding: 0 14px;
+}
+.mobile-tabbar::-webkit-scrollbar { display:none; }
+.mobile-tabbar .tb {
+  padding: 10px 14px; font-size: 13px;
+  border-bottom: 2px solid transparent; border-radius: 0;
+  border-left: none; border-right: none; border-top: none;
+  white-space: nowrap;
+}
+.mobile-tabbar .tb.active { border-bottom-color: var(--blue); color: var(--text); }
+
 /* ── MOBILE ── */
 @media(max-width:768px){
   .hamburger { display:flex; }
   .sidebar { transform:translateX(-100%); transition:transform .3s ease; z-index:90; width:260px; }
   .sidebar.open { transform:translateX(0); }
   .main { margin-left:0; }
-  .topbar { padding:0 14px; gap:8px; }
+  .topbar { padding:0 14px; gap:8px; height:56px; }
   .topbar-sub { display:none; }
   .topbar-sep { display:none; }
-  .tab-group { overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:2px; }
-  .tab-group::-webkit-scrollbar { display:none; }
-  .topbar-right .btn-secondary { display:none; }
-  .topbar-right .btn-primary { font-size:11px; padding:6px 10px; }
+  .tab-group { display:none; }
+  .topbar-right { display:none; }
+  .mobile-tabbar { display:flex; }
   .content { padding:14px; }
   .kpi-row { grid-template-columns:repeat(2,1fr); gap:8px; }
+  .kpi-row .kpi:last-child:nth-child(odd) { grid-column: 1 / -1; }
   .grid-2 { grid-template-columns:1fr; }
   .grid-3 { grid-template-columns:1fr; }
   .grid-13 { grid-template-columns:1fr; }
@@ -349,6 +368,7 @@ body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); 
   .summary-row { grid-template-columns:1fr; }
   .tbl { font-size:11px; }
   .tbl thead th, .tbl tbody td { padding:8px 10px; }
+  .tbl th:nth-child(n+4), .tbl td:nth-child(n+4) { display:none; }
 }
 </style>
 </head>
@@ -445,6 +465,14 @@ body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); 
       <button class="btn-secondary">⬆ Upload Excel</button>
       <button class="btn-primary">⬇ Export Report — Region 5</button>
     </div>
+  </div>
+
+  <!-- MOBILE TAB BAR (hanya tampil di mobile) -->
+  <div class="mobile-tabbar" id="mobile-tabbar">
+    <button class="tb active" onclick="switchTab(this,'dashboard')">📊 Overview</button>
+    <button class="tb" onclick="switchTab(this,'stores')">🏪 Stores</button>
+    <button class="tb" onclick="switchTab(this,'tsh')">👤 TSH</button>
+    <button class="tb" onclick="switchTab(this,'bep')">📈 BEP</button>
   </div>
 
   <!-- CONTENT AREA -->
@@ -1049,6 +1077,10 @@ function showPage(key, navEl) {
 
 function switchTab(btn, key) {
   document.querySelectorAll('.tb').forEach(b => b.classList.remove('active'));
+  // activate matching buttons in both desktop tab-group and mobile-tabbar
+  document.querySelectorAll('.tb').forEach(b => {
+    if(b.getAttribute('onclick') === btn.getAttribute('onclick')) b.classList.add('active');
+  });
   btn.classList.add('active');
   const navMap = { dashboard:0, stores:1, tsh:2, bep:3 };
   const navItems = document.querySelectorAll('.nav-item');
