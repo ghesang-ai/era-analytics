@@ -167,23 +167,50 @@ td{padding:9px 10px;color:var(--text);vertical-align:middle;white-space:nowrap}
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:80}
 .overlay.show{display:block}
 
+/* Mobile card cell */
+.mobile-card{display:none}
+.mc-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;line-height:1.3;white-space:normal}
+.mc-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.mc-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);font-size:13px}
+.mc-row:last-of-type{border-bottom:none}
+.mc-label{color:var(--text3);font-size:12px}
+.mc-val{font-weight:600;font-family:'JetBrains Mono',monospace;font-size:12px}
+.mc-action{display:flex;justify-content:flex-end;padding-top:8px;margin-top:4px;border-top:1px solid var(--border)}
+/* Desktop cells */
+.dt-cell{display:table-cell}
+
 @media(max-width:768px){
+  /* Sidebar */
   .hamburger{display:flex}
   .sidebar{transform:translateX(-100%);transition:transform .3s ease;z-index:90;width:260px}
   .sidebar.open{transform:translateX(0)}
   .main{margin-left:0}
-  .topbar{padding:0 14px;gap:8px}
-  .topbar-sub{display:none}
-  .topbar-sep{display:none}
-  .topbar-right .btn-secondary{display:none}
-  .topbar-right .btn-primary{font-size:11px;padding:6px 10px}
-  .filterbar{flex-wrap:wrap;gap:6px;padding:10px 14px}
-  .filterbar select,.filterbar input{font-size:12px}
-  .search-wrap{width:100%}
-  .content-area{padding:0 14px 14px}
-  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .summary-strip{flex-wrap:wrap;gap:8px;padding:10px 14px}
-  .summary-item{flex:1;min-width:120px}
+  /* Topbar */
+  .topbar{padding:0 12px;gap:8px;height:52px}
+  .topbar-sub,.topbar-sep,.topbar-right{display:none}
+  /* Filter bar */
+  .filterbar{flex-wrap:wrap;gap:6px;padding:8px 12px;position:sticky;top:52px;z-index:39}
+  .search-wrap{flex:0 0 100%;order:-1}
+  .search-wrap input{font-size:13px;padding:8px 10px 8px 32px}
+  select.flt{flex:1;min-width:calc(50% - 4px);font-size:12px;padding:7px 8px}
+  .count-badge{display:none}
+  /* Summary strip */
+  .summary-strip{padding:6px 12px;gap:6px;flex-wrap:wrap}
+  /* Content */
+  .content{padding:0 8px 20px}
+  /* Table → card mode */
+  .tbl-wrap{overflow-x:hidden}
+  table{display:block}
+  thead{display:none}
+  tbody{display:block}
+  tbody tr{display:block;padding:12px;border-bottom:1px solid var(--border);background:var(--surface)}
+  tbody tr:nth-child(even){background:#fafafa}
+  .dt-cell{display:none!important}
+  .mobile-card{display:table-cell;padding:0;border:none;width:100%}
+  /* Pagination */
+  .pagination{padding:10px 12px;flex-wrap:wrap;gap:6px}
+  .page-info{width:100%;text-align:center;order:-1}
+  .page-btns{margin:0 auto}
 }
 </style>
 </head>
@@ -492,29 +519,43 @@ function renderTable() {
     const rowNum = start + i + 1;
     const hc = healthColor(s.health);
     const yoyTxt = s.yoy > 0 ? `<span class="yoy-pos">+${s.yoy}%</span>` : s.yoy < 0 ? `<span class="yoy-neg">${s.yoy}%</span>` : `<span class="yoy-flat">0%</span>`;
-    const gapColor = s.gap >= 0 ? '#16a34a' : '#dc2626';
+    const idx = STORES.indexOf(s);
     return `<tr>
-      <td class="td-no">${rowNum}</td>
-      <td class="td-code">${s.code}</td>
-      <td class="td-name">${s.name}</td>
-      <td><span class="pill ${s.channel==='ERAFONE'?'p-erafone':'p-eramore'}">${s.channel}</span></td>
-      <td style="font-size:11px;max-width:140px;white-space:normal;">${s.tsh}</td>
-      <td><span class="pill ${clusterClass(s.cluster)}">${s.cluster}</span></td>
-      <td>
-        <div class="health-wrap">
-          <span class="health-num" style="color:${hc}">${s.health}</span>
-          <div class="health-track"><div class="health-fill" style="width:${s.health}%;background:${hc}"></div></div>
+      <!-- MOBILE CARD -->
+      <td class="mobile-card">
+        <div class="mc-name">${s.name}</div>
+        <div class="mc-pills">
+          <span class="pill ${s.channel==='ERAFONE'?'p-erafone':'p-eramore'}">${s.channel}</span>
+          <span class="pill ${clusterClass(s.cluster)}">${s.cluster}</span>
+          <span class="pill ${s.bep_reached?'p-bep':'p-rugi'}">${s.bep_reached?'BEP ✓':'RUGI ✗'}</span>
         </div>
+        <div class="mc-row"><span class="mc-label">Kode</span><span class="mc-val">${s.code}</span></div>
+        <div class="mc-row"><span class="mc-label">TSH</span><span style="font-size:13px;font-weight:600">${s.tsh}</span></div>
+        <div class="mc-row"><span class="mc-label">Revenue 2025</span><span class="mc-val">${fmtIDR(s.y25)}</span></div>
+        <div class="mc-row"><span class="mc-label">Total Revenue</span><span class="mc-val" style="font-weight:700">${fmtIDR(s.total)}</span></div>
+        <div class="mc-row"><span class="mc-label">YoY Growth</span>${yoyTxt}</div>
+        <div class="mc-row"><span class="mc-label">Health Score</span>
+          <div class="health-wrap"><span class="health-num" style="color:${hc}">${s.health}</span><div class="health-track"><div class="health-fill" style="width:${s.health}%;background:${hc}"></div></div></div>
+        </div>
+        <div class="mc-action"><button class="detail-btn" onclick="openDetail(${idx})">Lihat Detail →</button></div>
       </td>
-      <td class="td-num">${fmtIDR(s.y22)}</td>
-      <td class="td-num">${fmtIDR(s.y23)}</td>
-      <td class="td-num">${fmtIDR(s.y24)}</td>
-      <td class="td-num">${fmtIDR(s.y25)}</td>
-      <td class="td-num" style="color:var(--text3)">${fmtIDR(s.y26)}</td>
-      <td class="td-num" style="font-weight:700">${fmtIDR(s.total)}</td>
-      <td class="td-num">${yoyTxt}</td>
-      <td><span class="pill ${s.bep_reached?'p-bep':'p-rugi'}">${s.bep_reached?'BEP ✓':'RUGI ✗'}</span></td>
-      <td><button class="detail-btn" onclick="openDetail(${STORES.indexOf(s)})">Detail →</button></td>
+      <!-- DESKTOP CELLS -->
+      <td class="td-no dt-cell">${rowNum}</td>
+      <td class="td-code dt-cell">${s.code}</td>
+      <td class="td-name dt-cell">${s.name}</td>
+      <td class="dt-cell"><span class="pill ${s.channel==='ERAFONE'?'p-erafone':'p-eramore'}">${s.channel}</span></td>
+      <td class="dt-cell" style="font-size:11px;max-width:120px;white-space:normal">${s.tsh}</td>
+      <td class="dt-cell"><span class="pill ${clusterClass(s.cluster)}">${s.cluster}</span></td>
+      <td class="dt-cell"><div class="health-wrap"><span class="health-num" style="color:${hc}">${s.health}</span><div class="health-track"><div class="health-fill" style="width:${s.health}%;background:${hc}"></div></div></div></td>
+      <td class="td-num dt-cell">${fmtIDR(s.y22)}</td>
+      <td class="td-num dt-cell">${fmtIDR(s.y23)}</td>
+      <td class="td-num dt-cell">${fmtIDR(s.y24)}</td>
+      <td class="td-num dt-cell">${fmtIDR(s.y25)}</td>
+      <td class="td-num dt-cell" style="color:var(--text3)">${fmtIDR(s.y26)}</td>
+      <td class="td-num dt-cell" style="font-weight:700">${fmtIDR(s.total)}</td>
+      <td class="td-num dt-cell">${yoyTxt}</td>
+      <td class="dt-cell"><span class="pill ${s.bep_reached?'p-bep':'p-rugi'}">${s.bep_reached?'BEP ✓':'RUGI ✗'}</span></td>
+      <td class="dt-cell"><button class="detail-btn" onclick="openDetail(${idx})">Detail →</button></td>
     </tr>`;
   }).join('');
 
