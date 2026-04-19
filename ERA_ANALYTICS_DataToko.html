@@ -169,13 +169,13 @@ td{padding:9px 10px;color:var(--text);vertical-align:middle;white-space:nowrap}
 
 /* Mobile card cell */
 .mobile-card{display:none}
-.mc-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;line-height:1.3;white-space:normal}
-.mc-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
-.mc-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);font-size:13px}
-.mc-row:last-of-type{border-bottom:none}
-.mc-label{color:var(--text3);font-size:12px}
-.mc-val{font-weight:600;font-family:'JetBrains Mono',monospace;font-size:12px}
-.mc-action{display:flex;justify-content:flex-end;padding-top:8px;margin-top:4px;border-top:1px solid var(--border)}
+.mc-name{font-size:15px;font-weight:700;color:var(--text);margin-bottom:7px;line-height:1.35;white-space:normal}
+.mc-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.mc-grid{display:grid;grid-template-columns:120px 1fr;row-gap:0;border-top:1px solid var(--border)}
+.mc-label{color:var(--text3);font-size:12px;font-weight:500;padding:7px 0;border-bottom:1px solid var(--border);display:flex;align-items:center}
+.mc-val{font-weight:600;font-family:'JetBrains Mono',monospace;font-size:12px;padding:7px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:flex-end;text-align:right}
+.mc-val.plain{font-family:'Inter',sans-serif;font-size:13px}
+.mc-action{display:flex;justify-content:flex-end;padding-top:10px;margin-top:4px}
 /* Desktop cells */
 .dt-cell{display:table-cell}
 
@@ -529,13 +529,16 @@ function renderTable() {
           <span class="pill ${clusterClass(s.cluster)}">${s.cluster}</span>
           <span class="pill ${s.bep_reached?'p-bep':'p-rugi'}">${s.bep_reached?'BEP ✓':'RUGI ✗'}</span>
         </div>
-        <div class="mc-row"><span class="mc-label">Kode</span><span class="mc-val">${s.code}</span></div>
-        <div class="mc-row"><span class="mc-label">TSH</span><span style="font-size:13px;font-weight:600">${s.tsh}</span></div>
-        <div class="mc-row"><span class="mc-label">Revenue 2025</span><span class="mc-val">${fmtIDR(s.y25)}</span></div>
-        <div class="mc-row"><span class="mc-label">Total Revenue</span><span class="mc-val" style="font-weight:700">${fmtIDR(s.total)}</span></div>
-        <div class="mc-row"><span class="mc-label">YoY Growth</span>${yoyTxt}</div>
-        <div class="mc-row"><span class="mc-label">Health Score</span>
-          <div class="health-wrap"><span class="health-num" style="color:${hc}">${s.health}</span><div class="health-track"><div class="health-fill" style="width:${s.health}%;background:${hc}"></div></div></div>
+        <div class="mc-grid">
+          <span class="mc-label">Kode</span><span class="mc-val plain">${s.code}</span>
+          <span class="mc-label">TSH</span><span class="mc-val plain">${s.tsh}</span>
+          <span class="mc-label">Revenue 2025</span><span class="mc-val">${fmtIDR(s.y25)}</span>
+          <span class="mc-label">Total Revenue</span><span class="mc-val" style="font-weight:800">${fmtIDR(s.total)}</span>
+          <span class="mc-label">YoY Growth</span><span class="mc-val plain">${yoyTxt}</span>
+          <span class="mc-label">Health Score</span><span class="mc-val plain">
+            <span style="color:${hc};font-weight:700;margin-right:6px">${s.health}</span>
+            <div class="health-track" style="width:60px"><div class="health-fill" style="width:${s.health}%;background:${hc}"></div></div>
+          </span>
         </div>
         <div class="mc-action"><button class="detail-btn" onclick="openDetail(${idx})">Lihat Detail →</button></div>
       </td>
