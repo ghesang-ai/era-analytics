@@ -200,13 +200,13 @@ td{padding:9px 10px;color:var(--text);vertical-align:middle;white-space:nowrap}
   .content{padding:0 8px 20px}
   /* Table → card mode */
   .tbl-wrap{overflow-x:hidden}
-  table{display:block}
+  table{display:block;width:100%}
   thead{display:none}
-  tbody{display:block}
-  tbody tr{display:block;padding:12px;border-bottom:1px solid var(--border);background:var(--surface)}
+  tbody{display:block;width:100%}
+  tbody tr{display:block;width:100%;padding:14px 16px;border-bottom:1px solid var(--border);background:var(--surface);box-sizing:border-box}
   tbody tr:nth-child(even){background:#fafafa}
   .dt-cell{display:none!important}
-  .mobile-card{display:table-cell;padding:0;border:none;width:100%}
+  .mobile-card{display:block;padding:0;border:none;width:100%}
   /* Pagination */
   .pagination{padding:10px 12px;flex-wrap:wrap;gap:6px}
   .page-info{width:100%;text-align:center;order:-1}
