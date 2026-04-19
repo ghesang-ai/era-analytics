@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ERA-ANALYTICS — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --sidebar-w: 220px;
+  --bg: #f4f6f8;
+  --surface: #ffffff;
+  --border: #e5e7eb;
+  --border2: #d1d5db;
+  --text: #111827;
+  --text2: #6b7280;
+  --text3: #9ca3af;
+  --blue: #3b82f6;
+  --green: #10b981;
+  --red: #ef4444;
+  --amber: #f59e0b;
+  --purple: #8b5cf6;
+  --cyan: #06b6d4;
+  --indigo: #6366f1;
+  --sidebar-bg: #ffffff;
+  --sidebar-border: #e5e7eb;
+  --active-bg: #f0fdf4;
+  --active-text: #16a34a;
+  --radius: 10px;
+  --shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.08);
+}
+
+body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--sidebar-border);
+  display: flex; flex-direction: column;
+  position: fixed; top:0; left:0; bottom:0;
+  z-index: 50;
+}
+
+.brand {
+  padding: 18px 16px 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+.brand-icon {
+  width: 34px; height: 34px; border-radius: 8px;
+  background: linear-gradient(135deg,#1d4ed8,#7c3aed);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 900; color: #fff; letter-spacing: -0.5px;
+}
+.brand-name { font-size: 14px; font-weight: 800; color: var(--text); line-height: 1.1; }
+.brand-sub { font-size: 9px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; }
+.ai-pill {
+  margin-left: auto; font-size: 9px; font-weight: 700;
+  background: #dbeafe; color: #1d4ed8; padding: 2px 6px;
+  border-radius: 4px; letter-spacing: 0.5px;
+}
+
+.nav-section { padding: 16px 10px 4px; }
+.nav-label { font-size: 10px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 1.2px; padding: 0 6px; margin-bottom: 4px; }
+
+.nav-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 7px 8px; border-radius: 7px; cursor: pointer;
+  font-size: 13px; font-weight: 500; color: var(--text2);
+  transition: all 0.15s; margin-bottom: 1px;
+  border: 1px solid transparent;
+}
+.nav-item:hover { background: var(--bg); color: var(--text); }
+.nav-item.active { background: var(--active-bg); color: var(--active-text); border-color: #bbf7d0; font-weight: 600; }
+.nav-item.active .nav-dot { background: var(--green); }
+
+.nav-icon { font-size: 14px; width: 18px; text-align: center; }
+.nav-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text3); margin-left: auto; }
+.nav-dot.red { background: var(--red); }
+
+.sidebar-footer {
+  margin-top: auto; padding: 12px 14px;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+}
+.footer-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); flex-shrink:0; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+.footer-text { font-size: 11px; color: var(--text2); }
+.footer-text strong { font-weight: 600; color: var(--text); display: block; }
+
+/* ── MAIN ── */
+.main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+
+/* ── TOP BAR ── */
+.topbar {
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  padding: 0 28px; height: 56px;
+  display: flex; align-items: center; gap: 12px;
+  position: sticky; top: 0; z-index: 40;
+}
+.topbar-title { font-size: 15px; font-weight: 700; color: var(--text); }
+.topbar-sub { font-size: 12px; color: var(--text3); }
+.topbar-sep { width: 1px; height: 20px; background: var(--border); }
+
+.tab-group { display: flex; gap: 2px; }
+.tb {
+  font-size: 12px; font-weight: 500; padding: 5px 12px;
+  border-radius: 6px; cursor: pointer; color: var(--text2);
+  border: 1px solid transparent; background: none;
+  transition: all 0.15s;
+}
+.tb:hover { background: var(--bg); color: var(--text); }
+.tb.active { background: var(--surface); border-color: var(--border2); color: var(--text); font-weight: 600; box-shadow: var(--shadow); }
+
+.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.btn-primary {
+  background: #16a34a; color: #fff;
+  font-size: 12px; font-weight: 600; padding: 7px 14px;
+  border-radius: 7px; cursor: pointer; border: none;
+  display: flex; align-items: center; gap: 6px;
+  box-shadow: 0 1px 3px rgba(22,163,74,.3);
+  transition: background 0.15s;
+}
+.btn-primary:hover { background: #15803d; }
+.btn-secondary {
+  background: var(--surface); color: var(--text2);
+  font-size: 12px; font-weight: 500; padding: 7px 12px;
+  border-radius: 7px; cursor: pointer; border: 1px solid var(--border2);
+  display: flex; align-items: center; gap: 6px;
+  transition: all 0.15s;
+}
+.btn-secondary:hover { background: var(--bg); color: var(--text); }
+
+/* ── CONTENT ── */
+.content { padding: 24px 28px; flex: 1; }
+
+/* ── SECTION HEADING ── */
+.sh { font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.sh::after { content:''; flex:1; height:1px; background:var(--border); }
+
+/* ── KPI CARDS ── */
+.kpi-row { display: grid; grid-template-columns: repeat(7,1fr); gap: 10px; margin-bottom: 20px; }
+
+.kpi {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 14px 14px 12px;
+  position: relative; overflow: hidden;
+  box-shadow: var(--shadow); cursor: default;
+  transition: box-shadow 0.2s;
+}
+.kpi:hover { box-shadow: var(--shadow-md); }
+.kpi::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+.kpi.k-blue::before   { background: var(--blue); }
+.kpi.k-green::before  { background: var(--green); }
+.kpi.k-red::before    { background: var(--red); }
+.kpi.k-amber::before  { background: var(--amber); }
+.kpi.k-purple::before { background: var(--purple); }
+.kpi.k-cyan::before   { background: var(--cyan); }
+.kpi.k-indigo::before { background: var(--indigo); }
+
+.kpi-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text3); margin-bottom: 6px; }
+.kpi-value { font-size: 26px; font-weight: 800; color: var(--text); line-height: 1; margin-bottom: 4px; }
+.kpi-value.green { color: var(--green); }
+.kpi-value.red   { color: var(--red); }
+.kpi-value.amber { color: var(--amber); }
+.kpi-sub { font-size: 10px; color: var(--text3); }
+
+/* ── GRID LAYOUTS ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.grid-13 { display: grid; grid-template-columns: 1fr 2fr; gap: 16px; margin-bottom: 16px; }
+.grid-31 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 16px; }
+
+/* ── CARD ── */
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+}
+.card-head {
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+}
+.card-title { font-size: 13px; font-weight: 700; color: var(--text); }
+.card-sub { font-size: 11px; color: var(--text3); margin-top: 1px; }
+.card-body { padding: 16px; }
+.card-badge {
+  margin-left: auto; font-size: 10px; font-weight: 700;
+  padding: 3px 8px; border-radius: 5px;
+}
+.cb-blue   { background: #dbeafe; color: #1d4ed8; }
+.cb-green  { background: #dcfce7; color: #16a34a; }
+.cb-red    { background: #fee2e2; color: #dc2626; }
+.cb-amber  { background: #fef3c7; color: #d97706; }
+.cb-purple { background: #ede9fe; color: #7c3aed; }
+.cb-gray   { background: #f3f4f6; color: #6b7280; }
+
+/* ── SUMMARY BOX ── */
+.summary-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; background: var(--border); border-radius: 8px; overflow: hidden; margin-top: 4px; }
+.summary-col { background: var(--surface); padding: 14px 16px; }
+.summary-icon { font-size: 15px; margin-bottom: 4px; }
+.summary-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text3); margin-bottom: 4px; }
+.summary-text { font-size: 12px; color: var(--text2); line-height: 1.5; }
+.summary-title { font-size: 15px; font-weight: 800; margin-bottom: 10px; }
+.summary-title.excellent { color: var(--green); }
+.summary-title.warning { color: var(--amber); }
+.summary-title.critical { color: var(--red); }
+
+/* ── ACTION ZONE ── */
+.action-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+}
+.action-item:last-child { border-bottom: none; }
+.action-check { width: 18px; height: 18px; border-radius: 5px; border: 2px solid var(--border2); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; }
+.action-check.done { background: var(--green); border-color: var(--green); color: #fff; }
+.action-check.warn { background: var(--amber); border-color: var(--amber); color: #fff; }
+.action-check.crit { background: var(--red); border-color: var(--red); color: #fff; }
+.action-title { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+.action-desc { font-size: 11px; color: var(--text3); line-height: 1.4; }
+.action-pill {
+  margin-left: 6px; font-size: 9px; font-weight: 700;
+  padding: 1px 5px; border-radius: 3px; vertical-align: middle;
+}
+.ap-info { background: #dbeafe; color: #1d4ed8; }
+.ap-warn { background: #fef3c7; color: #d97706; }
+.ap-crit { background: #fee2e2; color: #dc2626; }
+
+/* ── DONUT CHART ── */
+.donut-wrap { display: flex; align-items: center; justify-content: center; padding: 16px 0; }
+.donut-center { position: relative; width: 130px; height: 130px; }
+.donut-center svg { transform: rotate(-90deg); }
+.donut-label {
+  position: absolute; inset:0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.donut-pct { font-size: 22px; font-weight: 800; color: var(--text); }
+.donut-desc { font-size: 10px; color: var(--text3); margin-top: 1px; }
+
+/* ── PROGRESS BAR ── */
+.progress-item { margin-bottom: 14px; }
+.progress-item:last-child { margin-bottom: 0; }
+.progress-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+.progress-label { font-size: 12px; font-weight: 600; color: var(--text); }
+.progress-pct { font-size: 12px; font-weight: 700; }
+.progress-track { height: 7px; background: var(--bg); border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 4px; transition: width 0.6s; }
+.progress-meta { font-size: 10px; color: var(--text3); margin-top: 4px; }
+
+/* ── TABLE ── */
+.tbl { width: 100%; border-collapse: collapse; }
+.tbl thead th {
+  text-align: left; padding: 9px 12px;
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.8px; color: var(--text3);
+  border-bottom: 1px solid var(--border);
+}
+.tbl tbody td { padding: 10px 12px; font-size: 12px; color: var(--text); border-bottom: 1px solid var(--border); }
+.tbl tbody tr:last-child td { border-bottom: none; }
+.tbl tbody tr:hover td { background: var(--bg); }
+.td-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+.td-code { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text2); }
+.status-pill { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 5px; }
+.sp-bep   { background: #dcfce7; color: #16a34a; }
+.sp-rugi  { background: #fee2e2; color: #dc2626; }
+.sp-watch { background: #fef3c7; color: #d97706; }
+.link-view { font-size: 11px; font-weight: 600; color: var(--blue); cursor: pointer; }
+.link-view:hover { text-decoration: underline; }
+
+/* ── TSH RANK ── */
+.tsh-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 0; border-bottom: 1px solid var(--border);
+}
+.tsh-item:last-child { border-bottom: none; }
+.tsh-rank { width: 22px; height: 22px; border-radius: 6px; background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: var(--text2); flex-shrink: 0; }
+.tsh-rank.gold   { background: #fef3c7; color: #d97706; }
+.tsh-rank.silver { background: #f3f4f6; color: #6b7280; }
+.tsh-rank.bronze { background: #fef3c7; color: #b45309; }
+.tsh-name { font-size: 12px; font-weight: 600; color: var(--text); }
+.tsh-stores { font-size: 10px; color: var(--text3); }
+.tsh-bar { flex: 1; }
+.tsh-value { font-size: 12px; font-weight: 700; color: var(--text); margin-left: auto; white-space: nowrap; font-family: 'JetBrains Mono',monospace; }
+
+/* ── CLUSTER CARDS ── */
+.cluster-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+.cluster-card { border-radius: 9px; padding: 14px; border: 1px solid var(--border); }
+.cluster-card.c-green  { background: #f0fdf4; border-color: #bbf7d0; }
+.cluster-card.c-blue   { background: #eff6ff; border-color: #bfdbfe; }
+.cluster-card.c-amber  { background: #fffbeb; border-color: #fde68a; }
+.cluster-card.c-red    { background: #fef2f2; border-color: #fecaca; }
+.cluster-label { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+.cluster-label.green  { color: #16a34a; }
+.cluster-label.blue   { color: #1d4ed8; }
+.cluster-label.amber  { color: #d97706; }
+.cluster-label.red    { color: #dc2626; }
+.cluster-count { font-size: 32px; font-weight: 900; line-height: 1; margin-bottom: 2px; color: var(--text); }
+.cluster-desc { font-size: 10px; color: var(--text2); line-height: 1.4; }
+
+/* ── MINI CHART (SVG bar) ── */
+.mini-bars { display: flex; align-items: flex-end; gap: 3px; height: 40px; }
+.mini-bar { flex: 1; border-radius: 2px 2px 0 0; min-width: 6px; }
+
+/* ── PAGE SECTIONS ── */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ══════════ SIDEBAR ══════════ -->
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-icon">EA</div>
+    <div>
+      <div class="brand-name">ERA-ANALYTICS</div>
+      <div class="brand-sub">Sales Intelligence</div>
+    </div>
+    <span class="ai-pill">AI</span>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Monitoring</div>
+    <div class="nav-item active" onclick="showPage('dashboard',this)">
+      <span class="nav-icon">📊</span> Dashboard
+      <span class="nav-dot"></span>
+    </div>
+    <div class="nav-item" onclick="location.href='ERA_ANALYTICS_DataToko.html'">
+      <span class="nav-icon">🏪</span> Data Toko
+    </div>
+    <div class="nav-item" onclick="showPage('tsh',this)">
+      <span class="nav-icon">👤</span> TSH Performance
+    </div>
+    <div class="nav-item" onclick="showPage('bep',this)">
+      <span class="nav-icon">📈</span> BEP Tracker
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Analytics</div>
+    <div class="nav-item" onclick="location.href='ERA_ANALYTICS_PnL.html'">
+      <span class="nav-icon">🔬</span> P&L Analytics
+    </div>
+    <div class="nav-item" onclick="showPage('arch',this)">
+      <span class="nav-icon">🏗️</span> Architecture
+    </div>
+    <div class="nav-item" onclick="showPage('workflow',this)">
+      <span class="nav-icon">🔄</span> Workflow
+    </div>
+    <div class="nav-item" onclick="showPage('db',this)">
+      <span class="nav-icon">🗄️</span> Database
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Manage</div>
+    <div class="nav-item">
+      <span class="nav-icon">📤</span> Upload Data
+    </div>
+    <div class="nav-item">
+      <span class="nav-icon">📄</span> Reports
+      <span class="nav-dot red"></span>
+    </div>
+    <div class="nav-item">
+      <span class="nav-icon">⚙️</span> Settings
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="footer-dot"></div>
+    <div class="footer-text">
+      <strong>Analytics Active</strong>
+      ERA-ANALYTICS v1.0
+    </div>
+  </div>
+</aside>
+
+<!-- ══════════ MAIN ══════════ -->
+<div class="main">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div>
+      <div class="topbar-title" id="page-title">Dashboard</div>
+      <div class="topbar-sub">KPI + Store Performance Overview</div>
+    </div>
+    <div class="topbar-sep"></div>
+    <div class="tab-group">
+      <button class="tb active" onclick="switchTab(this,'dashboard')">Overview</button>
+      <button class="tb" onclick="switchTab(this,'stores')">Stores</button>
+      <button class="tb" onclick="switchTab(this,'tsh')">TSH</button>
+      <button class="tb" onclick="switchTab(this,'bep')">BEP</button>
+    </div>
+    <div class="topbar-right">
+      <button class="btn-secondary">⬆ Upload Excel</button>
+      <button class="btn-primary">⬇ Export Report — Region 5</button>
+    </div>
+  </div>
+
+  <!-- CONTENT AREA -->
+  <div class="content">
+
+    <!-- ════════════ PAGE: DASHBOARD ════════════ -->
+    <div class="page active" id="pg-dashboard">
+
+      <!-- KPI ROW -->
+      <div class="kpi-row">
+        <div class="kpi k-blue">
+          <div class="kpi-label">Total Toko</div>
+          <div class="kpi-value">163</div>
+          <div class="kpi-sub">Erafone + ERA & More</div>
+        </div>
+        <div class="kpi k-green">
+          <div class="kpi-label">BEP Reached</div>
+          <div class="kpi-value green">119</div>
+          <div class="kpi-sub">73% dari total toko</div>
+        </div>
+        <div class="kpi k-red">
+          <div class="kpi-label">Below BEP</div>
+          <div class="kpi-value red">44</div>
+          <div class="kpi-sub">Perlu perhatian khusus</div>
+        </div>
+        <div class="kpi k-amber">
+          <div class="kpi-label">Revenue 2025</div>
+          <div class="kpi-value" style="font-size:18px;">1.53T</div>
+          <div class="kpi-sub">Net Amount (IDR)</div>
+        </div>
+        <div class="kpi k-purple">
+          <div class="kpi-label">YoY Growth</div>
+          <div class="kpi-value green" style="font-size:20px;">+19%</div>
+          <div class="kpi-sub">2024 → 2025</div>
+        </div>
+        <div class="kpi k-cyan">
+          <div class="kpi-label">Avg Health</div>
+          <div class="kpi-value amber" style="font-size:20px;">71</div>
+          <div class="kpi-sub">Score /100</div>
+        </div>
+        <div class="kpi k-indigo">
+          <div class="kpi-label">Data Per</div>
+          <div class="kpi-value" style="font-size:15px;">Apr 2026</div>
+          <div class="kpi-sub">2022 – 2026</div>
+        </div>
+      </div>
+
+      <!-- CLUSTER STATUS -->
+      <div class="sh">Store Health Clusters</div>
+      <div class="cluster-grid" style="margin-bottom:16px;">
+        <div class="cluster-card c-green">
+          <div class="cluster-label green">🟢 Growth</div>
+          <div class="cluster-count">38</div>
+          <div class="cluster-desc">Konsisten tumbuh, BEP tercapai, YoY positif</div>
+        </div>
+        <div class="cluster-card c-blue">
+          <div class="cluster-label blue">🔵 Stable</div>
+          <div class="cluster-count">81</div>
+          <div class="cluster-desc">BEP tercapai, revenue stabil bulan ke bulan</div>
+        </div>
+        <div class="cluster-card c-amber">
+          <div class="cluster-label amber">🟡 Recovery</div>
+          <div class="cluster-count">19</div>
+          <div class="cluster-desc">Pernah di bawah BEP, tapi ada perbaikan</div>
+        </div>
+        <div class="cluster-card c-red">
+          <div class="cluster-label red">🔴 Critical</div>
+          <div class="cluster-count">25</div>
+          <div class="cluster-desc">Konsisten merugi, gap BEP > 300 juta</div>
+        </div>
+      </div>
+
+      <!-- ROW: EXECUTIVE SUMMARY + ACTION ZONE -->
+      <div class="grid-31">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Executive Summary</div>
+              <div class="card-sub">Kondisi Region 5 · April 2026</div>
+            </div>
+            <span class="card-badge cb-blue">AI</span>
+          </div>
+          <div class="card-body">
+            <div class="summary-title excellent">Good — On Track Recovery</div>
+            <div class="summary-row">
+              <div class="summary-col">
+                <div class="summary-icon">📍</div>
+                <div class="summary-label">Kondisi</div>
+                <div class="summary-text">119 dari 163 toko sudah BEP. 44 toko masih merugi dengan gap terbesar di Senayan Park Mall (−Rp 1.6 M).</div>
+              </div>
+              <div class="summary-col">
+                <div class="summary-icon">🔍</div>
+                <div class="summary-label">Analisis</div>
+                <div class="summary-text">TSH Mensi Alexander punya 6 toko di bawah BEP. Toko format Megastore & 2.5 paling banyak merugi.</div>
+              </div>
+              <div class="summary-col">
+                <div class="summary-icon">⚡</div>
+                <div class="summary-label">Tindakan</div>
+                <div class="summary-text">Review lokasi 25 toko Critical cluster. Evaluasi kelayakan perpanjangan lease untuk below-BEP stores.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Action Zone</div>
+              <div class="card-sub">Prioritas tindakan</div>
+            </div>
+            <span style="color:var(--red);font-size:18px;margin-left:auto;">—</span>
+          </div>
+          <div class="card-body" style="padding:12px 16px;">
+            <div class="action-item">
+              <div class="action-check warn">!</div>
+              <div>
+                <div class="action-title">Review 25 Toko Critical <span class="action-pill ap-warn">URGENT</span></div>
+                <div class="action-desc">Konsisten merugi 12+ bulan, belum pernah capai BEP</div>
+              </div>
+            </div>
+            <div class="action-item">
+              <div class="action-check crit">!</div>
+              <div>
+                <div class="action-title">Senayan Park — Gap Rp 1.6M <span class="action-pill ap-crit">KRITIS</span></div>
+                <div class="action-desc">Best month sales hanya 26% dari BEP target</div>
+              </div>
+            </div>
+            <div class="action-item">
+              <div class="action-check done">✓</div>
+              <div>
+                <div class="action-title">119 Toko BEP Reached <span class="action-pill ap-info">INFO</span></div>
+                <div class="action-desc">73% toko sudah melewati BEP target bulanan</div>
+              </div>
+            </div>
+            <div class="action-item">
+              <div class="action-check warn">!</div>
+              <div>
+                <div class="action-title">Mensi Alexander — 6 Toko Rugi <span class="action-pill ap-warn">REVIEW</span></div>
+                <div class="action-desc">TSH dengan toko merugi terbanyak di Region 5</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROW: PROGRESS + TSH RANKING -->
+      <div class="grid-13">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Overall BEP Progress</div>
+              <div class="card-sub">163 toko · Erafone + ERA & More</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="donut-wrap">
+              <div class="donut-center">
+                <svg width="130" height="130" viewBox="0 0 130 130">
+                  <circle cx="65" cy="65" r="52" fill="none" stroke="#f3f4f6" stroke-width="14"/>
+                  <circle cx="65" cy="65" r="52" fill="none" stroke="#10b981" stroke-width="14"
+                    stroke-dasharray="326 400" stroke-linecap="round"/>
+                </svg>
+                <div class="donut-label">
+                  <span class="donut-pct" style="color:var(--green)">73%</span>
+                  <span class="donut-desc">BEP Reached</span>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-around;margin-top:4px;">
+              <div style="text-align:center;">
+                <div style="font-size:18px;font-weight:800;color:var(--green)">119</div>
+                <div style="font-size:10px;color:var(--text3)">BEP Reached</div>
+              </div>
+              <div style="text-align:center;">
+                <div style="font-size:18px;font-weight:800;color:var(--red)">44</div>
+                <div style="font-size:10px;color:var(--text3)">Below BEP</div>
+              </div>
+              <div style="text-align:center;">
+                <div style="font-size:18px;font-weight:800;color:var(--text)">163</div>
+                <div style="font-size:10px;color:var(--text3)">Total Toko</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Revenue per TSH — 2025</div>
+              <div class="card-sub">Net Amount (IDR Miliar)</div>
+            </div>
+            <span class="card-badge cb-gray" style="margin-left:auto;">YTD</span>
+          </div>
+          <div class="card-body" style="padding:12px 16px;">
+            <div class="tsh-item">
+              <div class="tsh-rank gold">1</div>
+              <div style="flex:1">
+                <div class="tsh-name">Sandi Maulana</div>
+                <div class="tsh-stores">10 toko · 2 merugi</div>
+                <div class="progress-track" style="margin-top:4px;">
+                  <div class="progress-fill" style="width:100%;background:var(--green);"></div>
+                </div>
+              </div>
+              <div class="tsh-value" style="color:var(--green)">165.1M</div>
+            </div>
+            <div class="tsh-item">
+              <div class="tsh-rank silver">2</div>
+              <div style="flex:1">
+                <div class="tsh-name">Rendy Nur Setiawan</div>
+                <div class="tsh-stores">9 toko · 3 merugi</div>
+                <div class="progress-track" style="margin-top:4px;">
+                  <div class="progress-fill" style="width:97%;background:var(--blue);"></div>
+                </div>
+              </div>
+              <div class="tsh-value">165.1M</div>
+            </div>
+            <div class="tsh-item">
+              <div class="tsh-rank bronze">3</div>
+              <div style="flex:1">
+                <div class="tsh-name">Febrian Tri Wibowo</div>
+                <div class="tsh-stores">11 toko · 5 merugi</div>
+                <div class="progress-track" style="margin-top:4px;">
+                  <div class="progress-fill" style="width:90%;background:var(--blue);"></div>
+                </div>
+              </div>
+              <div class="tsh-value">167.0M</div>
+            </div>
+            <div class="tsh-item">
+              <div class="tsh-rank">4</div>
+              <div style="flex:1">
+                <div class="tsh-name">Nurul Zaman</div>
+                <div class="tsh-stores">8 toko · 0 merugi</div>
+                <div class="progress-track" style="margin-top:4px;">
+                  <div class="progress-fill" style="width:88%;background:var(--green);"></div>
+                </div>
+              </div>
+              <div class="tsh-value">173.7M</div>
+            </div>
+            <div class="tsh-item">
+              <div class="tsh-rank">5</div>
+              <div style="flex:1">
+                <div class="tsh-name">Arengga</div>
+                <div class="tsh-stores">12 toko · 2 merugi</div>
+                <div class="progress-track" style="margin-top:4px;">
+                  <div class="progress-fill" style="width:85%;background:var(--blue);"></div>
+                </div>
+              </div>
+              <div class="tsh-value">201.5M</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RECENT TABLE -->
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <div class="card-title">Toko Below BEP — Prioritas Review</div>
+            <div class="card-sub">Sorted by gap terbesar vs BEP target</div>
+          </div>
+          <span class="card-badge cb-red" style="margin-left:auto;">44 toko</span>
+        </div>
+        <div class="card-body" style="padding:0;">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Store Code</th>
+                <th>Nama Toko</th>
+                <th>Channel</th>
+                <th>TSH</th>
+                <th>BEP Target</th>
+                <th>Best Month</th>
+                <th>Gap</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-code">E—</td>
+                <td style="font-weight:600;">Erafone Senayan Park Mall</td>
+                <td><span class="status-pill sp-watch">ERAFONE</span></td>
+                <td>Mensi Alexander</td>
+                <td class="td-num">2.21 M</td>
+                <td class="td-num">578 Jt</td>
+                <td class="td-num" style="color:var(--red);font-weight:700;">−1.63 M</td>
+                <td><span class="status-pill sp-rugi">CRITICAL</span></td>
+                <td><span class="link-view">Lihat</span></td>
+              </tr>
+              <tr>
+                <td class="td-code">E—</td>
+                <td style="font-weight:600;">Erafone & More ITC Roxy Mas</td>
+                <td><span class="status-pill sp-watch">ERA & MORE</span></td>
+                <td>Mensi Alexander</td>
+                <td class="td-num">3.69 M</td>
+                <td class="td-num">2.34 M</td>
+                <td class="td-num" style="color:var(--red);font-weight:700;">−1.35 M</td>
+                <td><span class="status-pill sp-rugi">CRITICAL</span></td>
+                <td><span class="link-view">Lihat</span></td>
+              </tr>
+              <tr>
+                <td class="td-code">E—</td>
+                <td style="font-weight:600;">Erafone & More Serpong</td>
+                <td><span class="status-pill sp-watch">ERA & MORE</span></td>
+                <td>Sandi Maulana</td>
+                <td class="td-num">2.54 M</td>
+                <td class="td-num">1.27 M</td>
+                <td class="td-num" style="color:var(--red);font-weight:700;">−1.27 M</td>
+                <td><span class="status-pill sp-rugi">CRITICAL</span></td>
+                <td><span class="link-view">Lihat</span></td>
+              </tr>
+              <tr>
+                <td class="td-code">E—</td>
+                <td style="font-weight:600;">Erafone Menara Jakarta</td>
+                <td><span class="status-pill sp-watch">ERAFONE</span></td>
+                <td>Lukman Wibowo</td>
+                <td class="td-num">2.03 M</td>
+                <td class="td-num">1.05 M</td>
+                <td class="td-num" style="color:var(--red);font-weight:700;">−978 Jt</td>
+                <td><span class="status-pill sp-rugi">CRITICAL</span></td>
+                <td><span class="link-view">Lihat</span></td>
+              </tr>
+              <tr>
+                <td class="td-code">E—</td>
+                <td style="font-weight:600;">Erafone MB Jalan Panjang</td>
+                <td><span class="status-pill sp-watch">ERAFONE</span></td>
+                <td>Febrian Tri Wibowo</td>
+                <td class="td-num">1.36 M</td>
+                <td class="td-num">573 Jt</td>
+                <td class="td-num" style="color:var(--red);font-weight:700;">−786 Jt</td>
+                <td><span class="status-pill sp-rugi">CRITICAL</span></td>
+                <td><span class="link-view">Lihat</span></td>
+              </tr>
+              <tr>
+                <td class="td-code">E—</td>
+                <td style="font-weight:600;">Megastore Supermal Karawaci</td>
+                <td><span class="status-pill sp-watch">ERAFONE</span></td>
+                <td>Sandi Maulana</td>
+                <td class="td-num">6.02 M</td>
+                <td class="td-num">5.92 M</td>
+                <td class="td-num" style="color:var(--amber);font-weight:700;">−96 Jt</td>
+                <td><span class="status-pill sp-watch">RECOVERY</span></td>
+                <td><span class="link-view">Lihat</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════ PAGE: ARCHITECTURE ════════════ -->
+    <div class="page" id="pg-arch">
+      <div class="sh">System Architecture — 6 Layers</div>
+      <div style="display:flex;flex-direction:column;gap:3px;">
+
+        <div class="card" style="overflow:hidden;">
+          <div class="card-head" style="background:#eff6ff;border-color:#bfdbfe;">
+            <span style="font-size:10px;font-weight:800;color:#1d4ed8;text-transform:uppercase;letter-spacing:1px;">01 · Client Layer</span>
+            <div style="display:flex;gap:6px;margin-left:auto;">
+              <span class="card-badge cb-blue">Next.js 14</span><span class="card-badge cb-blue">React 18</span>
+            </div>
+          </div>
+          <div class="card-body" style="display:flex;gap:10px;flex-wrap:wrap;padding:12px 16px;">
+            <div style="flex:1;min-width:130px;padding:10px;background:var(--bg);border-radius:8px;border:1px solid var(--border);">
+              <div style="font-size:11px;font-weight:700;margin-bottom:3px;">Dashboard View</div>
+              <div style="font-size:10px;color:var(--text3);">P&L Overview · BEP Tracker · TSH Ranking</div>
+            </div>
+            <div style="flex:1;min-width:130px;padding:10px;background:var(--bg);border-radius:8px;border:1px solid var(--border);">
+              <div style="font-size:11px;font-weight:700;margin-bottom:3px;">Charts</div>
+              <div style="font-size:10px;color:var(--text3);">Revenue Trend · BEP Progress · Category Mix</div>
+            </div>
+            <div style="flex:1;min-width:130px;padding:10px;background:var(--bg);border-radius:8px;border:1px solid var(--border);">
+              <div style="font-size:11px;font-weight:700;margin-bottom:3px;">Data Upload</div>
+              <div style="font-size:10px;color:var(--text3);">Drag & Drop Excel · Auto-parse · Progress</div>
+            </div>
+            <div style="flex:1;min-width:130px;padding:10px;background:var(--bg);border-radius:8px;border:1px solid var(--border);">
+              <div style="font-size:11px;font-weight:700;margin-bottom:3px;">Report Export</div>
+              <div style="font-size:10px;color:var(--text3);">Download PDF · Excel · Email Scheduled</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align:center;font-size:10px;color:var(--text3);padding:4px 0;">↕ HTTPS · REST API · WebSocket</div>
+
+        <div class="card" style="overflow:hidden;">
+          <div class="card-head" style="background:#f0fdf4;border-color:#bbf7d0;">
+            <span style="font-size:10px;font-weight:800;color:#16a34a;text-transform:uppercase;letter-spacing:1px;">02 · Frontend Layer</span>
+            <div style="display:flex;gap:6px;margin-left:auto;">
+              <span class="card-badge cb-green">TypeScript</span><span class="card-badge cb-green">Tailwind</span><span class="card-badge cb-green">shadcn/ui</span>
+            </div>
+          </div>
+          <div class="card-body" style="display:flex;gap:10px;flex-wrap:wrap;padding:12px 16px;">
+            <div style="flex:1;min-width:130px;padding:10px;background:var(--bg);border-radius:8px;border:1px solid var(--border);"><div style="font-size:11px;font-weight:700;margin-bottom:3px;">App Router</div><div style="font-size:10px;color:var(--text3);">SSR · ISR · Role-based routing</div></div>
+            <div style="flex:1;min-width:130px;padding:10px;background:var(--bg);border-radius:8px;border:1px solid var(--border);"><div style="font-size:11px;font-weight:700;margin-bottom:3px;">UI Components</div><div style="font-size:10px;color:var(--text3);">Tables · Cards · Modals · Filters</div></div>
+            <div style="flex:1;min-width:130px;padding:10px;background:var(--bg);border-radius:8px;border:1px solid var(--border);"><div style="font-size:11px;font-weight:700;margin-bottom:3px;">State — Zustand</div><div style="font-size:10px;color:var(--text3);">Global filters · Date range · Selection</div></div>
+            <div style="flex:1;min-width:130px;padding:10px;background:var(--bg);border-radius:8px;border:1px solid var(--border);"><div style="font-size:11px;font-weight:700;margin-bottom:3px;">Data — React Query</div><div style="font-size:10px;color:var(--text3);">Auto-refresh · Cache · Optimistic</div></div>
+          </div>
+        </div>
+
+        <div style="text-align:center;font-size:10px;color:var(--text3);padding:4px 0;">↕ Internal API Call</div>
+
+        <div class="card" style="overflow:hidden;">
+          <div class="card-head" style="background:#faf5ff;border-color:#e9d5ff;">
+            <span style="font-size:10px;font-weight:800;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;">03 · API Layer</span>
+            <div style="display:flex;gap:6px;margin-left:auto;">
+              <span class="card-badge cb-purple">FastAPI</span><span class="card-badge cb-purple">Python 3.11</span>
+            </div>
+          </div>
+          <div class="card-body" style="display:flex;gap:10px;flex-wrap:wrap;padding:12px 16px;">
+            <div style="flex:1;min-width:130px;padding:10px;background:var(--bg);border-radius:8px;border:1px solid var(--border);"><div style="font-size:11px;font-weight:700;margin-bottom:3px;">Auth Service</div><div style="font-size:10px;color:var(--text3);">JWT · Admin / TSH / Viewer roles</div></div>
+            <div style="flex:1;min-width:130px;padding:10px;background:var(--bg);border-radius:8px;border:1px solid var(--border);"><div style="font-size:11px;font-weight:700;margin-bottom:3px;">Analytics API</div><div style="font-size:10px;color:var(--text3);">/stores · /bep · /tsh-summary · /trends</div></div>
+            <div style="flex:1;min-width:130px;padding:10px;background:var(--bg);border-radius:8px;border:1px solid var(--border);"><div style="font-size:11px;font-weight:700;margin-bottom:3px;">Upload API</div><div style="font-size:10px;color:var(--text3);">POST /upload/excel → validate → queue</div></div>
+            <div style="flex:1;min-width:130px;padding:10px;background:var(--bg);border-radius:8px;border:1px solid var(--border);"><div style="font-size:11px;font-weight:700;margin-bottom:3px;">Export API</div><div style="font-size:10px;color:var(--text3);">/export/pdf · /export/xlsx · async</div></div>
+          </div>
+        </div>
+
+        <div style="text-align:center;font-size:10px;color:var(--text3);padding:4px 0;">↕ Task Queue · Direct Call</div>
+
+        <div class="card" style="overflow:hidden;">
+          <div class="card-head" style="background:#fffbeb;border-color:#fde68a;">
+            <span style="font-size:10px;font-weight:800;color:#d97706;text-transform:uppercase;letter-spacing:1px;">04 · Processing Layer</span>
+            <div style="display:flex;gap:6px;margin-left:auto;">
+              <span class="card-badge cb-amber">Pandas</span><span class="card-badge cb-amber">Celery</span><span class="card-badge cb-amber">Redis</span>
+            </div>
+          </div>
+          <div class="card-body" style="display:flex;gap:10px;flex-wrap:wrap;padding:12px 16px;">
+            <div style="flex:1;min-width:130px;padding:10px;background:var(--bg);border-radius:8px;border:1px solid var(--border);"><div style="font-size:11px;font-weight:700;margin-bottom:3px;">Excel Parser</div><div style="font-size:10px;color:var(--text3);">Multi-sheet · Column mapping · Validate</div></div>
+            <div style="flex:1;min-width:130px;padding:10px;background:var(--bg);border-radius:8px;border:1px solid var(--border);"><div style="font-size:11px;font-weight:700;margin-bottom:3px;">Analytics Engine</div><div style="font-size:10px;color:var(--text3);">BEP calc · YoY · Ramp-up · Health score</div></div>
+            <div style="flex:1;min-width:130px;padding:10px;background:var(--bg);border-radius:8px;border:1px solid var(--border);"><div style="font-size:11px;font-weight:700;margin-bottom:3px;">Background Jobs</div><div style="font-size:10px;color:var(--text3);">Async processing · Scheduled reports</div></div>
+            <div style="flex:1;min-width:130px;padding:10px;background:var(--bg);border-radius:8px;border:1px solid var(--border);"><div style="font-size:11px;font-weight:700;margin-bottom:3px;">Report Generator</div><div style="font-size:10px;color:var(--text3);">PDF: WeasyPrint · Excel: openpyxl</div></div>
+          </div>
+        </div>
+
+        <div style="text-align:center;font-size:10px;color:var(--text3);padding:4px 0;">↕ Read / Write</div>
+
+        <div class="grid-2" style="margin-bottom:3px;">
+          <div class="card" style="overflow:hidden;">
+            <div class="card-head" style="background:#ecfeff;border-color:#a5f3fc;">
+              <span style="font-size:10px;font-weight:800;color:#0891b2;text-transform:uppercase;letter-spacing:1px;">05 · Data Layer</span>
+              <div style="display:flex;gap:6px;margin-left:auto;"><span class="card-badge" style="background:#cffafe;color:#0e7490;">PostgreSQL</span><span class="card-badge" style="background:#cffafe;color:#0e7490;">Redis</span></div>
+            </div>
+            <div class="card-body" style="display:flex;gap:8px;padding:12px 16px;">
+              <div style="flex:1;padding:10px;background:var(--bg);border-radius:8px;border:1px solid var(--border);"><div style="font-size:11px;font-weight:700;margin-bottom:3px;">PostgreSQL 16</div><div style="font-size:10px;color:var(--text3);">stores · sales_monthly · bep_targets · users</div></div>
+              <div style="flex:1;padding:10px;background:var(--bg);border-radius:8px;border:1px solid var(--border);"><div style="font-size:11px;font-weight:700;margin-bottom:3px;">Redis 7</div><div style="font-size:10px;color:var(--text3);">Dashboard cache · Session · Queue broker</div></div>
+            </div>
+          </div>
+          <div class="card" style="overflow:hidden;">
+            <div class="card-head" style="background:#fef2f2;border-color:#fecaca;">
+              <span style="font-size:10px;font-weight:800;color:#dc2626;text-transform:uppercase;letter-spacing:1px;">06 · Storage Layer</span>
+              <div style="display:flex;gap:6px;margin-left:auto;"><span class="card-badge cb-red">MinIO</span><span class="card-badge cb-red">S3</span></div>
+            </div>
+            <div class="card-body" style="display:flex;gap:8px;padding:12px 16px;">
+              <div style="flex:1;padding:10px;background:var(--bg);border-radius:8px;border:1px solid var(--border);"><div style="font-size:11px;font-weight:700;margin-bottom:3px;">File Storage</div><div style="font-size:10px;color:var(--text3);">Upload Excel · PDF/XLSX output · Archive</div></div>
+              <div style="flex:1;padding:10px;background:var(--bg);border-radius:8px;border:1px solid var(--border);"><div style="font-size:11px;font-weight:700;margin-bottom:3px;">Audit Log</div><div style="font-size:10px;color:var(--text3);">Upload history · User actions · Versioning</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════ PAGE: WORKFLOW ════════════ -->
+    <div class="page" id="pg-workflow">
+      <div class="sh">System Workflow — 4 Core Flows</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head" style="border-left:3px solid var(--blue);">
+            <div class="flow-icon" style="width:32px;height:32px;border-radius:8px;background:#dbeafe;display:flex;align-items:center;justify-content:center;font-size:15px;">📥</div>
+            <div style="margin-left:8px;"><div class="card-title">Data Ingestion</div><div class="card-sub">Upload Excel → Parse → Store ke Database</div></div>
+            <span class="card-badge cb-blue" style="margin-left:auto;">Flow 1</span>
+          </div>
+          <div class="card-body" style="padding:0;">
+            <div class="action-item" style="padding:10px 16px;"><div class="step-dot" style="width:22px;height:22px;border-radius:50%;background:#dbeafe;color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;">1</div><div style="margin-left:10px;"><div style="font-size:12px;font-weight:600;">User Upload Excel</div><div style="font-size:11px;color:var(--text3);">Drag & drop Sales vs Stock xlsx ke dashboard</div></div></div>
+            <div class="action-item" style="padding:10px 16px;"><div class="step-dot" style="width:22px;height:22px;border-radius:50%;background:#dbeafe;color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;">2</div><div style="margin-left:10px;"><div style="font-size:12px;font-weight:600;">File Validation</div><div style="font-size:11px;color:var(--text3);">Cek format, sheet names, required columns</div></div></div>
+            <div class="action-item" style="padding:10px 16px;"><div class="step-dot" style="width:22px;height:22px;border-radius:50%;background:#dbeafe;color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;">3</div><div style="margin-left:10px;"><div style="font-size:12px;font-weight:600;">Queue Processing</div><div style="font-size:11px;color:var(--text3);">File masuk Celery → background job dimulai</div></div></div>
+            <div class="action-item" style="padding:10px 16px;"><div class="step-dot" style="width:22px;height:22px;border-radius:50%;background:#dbeafe;color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;">4</div><div style="margin-left:10px;"><div style="font-size:12px;font-weight:600;">Parse & Transform</div><div style="font-size:11px;color:var(--text3);">Pandas filter ERAFONE + ERA & MORE → monthly data</div></div></div>
+            <div class="action-item" style="padding:10px 16px;"><div class="step-dot" style="width:22px;height:22px;border-radius:50%;background:#dbeafe;color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;">5</div><div style="margin-left:10px;"><div style="font-size:12px;font-weight:600;">Upsert ke PostgreSQL</div><div style="font-size:11px;color:var(--text3);">Insert/update per store per bulan → invalidate cache</div></div></div>
+            <div class="action-item" style="padding:10px 16px;border-bottom:none;"><div class="step-dot" style="width:22px;height:22px;border-radius:50%;background:#dbeafe;color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;">6</div><div style="margin-left:10px;"><div style="font-size:12px;font-weight:600;">Dashboard Refresh</div><div style="font-size:11px;color:var(--text3);">WebSocket push → dashboard auto-reload</div></div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head" style="border-left:3px solid var(--green);">
+            <div style="width:32px;height:32px;border-radius:8px;background:#dcfce7;display:flex;align-items:center;justify-content:center;font-size:15px;">⚙️</div>
+            <div style="margin-left:8px;"><div class="card-title">Analytics Engine</div><div class="card-sub">Trigger otomatis setelah data masuk</div></div>
+            <span class="card-badge cb-green" style="margin-left:auto;">Flow 2</span>
+          </div>
+          <div class="card-body" style="padding:0;">
+            <div class="action-item" style="padding:10px 16px;"><div class="step-dot" style="width:22px;height:22px;border-radius:50%;background:#dcfce7;color:var(--green);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;">1</div><div style="margin-left:10px;"><div style="font-size:12px;font-weight:600;">BEP Calculation</div><div style="font-size:11px;color:var(--text3);">best_month_sales vs BEP target → REACHED / BELOW</div></div></div>
+            <div class="action-item" style="padding:10px 16px;"><div class="step-dot" style="width:22px;height:22px;border-radius:50%;background:#dcfce7;color:var(--green);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;">2</div><div style="margin-left:10px;"><div style="font-size:12px;font-weight:600;">YoY / MoM Growth</div><div style="font-size:11px;color:var(--text3);">Growth per TSH, store, channel setiap periode</div></div></div>
+            <div class="action-item" style="padding:10px 16px;"><div class="step-dot" style="width:22px;height:22px;border-radius:50%;background:#dcfce7;color:var(--green);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;">3</div><div style="margin-left:10px;"><div style="font-size:12px;font-weight:600;">Ramp-up Curve</div><div style="font-size:11px;color:var(--text3);">Revenue bulan 1–24 sejak opening vs benchmark</div></div></div>
+            <div class="action-item" style="padding:10px 16px;"><div class="step-dot" style="width:22px;height:22px;border-radius:50%;background:#dcfce7;color:var(--green);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;">4</div><div style="margin-left:10px;"><div style="font-size:12px;font-weight:600;">Health Score</div><div style="font-size:11px;color:var(--text3);">Scoring 0–100: trend + BEP gap + consistency</div></div></div>
+            <div class="action-item" style="padding:10px 16px;"><div class="step-dot" style="width:22px;height:22px;border-radius:50%;background:#dcfce7;color:var(--green);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;">5</div><div style="margin-left:10px;"><div style="font-size:12px;font-weight:600;">Store Clustering</div><div style="font-size:11px;color:var(--text3);">Auto-group: Critical · Recovery · Stable · Growth</div></div></div>
+            <div class="action-item" style="padding:10px 16px;border-bottom:none;"><div class="step-dot" style="width:22px;height:22px;border-radius:50%;background:#dcfce7;color:var(--green);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;">6</div><div style="margin-left:10px;"><div style="font-size:12px;font-weight:600;">Cache Result</div><div style="font-size:11px;color:var(--text3);">Simpan ke Redis TTL 24 jam → siap query</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════ PAGE: DATABASE ════════════ -->
+    <div class="page" id="pg-db">
+      <div class="sh">Database Schema — PostgreSQL</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+        <div class="card" style="overflow:hidden;">
+          <div class="card-head" style="background:#eff6ff;border-color:#bfdbfe;padding:10px 14px;">
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--blue);"></div>
+            <span style="font-size:12px;font-weight:700;margin-left:8px;font-family:'JetBrains Mono',monospace;">stores</span>
+          </div>
+          <div class="card-body" style="padding:0;">
+            <div class="db-field"><span class="db-fname db-pk" style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--amber);">id</span><span style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;">UUID PK</span></div>
+            <div class="db-field"><span class="db-fname" style="font-size:10px;font-family:'JetBrains Mono',monospace;">store_code</span><span style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;">VARCHAR</span></div>
+            <div class="db-field"><span class="db-fname" style="font-size:10px;font-family:'JetBrains Mono',monospace;">store_name</span><span style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;">VARCHAR</span></div>
+            <div class="db-field"><span class="db-fname" style="font-size:10px;font-family:'JetBrains Mono',monospace;">channel</span><span style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;">ENUM</span></div>
+            <div class="db-field"><span class="db-fname" style="font-size:10px;font-family:'JetBrains Mono',monospace;">status</span><span style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;">ENUM</span></div>
+            <div class="db-field"><span class="db-fname" style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--green);">tsh_id</span><span style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;">UUID FK</span></div>
+            <div class="db-field"><span class="db-fname" style="font-size:10px;font-family:'JetBrains Mono',monospace;">opening_date</span><span style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;">DATE</span></div>
+            <div class="db-field" style="border:none;"><span class="db-fname" style="font-size:10px;font-family:'JetBrains Mono',monospace;">area</span><span style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;">VARCHAR</span></div>
+          </div>
+        </div>
+        <div class="card" style="overflow:hidden;">
+          <div class="card-head" style="background:#f0fdf4;border-color:#bbf7d0;padding:10px 14px;">
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--green);"></div>
+            <span style="font-size:12px;font-weight:700;margin-left:8px;font-family:'JetBrains Mono',monospace;">sales_monthly</span>
+          </div>
+          <div class="card-body" style="padding:0;">
+            <div class="db-field"><span style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--amber);">id</span><span style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;">UUID PK</span></div>
+            <div class="db-field"><span style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--green);">store_id</span><span style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;">UUID FK</span></div>
+            <div class="db-field"><span style="font-size:10px;font-family:'JetBrains Mono',monospace;">period</span><span style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;">DATE</span></div>
+            <div class="db-field"><span style="font-size:10px;font-family:'JetBrains Mono',monospace;">net_device</span><span style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;">BIGINT</span></div>
+            <div class="db-field"><span style="font-size:10px;font-family:'JetBrains Mono',monospace;">net_accessories</span><span style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;">BIGINT</span></div>
+            <div class="db-field"><span style="font-size:10px;font-family:'JetBrains Mono',monospace;">net_operator</span><span style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;">BIGINT</span></div>
+            <div class="db-field"><span style="font-size:10px;font-family:'JetBrains Mono',monospace;">net_ce</span><span style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;">BIGINT</span></div>
+            <div class="db-field" style="border:none;"><span style="font-size:10px;font-family:'JetBrains Mono',monospace;">net_total</span><span style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;">BIGINT</span></div>
+          </div>
+        </div>
+        <div class="card" style="overflow:hidden;">
+          <div class="card-head" style="background:#fffbeb;border-color:#fde68a;padding:10px 14px;">
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--amber);"></div>
+            <span style="font-size:12px;font-weight:700;margin-left:8px;font-family:'JetBrains Mono',monospace;">bep_targets</span>
+          </div>
+          <div class="card-body" style="padding:0;">
+            <div class="db-field"><span style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--amber);">id</span><span style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;">UUID PK</span></div>
+            <div class="db-field"><span style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--green);">store_id</span><span style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;">UUID FK</span></div>
+            <div class="db-field"><span style="font-size:10px;font-family:'JetBrains Mono',monospace;">bep_amount</span><span style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;">BIGINT</span></div>
+            <div class="db-field"><span style="font-size:10px;font-family:'JetBrains Mono',monospace;">effective_date</span><span style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;">DATE</span></div>
+            <div class="db-field" style="border:none;"><span style="font-size:10px;font-family:'JetBrains Mono',monospace;">notes</span><span style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;">TEXT</span></div>
+          </div>
+        </div>
+        <div class="card" style="overflow:hidden;">
+          <div class="card-head" style="background:#faf5ff;border-color:#e9d5ff;padding:10px 14px;">
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--purple);"></div>
+            <span style="font-size:12px;font-weight:700;margin-left:8px;font-family:'JetBrains Mono',monospace;">users</span>
+          </div>
+          <div class="card-body" style="padding:0;">
+            <div class="db-field"><span style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--amber);">id</span><span style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;">UUID PK</span></div>
+            <div class="db-field"><span style="font-size:10px;font-family:'JetBrains Mono',monospace;">email</span><span style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;">VARCHAR</span></div>
+            <div class="db-field"><span style="font-size:10px;font-family:'JetBrains Mono',monospace;">name</span><span style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;">VARCHAR</span></div>
+            <div class="db-field"><span style="font-size:10px;font-family:'JetBrains Mono',monospace;">role</span><span style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;">ENUM</span></div>
+            <div class="db-field" style="border:none;"><span style="font-size:10px;font-family:'JetBrains Mono',monospace;">last_login</span><span style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;">TIMESTAMP</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PLACEHOLDER PAGES -->
+    <div class="page" id="pg-stores">
+      <div class="sh">Data Toko</div>
+      <div class="card"><div class="card-body" style="padding:40px;text-align:center;color:var(--text3);">Store detail page — coming in next phase</div></div>
+    </div>
+    <div class="page" id="pg-tsh">
+      <div class="sh">TSH Performance</div>
+      <div class="card"><div class="card-body" style="padding:40px;text-align:center;color:var(--text3);">TSH comparison page — coming in next phase</div></div>
+    </div>
+    <div class="page" id="pg-bep">
+      <div class="sh">BEP Tracker</div>
+      <div class="card"><div class="card-body" style="padding:40px;text-align:center;color:var(--text3);">Full BEP tracker — coming in next phase</div></div>
+    </div>
+    <div class="page" id="pg-workflow">
+      <div class="sh">System Workflow</div>
+      <div class="card"><div class="card-body" style="padding:40px;text-align:center;color:var(--text3);">Workflow diagram — shown in Architecture tab</div></div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+const pageMap = { dashboard:'pg-dashboard', stores:'pg-stores', tsh:'pg-tsh', bep:'pg-bep', arch:'pg-arch', workflow:'pg-workflow', db:'pg-db' };
+const titles = { dashboard:'Dashboard', stores:'Data Toko', tsh:'TSH Performance', bep:'BEP Tracker', arch:'Architecture', workflow:'Workflow', db:'Database Schema' };
+
+function showPage(key, navEl) {
+  Object.values(pageMap).forEach(id => { const el = document.getElementById(id); if(el) el.classList.remove('active'); });
+  const target = document.getElementById(pageMap[key]);
+  if(target) target.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if(navEl) { navEl.classList.add('active'); navEl.querySelector('.nav-dot') || navEl.insertAdjacentHTML('beforeend',''); }
+  document.getElementById('page-title').textContent = titles[key] || key;
+}
+
+function switchTab(btn, key) {
+  document.querySelectorAll('.tb').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const navMap = { dashboard:0, stores:1, tsh:2, bep:3 };
+  const navItems = document.querySelectorAll('.nav-item');
+  showPage(key, navItems[navMap[key]] || null);
+}
+</script>
+</body>
+</html>

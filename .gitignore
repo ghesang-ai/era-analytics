@@ -1,0 +1,14 @@
+# Excel data files (sensitive business data)
+*.xlsx
+*.xls
+*.csv
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Temp files
+/tmp/
+*.tmp
+*.log

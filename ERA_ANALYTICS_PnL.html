@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ERA-ANALYTICS — Analytics</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --sw:220px;--bg:#f4f6f8;--s:#fff;--b:#e5e7eb;--b2:#d1d5db;
+  --t:#111827;--t2:#6b7280;--t3:#9ca3af;
+  --blue:#3b82f6;--green:#10b981;--red:#ef4444;--amber:#f59e0b;
+  --purple:#8b5cf6;--indigo:#6366f1;--cyan:#06b6d4;
+  --r:10px;--sh:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --shm:0 4px 16px rgba(0,0,0,.08);
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t);display:flex;min-height:100vh}
+
+/* SIDEBAR */
+.sb{width:var(--sw);background:var(--s);border-right:1px solid var(--b);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:50;overflow-y:auto}
+.brand{padding:18px 16px 14px;border-bottom:1px solid var(--b);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.bi{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#1d4ed8,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#fff;flex-shrink:0}
+.bn{font-size:14px;font-weight:800;color:var(--t);line-height:1.1}
+.bs{font-size:9px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:1px}
+.ap{margin-left:auto;font-size:9px;font-weight:700;background:#dbeafe;color:#1d4ed8;padding:2px 6px;border-radius:4px}
+.ns{padding:14px 10px 4px}
+.nl{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:1.2px;padding:0 6px;margin-bottom:4px}
+.ni{display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:7px;cursor:pointer;font-size:13px;font-weight:500;color:var(--t2);margin-bottom:1px;border:1px solid transparent;transition:all .15s;text-decoration:none}
+.ni:hover{background:var(--bg);color:var(--t)}
+.ni.active{background:#f0fdf4;color:#16a34a;border-color:#bbf7d0;font-weight:600}
+.nic{font-size:14px;width:18px;text-align:center}
+.ndot{width:6px;height:6px;border-radius:50%;background:var(--t3);margin-left:auto}
+.ndot.red{background:var(--red)}
+.sf{margin-top:auto;padding:12px 14px;border-top:1px solid var(--b);display:flex;align-items:center;gap:8px;flex-shrink:0}
+.fd{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.ft{font-size:11px;color:var(--t2)}
+.ft strong{font-weight:600;color:var(--t);display:block}
+
+/* MAIN */
+.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column}
+
+/* TOPBAR */
+.tb{background:var(--s);border-bottom:1px solid var(--b);padding:0 28px;height:56px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:40}
+.tt{font-size:15px;font-weight:700}
+.ts{font-size:12px;color:var(--t3)}
+.sep{width:1px;height:20px;background:var(--b)}
+.tr{margin-left:auto;display:flex;align-items:center;gap:8px}
+.bp{background:#16a34a;color:#fff;font-size:12px;font-weight:600;padding:7px 14px;border-radius:7px;cursor:pointer;border:none;display:flex;align-items:center;gap:6px;font-family:'Inter',sans-serif}
+.bs2{background:var(--s);color:var(--t2);font-size:12px;font-weight:500;padding:7px 12px;border-radius:7px;cursor:pointer;border:1px solid var(--b2);font-family:'Inter',sans-serif}
+
+/* TAB BAR */
+.tabbar{background:var(--s);border-bottom:1px solid var(--b);padding:0 28px;display:flex;gap:2px;position:sticky;top:56px;z-index:39}
+.tab{padding:12px 16px;font-size:13px;font-weight:500;color:var(--t2);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
+.tab:hover{color:var(--t)}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:600}
+
+/* CONTENT */
+.content{padding:24px 28px;flex:1}
+.page{display:none}.page.active{display:block}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.g13{display:grid;grid-template-columns:1fr 2.5fr;gap:16px;margin-bottom:16px}
+.g31{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px}
+
+/* KPI ROW */
+.krow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px}
+.kpi{background:var(--s);border:1px solid var(--b);border-radius:var(--r);padding:16px;box-shadow:var(--sh);position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.kpi.kb::before{background:var(--blue)}.kpi.kg::before{background:var(--green)}
+.kpi.kr::before{background:var(--red)}.kpi.ka::before{background:var(--amber)}
+.kpi.kp::before{background:var(--purple)}
+.kl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--t3);margin-bottom:6px}
+.kv{font-size:24px;font-weight:900;color:var(--t);line-height:1;margin-bottom:3px}
+.kv.g{color:var(--green)}.kv.r{color:var(--red)}.kv.a{color:var(--amber)}
+.ks{font-size:11px;color:var(--t3)}
+
+/* CARD */
+.card{background:var(--s);border:1px solid var(--b);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
+.ch{padding:14px 16px;border-bottom:1px solid var(--b);display:flex;align-items:center;gap:8px}
+.ct{font-size:13px;font-weight:700;color:var(--t)}
+.cs{font-size:11px;color:var(--t3);margin-top:1px}
+.cb2{font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px;margin-left:auto}
+.cbb{background:#dbeafe;color:#1d4ed8}.cbg{background:#dcfce7;color:#16a34a}
+.cbr{background:#fee2e2;color:#dc2626}.cba{background:#fef3c7;color:#d97706}
+.cbp{background:#ede9fe;color:#7c3aed}.cbgr{background:#f3f4f6;color:#6b7280}
+.cbody{padding:16px}
+
+/* CHART WRAP */
+.cw{position:relative;padding:16px}
+.cw canvas{max-height:280px}
+.cw.tall canvas{max-height:360px}
+.cw.sm canvas{max-height:200px}
+
+/* WATERFALL */
+.wfall{display:flex;flex-direction:column;gap:0;padding:16px}
+.wrow{display:grid;grid-template-columns:180px 1fr 80px 80px;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid var(--b)}
+.wrow:last-child{border-bottom:none;font-weight:700}
+.wlabel{font-size:12px;color:var(--t2)}
+.wtrack{position:relative;height:18px;background:#f3f4f6;border-radius:4px;overflow:hidden}
+.wbar{height:100%;border-radius:4px;transition:width .5s}
+.wval{font-size:11px;font-family:'JetBrains Mono',monospace;text-align:right;color:var(--t)}
+.wpct{font-size:10px;color:var(--t3);text-align:right}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{padding:8px 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--t3);border-bottom:1px solid var(--b);white-space:nowrap;background:var(--s)}
+.tbl td{padding:8px 10px;border-bottom:1px solid var(--b);white-space:nowrap}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:#f8fafc}
+.tbl tr:nth-child(even) td{background:#fafafa}
+.tbl tr:nth-child(even):hover td{background:#f3f6f9}
+.tmono{font-family:'JetBrains Mono',monospace;font-size:11px;text-align:right}
+.tcenter{text-align:center}
+.tbold{font-weight:700}
+
+/* PILLS */
+.pill{font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;white-space:nowrap;display:inline-block}
+.pg{background:#dcfce7;color:#16a34a}.pb{background:#dbeafe;color:#1d4ed8}
+.pr{background:#fee2e2;color:#dc2626}.pa{background:#fef3c7;color:#d97706}
+.pp{background:#ede9fe;color:#7c3aed}
+.p-erafone{background:#dbeafe;color:#1d4ed8}.p-eramore{background:#ede9fe;color:#7c3aed}
+
+/* RANK LIST */
+.ritem{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--b)}
+.ritem:last-child{border-bottom:none}
+.rnum{width:22px;height:22px;border-radius:6px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--t2);flex-shrink:0}
+.rnum.gold{background:#fef3c7;color:#d97706}.rnum.silver{background:#f3f4f6;color:#6b7280}.rnum.bronze{background:#fef3c7;color:#b45309}
+.rname{font-size:12px;font-weight:600;flex:1;min-width:0;white-space:normal;line-height:1.3}
+.rsub{font-size:10px;color:var(--t3)}
+.rval{font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace;white-space:nowrap}
+.rbar-wrap{flex:1;min-width:60px}
+.rbar-track{height:5px;background:#f3f4f6;border-radius:3px;overflow:hidden}
+.rbar-fill{height:100%;border-radius:3px}
+
+/* SECTION HEADING */
+.sh{font-size:11px;font-weight:700;color:var(--t3);margin-bottom:12px;display:flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:.8px}
+.sh::after{content:'';flex:1;height:1px;background:var(--b)}
+
+/* SCATTER ITEM */
+.scatter-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;padding:16px;max-height:360px;overflow-y:auto}
+.sc-card{border-radius:8px;padding:10px 12px;border:1px solid var(--b)}
+.sc-name{font-size:11px;font-weight:600;margin-bottom:4px;line-height:1.3}
+.sc-row{display:flex;justify-content:space-between;font-size:10px;color:var(--t2);margin-bottom:2px}
+.sc-val{font-family:'JetBrains Mono',monospace;font-size:10px}
+
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--b2);border-radius:3px}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sb">
+  <div class="brand">
+    <div class="bi">EA</div>
+    <div><div class="bn">ERA-ANALYTICS</div><div class="bs">Sales Intelligence</div></div>
+    <span class="ap">AI</span>
+  </div>
+  <div class="ns">
+    <div class="nl">Monitoring</div>
+    <div class="ni" onclick="location.href='ERA_ANALYTICS_Architecture.html'"><span class="nic">📊</span> Dashboard</div>
+    <div class="ni" onclick="location.href='ERA_ANALYTICS_DataToko.html'"><span class="nic">🏪</span> Data Toko</div>
+    <div class="ni"><span class="nic">👤</span> TSH Performance</div>
+    <div class="ni"><span class="nic">📈</span> BEP Tracker</div>
+  </div>
+  <div class="ns">
+    <div class="nl">Analytics</div>
+    <div class="ni active"><span class="nic">🔬</span> P&L Analytics</div>
+    <div class="ni"><span class="nic">📉</span> Trend Analysis</div>
+    <div class="ni" onclick="location.href='ERA_ANALYTICS_Architecture.html'"><span class="nic">🏗️</span> Architecture</div>
+  </div>
+  <div class="ns">
+    <div class="nl">Manage</div>
+    <div class="ni"><span class="nic">📤</span> Upload Data</div>
+    <div class="ni"><span class="nic">📄</span> Reports<span class="ndot red"></span></div>
+    <div class="ni"><span class="nic">⚙️</span> Settings</div>
+  </div>
+  <div class="sf">
+    <div class="fd"></div>
+    <div class="ft"><strong>Analytics Active</strong>ERA-ANALYTICS v1.0</div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="tb">
+    <div>
+      <div class="tt">P&L Analytics</div>
+      <div class="ts">YTD September 2025 · 116 toko · Erafone & ERA & More · Region 5</div>
+    </div>
+    <div class="sep"></div>
+    <div class="tr">
+      <button class="bs2">📥 Sumber: YTD Sep 25</button>
+      <button class="bp">⬇ Export Analytics</button>
+    </div>
+  </div>
+
+  <!-- TAB BAR -->
+  <div class="tabbar">
+    <div class="tab active" onclick="showTab('overview',this)">Overview P&L</div>
+    <div class="tab" onclick="showTab('waterfall',this)">Waterfall P&L</div>
+    <div class="tab" onclick="showTab('stores',this)">Per Toko</div>
+    <div class="tab" onclick="showTab('opex',this)">Opex Breakdown</div>
+    <div class="tab" onclick="showTab('cluster',this)">Cluster Analysis</div>
+  </div>
+
+  <div class="content">
+
+    <!-- ═══════════ TAB 1: OVERVIEW ═══════════ -->
+    <div class="page active" id="pg-overview">
+      <div class="krow">
+        <div class="kpi kb">
+          <div class="kl">Net Sales YTD Sep</div>
+          <div class="kv">964 M</div>
+          <div class="ks">116 toko aktif</div>
+        </div>
+        <div class="kpi kg">
+          <div class="kl">Gross Profit</div>
+          <div class="kv g">84.5 M</div>
+          <div class="ks">GPM 8.8%</div>
+        </div>
+        <div class="kpi ka">
+          <div class="kl">Operating Income</div>
+          <div class="kv a">19.1 M</div>
+          <div class="ks">OPM 2.0%</div>
+        </div>
+        <div class="kpi kr">
+          <div class="kl">Net Income</div>
+          <div class="kv r">-169 Jt</div>
+          <div class="ks">NIM -0.02%</div>
+        </div>
+        <div class="kpi kp">
+          <div class="kl">Profitable Stores</div>
+          <div class="kv" style="color:var(--purple)">45 / 116</div>
+          <div class="ks">71 toko merugi (61%)</div>
+        </div>
+      </div>
+
+      <div class="g2">
+        <!-- DONUT: Profitable vs Loss -->
+        <div class="card">
+          <div class="ch">
+            <div><div class="ct">Profitable vs Loss Stores</div><div class="cs">116 toko · YTD Sep 2025</div></div>
+            <span class="cb2 cbr">61% Rugi</span>
+          </div>
+          <div class="cw sm"><canvas id="chartDonut"></canvas></div>
+          <div style="display:flex;justify-content:space-around;padding:0 16px 16px">
+            <div style="text-align:center"><div style="font-size:22px;font-weight:900;color:var(--green)">45</div><div style="font-size:10px;color:var(--t3)">Profitable</div></div>
+            <div style="text-align:center"><div style="font-size:22px;font-weight:900;color:var(--red)">71</div><div style="font-size:10px;color:var(--t3)">Loss</div></div>
+            <div style="text-align:center"><div style="font-size:22px;font-weight:900;color:var(--t)">116</div><div style="font-size:10px;color:var(--t3)">Total</div></div>
+          </div>
+        </div>
+
+        <!-- BAR: Net Income by Cluster -->
+        <div class="card">
+          <div class="ch">
+            <div><div class="ct">Net Income per Cluster</div><div class="cs">Rp Miliar · YTD Sep 2025</div></div>
+            <span class="cb2 cbgr">4 clusters</span>
+          </div>
+          <div class="cw"><canvas id="chartClusterNI"></canvas></div>
+        </div>
+      </div>
+
+      <div class="g31">
+        <!-- P&L Waterfall Summary -->
+        <div class="card">
+          <div class="ch">
+            <div><div class="ct">P&L Waterfall — Aggregate Region 5</div><div class="cs">Dari Net Sales ke Net Income · YTD Sep 2025</div></div>
+          </div>
+          <div class="wfall" id="waterfallMain"></div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="card">
+          <div class="ch"><div><div class="ct">P&L Ratios</div><div class="cs">% terhadap Net Sales</div></div></div>
+          <div class="cbody">
+            <div style="margin-bottom:14px">
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:12px;color:var(--t2)">Gross Profit Margin</span><span style="font-size:12px;font-weight:700;color:var(--green)">8.8%</span></div>
+              <div style="height:7px;background:#f3f4f6;border-radius:4px;overflow:hidden"><div style="width:8.8%;height:100%;background:var(--green);border-radius:4px"></div></div>
+            </div>
+            <div style="margin-bottom:14px">
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:12px;color:var(--t2)">Selling Expense</span><span style="font-size:12px;font-weight:700;color:var(--red)">8.4%</span></div>
+              <div style="height:7px;background:#f3f4f6;border-radius:4px;overflow:hidden"><div style="width:8.4%;height:100%;background:var(--red);border-radius:4px"></div></div>
+            </div>
+            <div style="margin-bottom:14px">
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:12px;color:var(--t2)">G&A Expense</span><span style="font-size:12px;font-weight:700;color:var(--amber)">1.8%</span></div>
+              <div style="height:7px;background:#f3f4f6;border-radius:4px;overflow:hidden"><div style="width:1.8%;height:100%;background:var(--amber);border-radius:4px"></div></div>
+            </div>
+            <div style="margin-bottom:14px">
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:12px;color:var(--t2)">Operating Income</span><span style="font-size:12px;font-weight:700;color:var(--blue)">2.0%</span></div>
+              <div style="height:7px;background:#f3f4f6;border-radius:4px;overflow:hidden"><div style="width:2%;height:100%;background:var(--blue);border-radius:4px"></div></div>
+            </div>
+            <div style="padding:12px;background:#fef2f2;border-radius:8px;border:1px solid #fecaca;margin-top:8px">
+              <div style="font-size:11px;font-weight:700;color:#dc2626;margin-bottom:4px">⚠ Net Income</div>
+              <div style="font-size:10px;color:#dc2626">Rp -169 Juta (−0.02%)<br>Margin tipis — majority beban HO & Finance Cost</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOP PROFIT & LOSS -->
+      <div class="g2">
+        <div class="card">
+          <div class="ch"><div><div class="ct">Top 10 Toko — Paling Profit</div><div class="cs">Net Income tertinggi · YTD Sep 2025</div></div><span class="cb2 cbg">Profit</span></div>
+          <div class="cbody" style="padding:0 16px">
+            <div id="topProfit"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><div><div class="ct">Top 10 Toko — Paling Merugi</div><div class="cs">Net Income terendah · YTD Sep 2025</div></div><span class="cb2 cbr">Loss</span></div>
+          <div class="cbody" style="padding:0 16px">
+            <div id="topLoss"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ TAB 2: WATERFALL ═══════════ -->
+    <div class="page" id="pg-waterfall">
+      <div class="g2">
+        <div class="card">
+          <div class="ch"><div><div class="ct">Waterfall P&L — Aggregate</div><div class="cs">Region 5 · YTD Sep 2025 · IDR Miliar</div></div></div>
+          <div class="cw tall"><canvas id="chartWaterfall"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="ch"><div><div class="ct">Opex Composition</div><div class="cs">% terhadap Net Sales</div></div></div>
+          <div class="cw tall"><canvas id="chartOpexPie"></canvas></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><div><div class="ct">P&L Detail — Semua Toko</div><div class="cs">Sorted by Net Income · klik header untuk sort</div></div><span class="cb2 cbgr" id="wfCount">116 toko</span></div>
+        <div style="overflow-x:auto;max-height:420px;overflow-y:auto">
+          <table class="tbl" id="tblWaterfall">
+            <thead>
+              <tr>
+                <th>Kode</th><th>Nama Toko</th><th>Channel</th>
+                <th style="text-align:right">Net Sales</th>
+                <th style="text-align:right">Gross Profit</th>
+                <th style="text-align:right">%GP</th>
+                <th style="text-align:right">Total OPEX</th>
+                <th style="text-align:right">Oper Income</th>
+                <th style="text-align:right">Net Income</th>
+                <th style="text-align:right">%NI</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="wfBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ TAB 3: PER TOKO ═══════════ -->
+    <div class="page" id="pg-stores">
+      <div style="display:flex;gap:8px;margin-bottom:16px;align-items:center">
+        <select id="storeSelect" style="padding:7px 12px;border:1px solid var(--b2);border-radius:7px;font-size:12px;font-family:'Inter',sans-serif;background:var(--s);color:var(--t);min-width:300px" onchange="loadStore()">
+          <option value="">— Pilih Toko —</option>
+        </select>
+        <span style="font-size:12px;color:var(--t3)">atau klik toko dari tabel di bawah</span>
+      </div>
+
+      <div id="storeDetail" style="display:none">
+        <div class="g3" id="storeKPI"></div>
+        <div class="g2">
+          <div class="card"><div class="ch"><div><div class="ct">P&L Waterfall — Toko Terpilih</div></div></div><div class="cw"><canvas id="chartStorePL"></canvas></div></div>
+          <div class="card"><div class="ch"><div><div class="ct">Revenue Trend 2022–2026</div></div></div><div class="cw"><canvas id="chartStoreTrend"></canvas></div></div>
+        </div>
+        <div class="card"><div class="ch"><div><div class="ct">Opex Breakdown — Toko Terpilih</div></div></div><div class="cw sm"><canvas id="chartStoreOpex"></canvas></div></div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="ch"><div><div class="ct">Semua Toko — Klik untuk Detail</div><div class="cs">Sorted by Net Income</div></div></div>
+        <div style="overflow-x:auto;max-height:380px;overflow-y:auto">
+          <table class="tbl">
+            <thead><tr><th>#</th><th>Kode</th><th>Nama Toko</th><th>Channel</th><th>Type</th><th style="text-align:right">Net Sales</th><th style="text-align:right">GP%</th><th style="text-align:right">Net Income</th><th style="text-align:right">NI%</th><th>Status</th></tr></thead>
+            <tbody id="storeListBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ TAB 4: OPEX ═══════════ -->
+    <div class="page" id="pg-opex">
+      <div class="g2">
+        <div class="card">
+          <div class="ch"><div><div class="ct">Opex Breakdown — Aggregate</div><div class="cs">% Net Sales · YTD Sep 2025</div></div></div>
+          <div class="cw tall"><canvas id="chartOpexBar"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="ch"><div><div class="ct">Salaries vs Revenue per Toko</div><div class="cs">Beban gaji / Net Sales · top 20 toko</div></div></div>
+          <div class="cw tall"><canvas id="chartSalary"></canvas></div>
+        </div>
+      </div>
+      <div class="g2">
+        <div class="card">
+          <div class="ch"><div><div class="ct">Top 15 — Beban OPEX Tertinggi</div><div class="cs">% terhadap Net Sales per toko</div></div></div>
+          <div class="cbody" style="padding:0 16px"><div id="topOpex"></div></div>
+        </div>
+        <div class="card">
+          <div class="ch"><div><div class="ct">Top 15 — OPEX Paling Efisien</div><div class="cs">% terhadap Net Sales per toko</div></div></div>
+          <div class="cbody" style="padding:0 16px"><div id="lowOpex"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ TAB 5: CLUSTER ═══════════ -->
+    <div class="page" id="pg-cluster">
+      <div class="g4" id="clusterCards"></div>
+      <div class="g2">
+        <div class="card">
+          <div class="ch"><div><div class="ct">Net Sales vs Net Income per Cluster</div><div class="cs">Bubble size = jumlah toko</div></div></div>
+          <div class="cw tall"><canvas id="chartClusterScatter"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="ch"><div><div class="ct">GP Margin per Cluster</div><div class="cs">% Gross Profit terhadap Net Sales</div></div></div>
+          <div class="cw tall"><canvas id="chartClusterGP"></canvas></div>
+        </div>
+      </div>
+      <div class="g2" id="clusterTables"></div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+const PNL = [{"code":"E027","name":"ERAFONE DAAN MOGOT MALL","category":"ERAFONE","type":"MALL","city":"KODYA JAKARTA BARAT","net_sales":16344442541,"gross_profit":1498296215,"adv_promo":-37457322,"salaries":-427685992,"total_se":-952128709,"total_ga":-102792696,"total_opex":-893457577,"operating_income":917936783,"net_income":572565916,"net_income_final":499480464,"pct_gp":9.2,"pct_oi":5.6,"pct_ni":3.5,"profitable":true,"y22":25095038474,"y23":25621641346,"y24":19837275779,"y25":24037801953,"y26":9280168555,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":80,"tsh":"IRMAN PERMANA","yoy":21.2},{"code":"E028","name":"ERAFONE MAL PURI INDAH","category":"ERAFONE","type":"MALL","city":"KODYA JAKARTA BARAT","net_sales":20499870147,"gross_profit":1873257043,"adv_promo":-8086000,"salaries":-514199172,"total_se":-1557421096,"total_ga":-39761080,"total_opex":-1474444246,"operating_income":913259114,"net_income":479654714,"net_income_final":387987942,"pct_gp":9.1,"pct_oi":4.5,"pct_ni":2.3,"profitable":true,"y22":23255277729,"y23":28839340914,"y24":26188879861,"y25":30337012816,"y26":10383175750,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":77,"tsh":"FEBRIAN TRI WIBOWO","yoy":15.8},{"code":"E029","name":"ERAFONE LIPPO MALL PURI","category":"ERAFONE","type":"MALL","city":"KODYA JAKARTA BARAT","net_sales":26972498778,"gross_profit":2478461722,"adv_promo":-5361000,"salaries":-529289749,"total_se":-1792750386,"total_ga":-90713461,"total_opex":-1738534102,"operating_income":1468750721,"net_income":865954398,"net_income_final":745344761,"pct_gp":9.2,"pct_oi":5.4,"pct_ni":3.2,"profitable":true,"y22":35598346862,"y23":39619412238,"y24":34550519269,"y25":39633426122,"y26":14125163076,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":77,"tsh":"FEBRIAN TRI WIBOWO","yoy":14.7},{"code":"E037","name":"ERAFONE GAJAH MADA PLAZA","category":"ERAFONE","type":"MALL","city":"KODYA JAKARTA PUSAT","net_sales":7373447727,"gross_profit":647781288,"adv_promo":-4143122,"salaries":-354767589,"total_se":-829621534,"total_ga":-128318928,"total_opex":-864262921,"operating_income":-42488035,"net_income":-211462345,"net_income_final":-244433293,"pct_gp":8.8,"pct_oi":-0.6,"pct_ni":-2.9,"profitable":false,"y22":9640607029,"y23":8304716068,"y24":9864175728,"y25":10551464733,"y26":3955440675,"bep":0,"bep_reached":true,"cluster":"STABLE","health":73,"tsh":"MENSI ALEXANDER","yoy":7.0},{"code":"E038","name":"ERAFONE MALL ATRIUM SENEN","category":"ERAFONE","type":"MALL","city":"KODYA JAKARTA PUSAT","net_sales":7655227844,"gross_profit":748872664,"adv_promo":-3449000,"salaries":-336993565,"total_se":-699243532,"total_ga":-91050568,"total_opex":-642852900,"operating_income":269220998,"net_income":90994581,"net_income_final":56763631,"pct_gp":9.8,"pct_oi":3.5,"pct_ni":1.2,"profitable":true,"y22":9831287475,"y23":8895259676,"y24":9198893833,"y25":10680428032,"y26":3008907001,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":78,"tsh":"LUKMAN WIBOWO","yoy":16.1},{"code":"E043","name":"ERAFONE PLAZA BINTARO JAYA","category":"ERAFONE","type":"MALL","city":"KOTA TANGERANG SELATAN","net_sales":12654601085,"gross_profit":1124210171,"adv_promo":-5099000,"salaries":-463510663,"total_se":-918749861,"total_ga":-58838818,"total_opex":-883598135,"operating_income":527652139,"net_income":263543211,"net_income_final":206957173,"pct_gp":8.9,"pct_oi":4.2,"pct_ni":2.1,"profitable":true,"y22":15111945024,"y23":17865969536,"y24":16994424948,"y25":18221220296,"y26":6850877989,"bep":0,"bep_reached":true,"cluster":"STABLE","health":73,"tsh":"ARENGGA","yoy":7.2},{"code":"E047","name":"ERAFONE 1 ITC CEMPAKA MAS","category":"ERAFONE","type":"MALL","city":"KODYA JAKARTA PUSAT","net_sales":4517541607,"gross_profit":358637072,"adv_promo":0,"salaries":-294074742,"total_se":-511818286,"total_ga":-64038135,"total_opex":-517296232,"operating_income":-34220506,"net_income":-117481273,"net_income_final":-137681814,"pct_gp":7.9,"pct_oi":-0.8,"pct_ni":-2.6,"profitable":false,"y22":9451687977,"y23":6578814372,"y24":5334482769,"y25":7534481632,"y26":3648074581,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":80,"tsh":"LUKMAN WIBOWO","yoy":41.2},{"code":"E081","name":"ERAFONE MALL OF SERANG","category":"ERAFONE","type":"MALL","city":"KOTA SERANG","net_sales":14446364281,"gross_profit":1273939578,"adv_promo":-5314000,"salaries":-412353181,"total_se":-819921437,"total_ga":-154122078,"total_opex":-879228265,"operating_income":717728806,"net_income":451474394,"net_income_final":386876347,"pct_gp":8.8,"pct_oi":5.0,"pct_ni":3.1,"profitable":true,"y22":10090846807,"y23":10538004280,"y24":13958729970,"y25":21448263293,"y26":7761646023,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":80,"tsh":"NURUL ZAMAN","yoy":53.7},{"code":"E082","name":"ERAFONE LIVING WORLD ALAM SUTE","category":"ERAFONE","type":"MALL","city":"KOTA TANGERANG SELATAN","net_sales":13364908204,"gross_profit":1143129957,"adv_promo":-5328322,"salaries":-396362436,"total_se":-1186220560,"total_ga":-76941405,"total_opex":-1155041618,"operating_income":324155839,"net_income":2191936,"net_income_final":-57570295,"pct_gp":8.6,"pct_oi":2.4,"pct_ni":0.0,"profitable":true,"y22":15583037188,"y23":20225866610,"y24":16111075949,"y25":19333725731,"y26":6576622222,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":80,"tsh":"EKA FUJI CHAERUL ANWAR","yoy":20.0},{"code":"E084","name":"ERAFONE 1 SUPERMALL KARAWACI","category":"ERAFONE","type":"MALL","city":"TANGERANG","net_sales":20186407237,"gross_profit":1717815781,"adv_promo":-7977000,"salaries":-440026544,"total_se":-1810355570,"total_ga":-46244011,"total_opex":-1697453604,"operating_income":558521222,"net_income":135184077,"net_income_final":44918979,"pct_gp":8.5,"pct_oi":2.8,"pct_ni":0.7,"profitable":true,"y22":28540956579,"y23":31748725940,"y24":29559135200,"y25":29083282582,"y26":10492521191,"bep":0,"bep_reached":true,"cluster":"STABLE","health":70,"tsh":"SANDI MAULANA","yoy":-1.6},{"code":"E087","name":"ERAFONE ITC BSD","category":"ERAFONE","type":"MALL","city":"KOTA TANGERANG SELATAN","net_sales":7378630346,"gross_profit":678559458,"adv_promo":-6707000,"salaries":-332047718,"total_se":-590887782,"total_ga":-85809570,"total_opex":-612243498,"operating_income":242328749,"net_income":106336547,"net_income_final":73342425,"pct_gp":9.2,"pct_oi":3.3,"pct_ni":1.4,"profitable":true,"y22":12852070100,"y23":11526572555,"y24":9777152699,"y25":10631889148,"y26":3255166964,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":74,"tsh":"EKA FUJI CHAERUL ANWAR","yoy":8.7},{"code":"E088","name":"ERAFONE AEON MAL BSD CITY","category":"ERAFONE","type":"MALL","city":"TANGERANG","net_sales":18719735283,"gross_profit":1687774201,"adv_promo":-7214000,"salaries":-449270966,"total_se":-1209843569,"total_ga":-50497548,"total_opex":-1154560139,"operating_income":976217959,"net_income":618991269,"net_income_final":535284510,"pct_gp":9.0,"pct_oi":5.2,"pct_ni":3.3,"profitable":true,"y22":23402882311,"y23":26750010880,"y24":21672308549,"y25":27680330798,"y26":9791206825,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":80,"tsh":"EKA FUJI CHAERUL ANWAR","yoy":27.7},{"code":"E089","name":"ERAFONE LOTTEMART II BINTARO","category":"ERAFONE","type":"MALL","city":"KOTA TANGERANG SELATAN","net_sales":3991689272,"gross_profit":348779597,"adv_promo":-4350000,"salaries":-289249594,"total_se":-582334255,"total_ga":-74568386,"total_opex":-591435620,"operating_income":-128454318,"net_income":-202023339,"net_income_final":-219872489,"pct_gp":8.7,"pct_oi":-3.2,"pct_ni":-5.1,"profitable":false,"y22":12449805816,"y23":10227247463,"y24":8441300543,"y25":4004395974,"y26":0,"bep":0,"bep_reached":true,"cluster":"RECOVERY","health":44,"tsh":"Close","yoy":-52.6},{"code":"E096","name":"ERAFONE 2 ITC ROXY MAS","category":"ERAFONE","type":"MALL","city":"KODYA JAKARTA PUSAT","net_sales":3914223439,"gross_profit":366465346,"adv_promo":-149000,"salaries":-262994478,"total_se":-504459603,"total_ga":-25546059,"total_opex":-474328122,"operating_income":-37583409,"net_income":-109724692,"net_income_final":-127227448,"pct_gp":9.4,"pct_oi":-1.0,"pct_ni":-2.8,"profitable":false,"y22":8293404789,"y23":4987622746,"y24":3786017691,"y25":6168448261,"y26":2078211315,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":60,"tsh":"MENSI ALEXANDER","yoy":62.9},{"code":"E113","name":"ERAFONE GRAND INDONESIA","category":"ERAFONE","type":"MALL","city":"KODYA JAKARTA PUSAT","net_sales":23802458515,"gross_profit":2174391145,"adv_promo":-2048000,"salaries":-559784615,"total_se":-1750860978,"total_ga":-137931113,"total_opex":-1452061727,"operating_income":1362157936,"net_income":853005411,"net_income_final":746570857,"pct_gp":9.1,"pct_oi":5.7,"pct_ni":3.6,"profitable":true,"y22":30511078102,"y23":38997606017,"y24":34275278013,"y25":34884041499,"y26":10953555167,"bep":0,"bep_reached":true,"cluster":"STABLE","health":70,"tsh":"LUKMAN WIBOWO","yoy":1.8},{"code":"E119","name":"ERAFONE TANGERANG CITY MALL","category":"ERAFONE","type":"MALL","city":"KOTA TANGERANG","net_sales":28864601076,"gross_profit":2326005653,"adv_promo":-5794000,"salaries":-539649756,"total_se":-1187883168,"total_ga":-127117338,"total_opex":-1209458988,"operating_income":1859305649,"net_income":1308208430,"net_income_final":1179138110,"pct_gp":8.1,"pct_oi":6.4,"pct_ni":4.5,"profitable":true,"y22":22566444459,"y23":34068065000,"y24":34181093015,"y25":41379320281,"y26":13447050479,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":80,"tsh":"ARI HIDAYAT","yoy":21.1},{"code":"E137","name":"ERAFONE GREEN PRAMUKA SQUARE","category":"ERAFONE","type":"MALL","city":"KODYA JAKARTA PUSAT","net_sales":11990661931,"gross_profit":1150332728,"adv_promo":-6077322,"salaries":-522142323,"total_se":-1038067072,"total_ga":-143262887,"total_opex":-1063484528,"operating_income":326015309,"net_income":68773034,"net_income_final":15155852,"pct_gp":9.6,"pct_oi":2.7,"pct_ni":0.6,"profitable":true,"y22":15009973171,"y23":18872799510,"y24":16685353460,"y25":16901155991,"y26":5712820620,"bep":0,"bep_reached":true,"cluster":"STABLE","health":70,"tsh":"LUKMAN WIBOWO","yoy":1.3},{"code":"E150","name":"ERAFONE CILEGON CENTER MALL","category":"ERAFONE","type":"MALL","city":"KOTA CILEGON","net_sales":17397158589,"gross_profit":1573240804,"adv_promo":-7082715,"salaries":-483032305,"total_se":-930152553,"total_ga":-94824895,"total_opex":-923992308,"operating_income":1063974347,"net_income":712759632,"net_income_final":634966877,"pct_gp":9.0,"pct_oi":6.1,"pct_ni":4.1,"profitable":true,"y22":15013823439,"y23":17077873645,"y24":20794440331,"y25":25300646685,"y26":10646703793,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":80,"tsh":"NURUL ZAMAN","yoy":21.7},{"code":"E158","name":"ERAFONE MAL CIPUTRA JAKARTA","category":"ERAFONE","type":"MALL","city":"KODYA JAKARTA BARAT","net_sales":9155475537,"gross_profit":818096731,"adv_promo":-7200000,"salaries":-367027681,"total_se":-769084636,"total_ga":-37590801,"total_opex":-732953887,"operating_income":287209169,"net_income":107988468,"net_income_final":67049044,"pct_gp":8.9,"pct_oi":3.1,"pct_ni":1.2,"profitable":true,"y22":13800266537,"y23":14541128970,"y24":11952287398,"y25":13638890466,"y26":4328515415,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":77,"tsh":"RENDY NUR SETIAWAN","yoy":14.1},{"code":"E160","name":"ERAFONE RUKO CEGER TANGERANG","category":"ERAFONE","type":"STREET","city":"KOTA TANGERANG SELATAN","net_sales":9554226943,"gross_profit":827962998,"adv_promo":-3613000,"salaries":-409570364,"total_se":-771428302,"total_ga":-45539411,"total_opex":-733385825,"operating_income":304582505,"net_income":128492865,"net_income_final":85770393,"pct_gp":8.7,"pct_oi":3.2,"pct_ni":1.3,"profitable":true,"y22":16479172066,"y23":14196387063,"y24":11427906875,"y25":13437671514,"y26":3911980180,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":78,"tsh":"ARENGGA","yoy":17.6},{"code":"E164","name":"ERAFONE MAL TAMAN ANGGREK","category":"ERAFONE","type":"MALL","city":"KODYA JAKARTA BARAT","net_sales":20460389049,"gross_profit":1846667352,"adv_promo":-10943923,"salaries":-549956523,"total_se":-1823632000,"total_ga":-121297426,"total_opex":-1776225313,"operating_income":515601337,"net_income":26329028,"net_income_final":-65161200,"pct_gp":9.0,"pct_oi":2.5,"pct_ni":0.1,"profitable":true,"y22":25446619060,"y23":30249316370,"y24":25921231449,"y25":28578832218,"y26":8231429958,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":55,"tsh":"RENDY NUR SETIAWAN","yoy":10.3},{"code":"E172","name":"ERAFONE RUKO KEBON JERUK BINUS","category":"ERAFONE","type":"STREET","city":"KODYA JAKARTA BARAT","net_sales":17377508435,"gross_profit":1569332484,"adv_promo":-10377000,"salaries":-472012650,"total_se":-816481370,"total_ga":-118670996,"total_opex":-850350528,"operating_income":1084102010,"net_income":763825005,"net_income_final":686120117,"pct_gp":9.0,"pct_oi":6.2,"pct_ni":4.4,"profitable":true,"y22":19254351929,"y23":19563714995,"y24":22866133165,"y25":24186747331,"y26":6989082988,"bep":0,"bep_reached":true,"cluster":"STABLE","health":72,"tsh":"RENDY NUR SETIAWAN","yoy":5.8},{"code":"E191","name":"ERAFONE RUKO SURYA KENCANA PAM","category":"ERAFONE","type":"STREET","city":"KOTA TANGERANG SELATAN","net_sales":8647618361,"gross_profit":727682743,"adv_promo":-14899000,"salaries":-397261406,"total_se":-597550010,"total_ga":-47110918,"total_opex":-581749209,"operating_income":363911562,"net_income":204531215,"net_income_final":165862714,"pct_gp":8.4,"pct_oi":4.2,"pct_ni":2.4,"profitable":true,"y22":16964061096,"y23":14800291695,"y24":10428429285,"y25":12261046596,"y26":5061452239,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":78,"tsh":"EKA FUJI CHAERUL ANWAR","yoy":17.6},{"code":"E194","name":"ERAFONE RUKO RANGKASBITUNG","category":"ERAFONE","type":"STREET","city":"LEBAK","net_sales":12231587085,"gross_profit":1139904491,"adv_promo":-4696000,"salaries":-327028255,"total_se":-517457204,"total_ga":-63787900,"total_opex":-523332870,"operating_income":886744056,"net_income":661309202,"net_income_final":606614704,"pct_gp":9.3,"pct_oi":7.2,"pct_ni":5.4,"profitable":true,"y22":9219125268,"y23":11497694509,"y24":12144971466,"y25":18204405226,"y26":7258845189,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":80,"tsh":"NURUL ZAMAN","yoy":49.9},{"code":"E201","name":"ERAFONE RUKO KRESEK BALARAJA","category":"ERAFONE","type":"STREET","city":"TANGERANG","net_sales":7121703468,"gross_profit":664475970,"adv_promo":-13303000,"salaries":-378012369,"total_se":-554346856,"total_ga":-170318046,"total_opex":-650627177,"operating_income":168783370,"net_income":35564632,"net_income_final":3719379,"pct_gp":9.3,"pct_oi":2.4,"pct_ni":0.5,"profitable":true,"y22":9641905185,"y23":12055596734,"y24":12028279291,"y25":9833448140,"y26":3167210095,"bep":0,"bep_reached":true,"cluster":"RECOVERY","health":61,"tsh":"RENDI JANUARDI","yoy":-18.2},{"code":"E209","name":"ERAFONE RUKO AHMAD YANI SERANG","category":"ERAFONE","type":"STREET","city":"KOTA SERANG","net_sales":16158475144,"gross_profit":1399374539,"adv_promo":-2645000,"salaries":-431327276,"total_se":-714388918,"total_ga":-185781556,"total_opex":-806040815,"operating_income":974714261,"net_income":674168894,"net_income_final":601915010,"pct_gp":8.7,"pct_oi":6.0,"pct_ni":4.2,"profitable":true,"y22":14306723017,"y23":15806820724,"y24":17345084908,"y25":23267137799,"y26":8622112451,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":80,"tsh":"NURUL ZAMAN","yoy":34.1},{"code":"E215","name":"ERAFONE GREEN SEDAYU MALL","category":"ERAFONE","type":"MALL","city":"KODYA JAKARTA BARAT","net_sales":11643571910,"gross_profit":1037965054,"adv_promo":-4213000,"salaries":-368255524,"total_se":-855209276,"total_ga":-74177173,"total_opex":-546368055,"operating_income":760167955,"net_income":532401705,"net_income_final":480336564,"pct_gp":8.9,"pct_oi":6.5,"pct_ni":4.6,"profitable":true,"y22":13241111225,"y23":16559719164,"y24":13638046252,"y25":17489338837,"y26":6865567839,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":80,"tsh":"IRMAN PERMANA","yoy":28.2},{"code":"E216","name":"ERAFONE SENAYAN PARK MALL","category":"ERAFONE","type":"MALL","city":"KODYA JAKARTA PUSAT","net_sales":2504218640,"gross_profit":216729250,"adv_promo":-950000,"salaries":-300243238,"total_se":-878770265,"total_ga":-41033231,"total_opex":-819710229,"operating_income":-544705641,"net_income":-590859763,"net_income_final":-602057572,"pct_gp":8.7,"pct_oi":-21.8,"pct_ni":-23.6,"profitable":false,"y22":2652862282,"y23":3459821394,"y24":3247059835,"y25":3768079563,"y26":1412837408,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":58,"tsh":"MENSI ALEXANDER","yoy":16.0},{"code":"E231","name":"ERAFONE RUKO HOS COKROAMINOTO","category":"ERAFONE","type":"STREET","city":"KOTA TANGERANG","net_sales":11007813757,"gross_profit":726182243,"adv_promo":-11294000,"salaries":-339805157,"total_se":-680007921,"total_ga":-155303005,"total_opex":-752139584,"operating_income":203987139,"net_income":-10517004,"net_income_final":-59739304,"pct_gp":6.6,"pct_oi":1.9,"pct_ni":-0.1,"profitable":false,"y22":22015286610,"y23":15764854174,"y24":13295382073,"y25":15600542807,"y26":5619582085,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":78,"tsh":"ABDILLAH","yoy":17.3},{"code":"E245","name":"ERAFONE RUKO BENDA RAYA PAMULA","category":"ERAFONE","type":"STREET","city":"KOTA TANGERANG SELATAN","net_sales":4503433095,"gross_profit":384044123,"adv_promo":-7943000,"salaries":-338914686,"total_se":-529380528,"total_ga":-166575178,"total_opex":-624776495,"operating_income":-130397653,"net_income":-213398393,"net_income_final":-233535846,"pct_gp":8.5,"pct_oi":-2.9,"pct_ni":-4.7,"profitable":false,"y22":13998318788,"y23":10711639011,"y24":7872713196,"y25":6347739417,"y26":1670914102,"bep":0,"bep_reached":true,"cluster":"RECOVERY","health":61,"tsh":"EKA FUJI CHAERUL ANWAR","yoy":-19.4},{"code":"E251","name":"ERAFONE RUKO CIMONE TANGERANG","category":"ERAFONE","type":"STREET","city":"KOTA TANGERANG","net_sales":3507215395,"gross_profit":244571306,"adv_promo":-5631000,"salaries":-297624017,"total_se":-447068240,"total_ga":-118837617,"total_opex":-511917033,"operating_income":-188777038,"net_income":-253416939,"net_income_final":-269099727,"pct_gp":7.0,"pct_oi":-5.4,"pct_ni":-7.2,"profitable":false,"y22":4851689045,"y23":5944582713,"y24":4729306656,"y25":5115972227,"y26":1786530761,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":54,"tsh":"ARI HIDAYAT","yoy":8.2},{"code":"E253","name":"ERAFONE RUKO CURUG TANGERANG","category":"ERAFONE","type":"STREET","city":"TANGERANG","net_sales":5229716277,"gross_profit":473065375,"adv_promo":-5313000,"salaries":-318601930,"total_se":-500398759,"total_ga":-139389132,"total_opex":-574615670,"operating_income":10140072,"net_income":-86246465,"net_income_final":-109631550,"pct_gp":9.0,"pct_oi":0.2,"pct_ni":-1.6,"profitable":false,"y22":5722428940,"y23":8378817147,"y24":6640613629,"y25":7261459905,"y26":2666259606,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":74,"tsh":"RENDI JANUARDI","yoy":9.3},{"code":"E259","name":"ERAFONE RUKO KELAPA DUA TANGER","category":"ERAFONE","type":"STREET","city":"TANGERANG","net_sales":3376752388,"gross_profit":281197153,"adv_promo":-11312000,"salaries":-351245002,"total_se":-512488240,"total_ga":-157297440,"total_opex":-603294101,"operating_income":-241513748,"net_income":-303749145,"net_income_final":-318848557,"pct_gp":8.3,"pct_oi":-7.2,"pct_ni":-9.0,"profitable":false,"y22":7302990834,"y23":7335586118,"y24":5370499575,"y25":4456118506,"y26":908946437,"bep":0,"bep_reached":true,"cluster":"RECOVERY","health":62,"tsh":"SANDI MAULANA","yoy":-17.0},{"code":"E281","name":"ERAFONE SENAYAN CITY 3.0","category":"ERAFONE","type":"MALL","city":"KODYA JAKARTA PUSAT","net_sales":19303221260,"gross_profit":1495402901,"adv_promo":-8585930,"salaries":-464997548,"total_se":-1878775470,"total_ga":-331221345,"total_opex":-2002518463,"operating_income":137322621,"net_income":-253131989,"net_income_final":-339447852,"pct_gp":7.7,"pct_oi":0.7,"pct_ni":-1.3,"profitable":false,"y22":21859012618,"y23":23167591798,"y24":21983471846,"y25":31285211751,"y26":10380461114,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":80,"tsh":"MENSI ALEXANDER","yoy":42.3},{"code":"E299","name":"ERAFONE RUKO CIRENDEU","category":"ERAFONE","type":"STREET","city":"KOTA TANGERANG SELATAN","net_sales":4040064202,"gross_profit":383859257,"adv_promo":-8688237,"salaries":-319302347,"total_se":-487405699,"total_ga":-70907754,"total_opex":-504175807,"operating_income":-26709817,"net_income":-101170414,"net_income_final":-119235877,"pct_gp":9.5,"pct_oi":-0.7,"pct_ni":-2.5,"profitable":false,"y22":7456143799,"y23":7443301799,"y24":6365090193,"y25":5633353767,"y26":1734898771,"bep":0,"bep_reached":true,"cluster":"RECOVERY","health":65,"tsh":"ARENGGA","yoy":-11.5},{"code":"E308","name":"ERAFONE RUKO MAYOR SAFEI","category":"ERAFONE","type":"STREET","city":"KOTA SERANG","net_sales":8379295747,"gross_profit":724239426,"adv_promo":-5973000,"salaries":-372701373,"total_se":-529000929,"total_ga":-75454610,"total_opex":-543253622,"operating_income":381320376,"net_income":226885362,"net_income_final":189416686,"pct_gp":8.6,"pct_oi":4.6,"pct_ni":2.7,"profitable":true,"y22":7625642149,"y23":9698098851,"y24":10116634304,"y25":12329091375,"y26":4517406942,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":80,"tsh":"NURUL ZAMAN","yoy":21.9},{"code":"E320","name":"ERAFONE RUKO PANDEGLANG","category":"ERAFONE","type":"STREET","city":"PANDEGLANG","net_sales":7817350467,"gross_profit":735363772,"adv_promo":-8468000,"salaries":-261094638,"total_se":-363578265,"total_ga":-172127061,"total_opex":-480905504,"operating_income":422222355,"net_income":278144301,"net_income_final":243188407,"pct_gp":9.4,"pct_oi":5.4,"pct_ni":3.6,"profitable":true,"y22":4979228586,"y23":6725490902,"y24":9127726126,"y25":10691097009,"y26":3670402376,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":78,"tsh":"NURUL ZAMAN","yoy":17.1},{"code":"E321","name":"ERAFONE RUKO SUDIMARA","category":"ERAFONE","type":"STREET","city":"KOTA TANGERANG SELATAN","net_sales":8299150660,"gross_profit":826075211,"adv_promo":-6324000,"salaries":-424906736,"total_se":-612081741,"total_ga":-98705282,"total_opex":-640510928,"operating_income":351661573,"net_income":198703677,"net_income_final":161593376,"pct_gp":10.0,"pct_oi":4.2,"pct_ni":2.4,"profitable":true,"y22":10307350618,"y23":11028659443,"y24":10575252509,"y25":11870197318,"y26":3790772656,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":76,"tsh":"ARENGGA","yoy":12.2},{"code":"E322","name":"ERAFONE RUKO MERUYA","category":"ERAFONE","type":"STREET","city":"KODYA JAKARTA BARAT","net_sales":6803309872,"gross_profit":623125050,"adv_promo":-3635000,"salaries":-386166610,"total_se":-568300915,"total_ga":-168054632,"total_opex":-666095165,"operating_income":107735893,"net_income":-17652836,"net_income_final":-48074368,"pct_gp":9.2,"pct_oi":1.6,"pct_ni":-0.3,"profitable":false,"y22":11764000481,"y23":10477950063,"y24":10484891503,"y25":9273684081,"y26":2878202309,"bep":0,"bep_reached":true,"cluster":"RECOVERY","health":65,"tsh":"FEBRIAN TRI WIBOWO","yoy":-11.6},{"code":"E336","name":"ERAFONE RUKO RADEN FATAH CILED","category":"ERAFONE","type":"STREET","city":"KOTA TANGERANG","net_sales":4004579567,"gross_profit":364667475,"adv_promo":-6543000,"salaries":-283045026,"total_se":-395070486,"total_ga":-185601903,"total_opex":-525977480,"operating_income":-82412883,"net_income":-156219479,"net_income_final":-174126269,"pct_gp":9.1,"pct_oi":-2.1,"pct_ni":-3.9,"profitable":false,"y22":7031185707,"y23":7203489703,"y24":5315315286,"y25":4008366950,"y26":0,"bep":0,"bep_reached":true,"cluster":"RECOVERY","health":58,"tsh":"Close","yoy":-24.6},{"code":"E347","name":"ERAFONE RUKO JELAMBAR BARU","category":"ERAFONE","type":"STREET","city":"KODYA JAKARTA BARAT","net_sales":3640817309,"gross_profit":330542749,"adv_promo":-5520000,"salaries":-316093095,"total_se":-498298175,"total_ga":-139201788,"total_opex":-578654714,"operating_income":-177225257,"net_income":-244327515,"net_income_final":-260607714,"pct_gp":9.1,"pct_oi":-4.9,"pct_ni":-6.7,"profitable":false,"y22":5656697362,"y23":5886791987,"y24":6079244517,"y25":3659006993,"y26":0,"bep":0,"bep_reached":true,"cluster":"RECOVERY","health":51,"tsh":"Close","yoy":-39.8},{"code":"E381","name":"ERAFONE RUKO PETA BARAT JAKBAR","category":"ERAFONE","type":"STREET","city":"KODYA JAKARTA BARAT","net_sales":7871197785,"gross_profit":688113343,"adv_promo":-5143000,"salaries":-413201772,"total_se":-555108655,"total_ga":-134016461,"total_opex":-620535917,"operating_income":230139536,"net_income":85069046,"net_income_final":49872370,"pct_gp":8.7,"pct_oi":2.9,"pct_ni":1.1,"profitable":true,"y22":2727261722,"y23":11240084737,"y24":10391019629,"y25":10907143092,"y26":2969804122,"bep":0,"bep_reached":true,"cluster":"STABLE","health":72,"tsh":"IRMAN PERMANA","yoy":5.0},{"code":"E391","name":"ERAFONE RUKO SUPRATMAN CIPUTAT","category":"ERAFONE","type":"STREET","city":"KOTA TANGERANG SELATAN","net_sales":6782642200,"gross_profit":606274805,"adv_promo":-9547000,"salaries":-359019137,"total_se":-523110692,"total_ga":-168031291,"total_opex":-621600375,"operating_income":140376022,"net_income":15368208,"net_income_final":-14960905,"pct_gp":8.9,"pct_oi":2.1,"pct_ni":0.2,"profitable":true,"y22":3103446696,"y23":7494665555,"y24":8329811555,"y25":8735663598,"y26":1892978617,"bep":0,"bep_reached":true,"cluster":"STABLE","health":72,"tsh":"ARENGGA","yoy":4.9},{"code":"E413","name":"ERAFONE RUKO KEDOYA","category":"ERAFONE","type":"STREET","city":"KODYA JAKARTA BARAT","net_sales":8081083662,"gross_profit":760765104,"adv_promo":-4668000,"salaries":-363108242,"total_se":-579338716,"total_ga":-178647996,"total_opex":-687635616,"operating_income":237981378,"net_income":89042576,"net_income_final":52907379,"pct_gp":9.4,"pct_oi":2.9,"pct_ni":1.1,"profitable":true,"y22":4589218857,"y23":9926521140,"y24":12106896657,"y25":11617522632,"y26":3920495119,"bep":0,"bep_reached":true,"cluster":"STABLE","health":68,"tsh":"FEBRIAN TRI WIBOWO","yoy":-4.0},{"code":"E414","name":"ERAFONE RUKO PERCETAKAN NEGARA","category":"ERAFONE","type":"STREET","city":"KODYA JAKARTA PUSAT","net_sales":12372991661,"gross_profit":1152635152,"adv_promo":-8972000,"salaries":-477318861,"total_se":-710379346,"total_ga":-154936785,"total_opex":-777538947,"operating_income":613295115,"net_income":385254097,"net_income_final":329927297,"pct_gp":9.3,"pct_oi":5.0,"pct_ni":3.1,"profitable":true,"y22":5264517849,"y23":14845543128,"y24":18672101251,"y25":17802262307,"y26":6094727423,"bep":0,"bep_reached":true,"cluster":"STABLE","health":68,"tsh":"LUKMAN WIBOWO","yoy":-4.7},{"code":"E417","name":"ERAFONE RUKO HASYIM ASYARI CIL","category":"ERAFONE","type":"STREET","city":"KOTA TANGERANG","net_sales":3642640547,"gross_profit":314785110,"adv_promo":-4929951,"salaries":-315351804,"total_se":-452188979,"total_ga":-182665012,"total_opex":-571254481,"operating_income":-185565755,"net_income":-252701616,"net_income_final":-268989968,"pct_gp":8.6,"pct_oi":-5.1,"pct_ni":-6.9,"profitable":false,"y22":2588710952,"y23":7087672041,"y24":8080927479,"y25":5063329107,"y26":1608079389,"bep":0,"bep_reached":true,"cluster":"RECOVERY","health":52,"tsh":"ARI HIDAYAT","yoy":-37.3},{"code":"E419","name":"ERAFONE RUKO RAWA BUNTU","category":"ERAFONE","type":"STREET","city":"0","net_sales":675652727,"gross_profit":61872374,"adv_promo":-345000,"salaries":-92709563,"total_se":-228007915,"total_ga":-394911142,"total_opex":-567627955,"operating_income":-483522946,"net_income":-495975596,"net_income_final":-498996830,"pct_gp":9.2,"pct_oi":-71.6,"pct_ni":-73.4,"profitable":false,"y22":2647896482,"y23":5580098757,"y24":3930271686,"y25":676125215,"y26":0,"bep":0,"bep_reached":true,"cluster":"RECOVERY","health":29,"tsh":"Close","yoy":-82.8},{"code":"E420","name":"ERAFONE RUKO CEMPAKA PUTIH","category":"ERAFONE","type":"STREET","city":"KODYA JAKARTA PUSAT","net_sales":3125271370,"gross_profit":273936802,"adv_promo":-3318000,"salaries":-325554330,"total_se":-567189977,"total_ga":-152011522,"total_opex":-650154139,"operating_income":-306606638,"net_income":-364207102,"net_income_final":-378181997,"pct_gp":8.8,"pct_oi":-9.8,"pct_ni":-11.7,"profitable":false,"y22":1858941460,"y23":5520943162,"y24":5610102886,"y25":4879642656,"y26":839885752,"bep":0,"bep_reached":true,"cluster":"RECOVERY","health":64,"tsh":"Close","yoy":-13.0},{"code":"E422","name":"ERAFONE RUKO MOH TOHA TANGERAN","category":"ERAFONE","type":"STREET","city":"KOTA TANGERANG","net_sales":5116571218,"gross_profit":482855641,"adv_promo":-7872929,"salaries":-350086076,"total_se":-516211867,"total_ga":-196341035,"total_opex":-641625989,"operating_income":-49980994,"net_income":-144282205,"net_income_final":-167161354,"pct_gp":9.4,"pct_oi":-1.0,"pct_ni":-2.8,"profitable":false,"y22":2246094475,"y23":8217921340,"y24":6244568629,"y25":7405909230,"y26":3062689733,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":79,"tsh":"ARI HIDAYAT","yoy":18.6},{"code":"E453","name":"ERAFONE RUKO DURI KOSAMBI","category":"ERAFONE","type":"STREET","city":"KODYA JAKARTA BARAT","net_sales":6889507120,"gross_profit":598380211,"adv_promo":-9448000,"salaries":-329311875,"total_se":-585455651,"total_ga":-143312394,"total_opex":-668702950,"operating_income":76668099,"net_income":-50309293,"net_income_final":-81116262,"pct_gp":8.7,"pct_oi":1.1,"pct_ni":-0.7,"profitable":false,"y22":2044065567,"y23":11354399821,"y24":11251665110,"y25":9600857958,"y26":2527418051,"bep":0,"bep_reached":true,"cluster":"RECOVERY","health":63,"tsh":"IRMAN PERMANA","yoy":-14.7},{"code":"E465","name":"ERAFONE RUKO KEBAYORAN LAMA","category":"ERAFONE","type":"STREET","city":"KODYA JAKARTA BARAT","net_sales":5589949108,"gross_profit":525181811,"adv_promo":-9709000,"salaries":-307741506,"total_se":-460906718,"total_ga":-156199576,"total_opex":-556373381,"operating_income":89577472,"net_income":-13448353,"net_income_final":-38444248,"pct_gp":9.4,"pct_oi":1.6,"pct_ni":-0.2,"profitable":false,"y22":1419982495,"y23":6785118485,"y24":8584461787,"y25":7689687682,"y26":2346486905,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":45,"tsh":"FEBRIAN TRI WIBOWO","yoy":-10.4},{"code":"E484","name":"ERAFONE SERPONG PARADISE WALK","category":"ERAFONE","type":"MALL","city":"KOTA TANGERANG SELATAN","net_sales":7013988635,"gross_profit":586546267,"adv_promo":-8773000,"salaries":-346139800,"total_se":-682829409,"total_ga":-147883025,"total_opex":-748826117,"operating_income":3022624,"net_income":-149612998,"net_income_final":-180976597,"pct_gp":8.4,"pct_oi":0.0,"pct_ni":-2.1,"profitable":false,"y22":920395161,"y23":10175651133,"y24":10360778282,"y25":10020997317,"y26":3288150010,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":49,"tsh":"EKA FUJI CHAERUL ANWAR","yoy":-3.3},{"code":"E499","name":"ERAFONE LABUAN","category":"ERAFONE","type":"STREET","city":"PANDEGLANG","net_sales":6288230532,"gross_profit":548829419,"adv_promo":-2686000,"salaries":-278120443,"total_se":-328035682,"total_ga":-117568392,"total_opex":-399407017,"operating_income":306531910,"net_income":190636374,"net_income_final":162518060,"pct_gp":8.7,"pct_oi":4.9,"pct_ni":3.0,"profitable":true,"y22":986969058,"y23":4893050985,"y24":6522800523,"y25":8831910302,"y26":2957776176,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":80,"tsh":"NURUL ZAMAN","yoy":35.4},{"code":"E508","name":"ERAFONE JEMBATAN LIMA","category":"ERAFONE","type":"STREET","city":"KODYA JAKARTA BARAT","net_sales":6249947431,"gross_profit":517680633,"adv_promo":-9357000,"salaries":-330768283,"total_se":-592569088,"total_ga":-132742033,"total_opex":-660905750,"operating_income":-1933093,"net_income":-117123049,"net_income_final":-145070178,"pct_gp":8.3,"pct_oi":-0.0,"pct_ni":-1.9,"profitable":false,"y22":1806956753,"y23":9112079558,"y24":8763912220,"y25":9023123448,"y26":2580443115,"bep":0,"bep_reached":true,"cluster":"STABLE","health":71,"tsh":"RENDY NUR SETIAWAN","yoy":3.0},{"code":"E544","name":"ERAFONE CILEGON","category":"ERAFONE","type":"STREET","city":"KOTA CILEGON","net_sales":8159959710,"gross_profit":686909267,"adv_promo":-29362350,"salaries":-393329421,"total_se":-597546988,"total_ga":-147139244,"total_opex":-665926544,"operating_income":213097386,"net_income":62704856,"net_income_final":26216958,"pct_gp":8.4,"pct_oi":2.6,"pct_ni":0.8,"profitable":true,"y22":721227236,"y23":7506002982,"y24":11213041334,"y25":11827323991,"y26":4611267577,"bep":0,"bep_reached":true,"cluster":"STABLE","health":72,"tsh":"NURUL ZAMAN","yoy":5.5},{"code":"E582","name":"ERAFONE RUKO SRENGSENG","category":"ERAFONE","type":"STREET","city":"KODYA JAKARTA BARAT","net_sales":6913204518,"gross_profit":617531378,"adv_promo":-6520000,"salaries":-368281821,"total_se":-620975776,"total_ga":-268192605,"total_opex":-799114011,"operating_income":-21666854,"net_income":-149081002,"net_income_final":-179993936,"pct_gp":8.9,"pct_oi":-0.3,"pct_ni":-2.2,"profitable":false,"y22":0,"y23":7345330313,"y24":8578271335,"y25":10277941371,"y26":3312548300,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":79,"tsh":"FEBRIAN TRI WIBOWO","yoy":19.8},{"code":"E586","name":"ERAFONE RUKO GRAHA RAYA","category":"ERAFONE","type":"STREET","city":"KOTA TANGERANG SELATAN","net_sales":5938131784,"gross_profit":556926829,"adv_promo":-24381000,"salaries":-318458208,"total_se":-546197015,"total_ga":-119610883,"total_opex":-601075660,"operating_income":98733783,"net_income":-10709240,"net_income_final":-37262060,"pct_gp":9.4,"pct_oi":1.7,"pct_ni":-0.2,"profitable":false,"y22":668745108,"y23":6709252201,"y24":9582567827,"y25":7733874907,"y26":1964244390,"bep":0,"bep_reached":true,"cluster":"RECOVERY","health":61,"tsh":"EKA FUJI CHAERUL ANWAR","yoy":-19.3},{"code":"E589","name":"ERAFONE RUKO PANIMBANG","category":"ERAFONE","type":"STREET","city":"PANDEGLANG","net_sales":6284342199,"gross_profit":570216733,"adv_promo":-7471000,"salaries":-267381448,"total_se":-332070925,"total_ga":-113762956,"total_opex":-398653693,"operating_income":332162041,"net_income":216338169,"net_income_final":188237242,"pct_gp":9.1,"pct_oi":5.3,"pct_ni":3.4,"profitable":true,"y22":318290624,"y23":3500764331,"y24":5438459660,"y25":9349267720,"y26":3695528805,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":80,"tsh":"NURUL ZAMAN","yoy":71.9},{"code":"E593","name":"ERAFONE RUKO MANGGA BESAR","category":"ERAFONE","type":"STREET","city":"KODYA JAKARTA BARAT","net_sales":11555353650,"gross_profit":1006913858,"adv_promo":-6965000,"salaries":-350194168,"total_se":-712793308,"total_ga":-124698023,"total_opex":-762986386,"operating_income":513787820,"net_income":300816318,"net_income_final":249145651,"pct_gp":8.7,"pct_oi":4.4,"pct_ni":2.6,"profitable":true,"y22":912508383,"y23":12294618535,"y24":14112767637,"y25":15800553216,"y26":5089903190,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":75,"tsh":"RENDY NUR SETIAWAN","yoy":12.0},{"code":"E612","name":"ERAFONE RUKO JOMBANG","category":"ERAFONE","type":"STREET","city":"KOTA TANGERANG SELATAN","net_sales":6037652366,"gross_profit":516222688,"adv_promo":-11941000,"salaries":-344029915,"total_se":-494081278,"total_ga":-121646892,"total_opex":-556806165,"operating_income":104296993,"net_income":-6980249,"net_income_final":-33978083,"pct_gp":8.6,"pct_oi":1.7,"pct_ni":-0.1,"profitable":false,"y22":637970355,"y23":6891823886,"y24":8817763857,"y25":8255127059,"y26":2623583470,"bep":0,"bep_reached":true,"cluster":"RECOVERY","health":67,"tsh":"ARENGGA","yoy":-6.4},{"code":"E616","name":"ERAFONE 2.5 MERUYA ILIR","category":"ERAFONE","type":"STREET","city":"KODYA JAKARTA BARAT","net_sales":3446149785,"gross_profit":294516871,"adv_promo":-4966000,"salaries":-263230764,"total_se":-366552629,"total_ga":-127347817,"total_opex":-444961670,"operating_income":-78177366,"net_income":-141691795,"net_income_final":-157101523,"pct_gp":8.5,"pct_oi":-2.3,"pct_ni":-4.1,"profitable":false,"y22":0,"y23":1411520842,"y24":3937407736,"y25":4571668320,"y26":1638400120,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":58,"tsh":"FEBRIAN TRI WIBOWO","yoy":16.1},{"code":"E620","name":"ERAFONE 2.5 PADJAJARAN PAMULAN","category":"ERAFONE","type":"STREET","city":"KOTA TANGERANG SELATAN","net_sales":2819726871,"gross_profit":241575752,"adv_promo":-5532000,"salaries":-299562954,"total_se":-428613273,"total_ga":-140403507,"total_opex":-513169780,"operating_income":-209526524,"net_income":-261495635,"net_income_final":-274104264,"pct_gp":8.6,"pct_oi":-7.4,"pct_ni":-9.3,"profitable":false,"y22":0,"y23":1370772658,"y24":5517528199,"y25":3718095430,"y26":787469545,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":34,"tsh":"ARENGGA","yoy":-32.6},{"code":"E627","name":"ERAFONE RUKO CISOKA","category":"ERAFONE","type":"STREET","city":"TANGERANG","net_sales":6316485184,"gross_profit":543955291,"adv_promo":-12888000,"salaries":-379143316,"total_se":-488728425,"total_ga":-166513866,"total_opex":-589943319,"operating_income":95615234,"net_income":-20801049,"net_income_final":-49045707,"pct_gp":8.6,"pct_oi":1.5,"pct_ni":-0.3,"profitable":false,"y22":0,"y23":5905521443,"y24":7261844183,"y25":9035030213,"y26":2802932723,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":80,"tsh":"RENDI JANUARDI","yoy":24.4},{"code":"E646","name":"ERAFONE  BATU CEPER","category":"ERAFONE","type":"STREET","city":"KOTA TANGERANG","net_sales":6525654500,"gross_profit":470605459,"adv_promo":-5848000,"salaries":-308519869,"total_se":-548767921,"total_ga":-202784079,"total_opex":-675653334,"operating_income":-64323597,"net_income":-184594986,"net_income_final":-213774960,"pct_gp":7.2,"pct_oi":-1.0,"pct_ni":-2.8,"profitable":false,"y22":56649549,"y23":7405055078,"y24":8699898756,"y25":8871257541,"y26":2829616546,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":50,"tsh":"ABDILLAH","yoy":2.0},{"code":"E648","name":"ERAFONE RADEN SALEH CILEDUG 2","category":"ERAFONE","type":"STREET","city":"KOTA TANGERANG","net_sales":2924139748,"gross_profit":197827086,"adv_promo":-5948000,"salaries":-285591148,"total_se":-468990058,"total_ga":-151494928,"total_opex":-558720777,"operating_income":-292621596,"net_income":-346515094,"net_income_final":-359590613,"pct_gp":6.8,"pct_oi":-10.0,"pct_ni":-11.9,"profitable":false,"y22":80939638,"y23":5448368817,"y24":4923496553,"y25":4021537004,"y26":1117813373,"bep":0,"bep_reached":true,"cluster":"RECOVERY","health":61,"tsh":"Close","yoy":-18.3},{"code":"E663","name":"ERAFONE GARUDA KEMAYORAN","category":"ERAFONE","type":"STREET","city":"KODYA JAKARTA PUSAT","net_sales":5883275152,"gross_profit":569572134,"adv_promo":-6577000,"salaries":-365372989,"total_se":-602185930,"total_ga":-139685895,"total_opex":-667695749,"operating_income":28318885,"net_income":-80113100,"net_income_final":-106420625,"pct_gp":9.7,"pct_oi":0.5,"pct_ni":-1.4,"profitable":false,"y22":607040043,"y23":7332326406,"y24":9960200956,"y25":8637346501,"y26":2311958250,"bep":0,"bep_reached":true,"cluster":"RECOVERY","health":64,"tsh":"LUKMAN WIBOWO","yoy":-13.3},{"code":"E664","name":"ERAFONE TANJUNG DUREN","category":"ERAFONE","type":"STREET","city":"KODYA JAKARTA BARAT","net_sales":4152317045,"gross_profit":370696851,"adv_promo":-3335000,"salaries":-284216089,"total_se":-483052701,"total_ga":-115703682,"total_opex":-542716691,"operating_income":-82805111,"net_income":-159334589,"net_income_final":-177902000,"pct_gp":8.9,"pct_oi":-2.0,"pct_ni":-3.8,"profitable":false,"y22":8310811,"y23":7100748542,"y24":5845299223,"y25":6162173267,"y26":2330698172,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":52,"tsh":"RENDY NUR SETIAWAN","yoy":5.4},{"code":"E678","name":"ERAFONE MB BENDUNGAN HILIR","category":"ERAFONE","type":"STREET","city":"KODYA JAKARTA PUSAT","net_sales":4823243129,"gross_profit":471727740,"adv_promo":-12182000,"salaries":-348870978,"total_se":-617925128,"total_ga":-147537351,"total_opex":-690291948,"operating_income":-121177376,"net_income":-210072390,"net_income_final":-231639899,"pct_gp":9.8,"pct_oi":-2.5,"pct_ni":-4.4,"profitable":false,"y22":415499977,"y23":7542955898,"y24":7380267887,"y25":7045708343,"y26":2343730157,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":48,"tsh":"MENSI ALEXANDER","yoy":-4.5},{"code":"E679","name":"ERAFONE MB JOGLO RAYA","category":"ERAFONE","type":"STREET","city":"KODYA JAKARTA BARAT","net_sales":7002947632,"gross_profit":618726629,"adv_promo":-10227000,"salaries":-322679659,"total_se":-610935226,"total_ga":-176242645,"total_opex":-707996232,"operating_income":75781822,"net_income":-53286341,"net_income_final":-84600568,"pct_gp":8.8,"pct_oi":1.1,"pct_ni":-0.8,"profitable":false,"y22":631370168,"y23":12128166479,"y24":10796740641,"y25":9319539322,"y26":2362013351,"bep":0,"bep_reached":true,"cluster":"RECOVERY","health":64,"tsh":"FEBRIAN TRI WIBOWO","yoy":-13.7},{"code":"E682","name":"ERAFONE MB KH MANSYUR TANAH AB","category":"ERAFONE","type":"STREET","city":"KODYA JAKARTA PUSAT","net_sales":2875879100,"gross_profit":247535062,"adv_promo":-8766000,"salaries":-248721687,"total_se":-521382662,"total_ga":-130309383,"total_opex":-585195605,"operating_income":-277265895,"net_income":-330269923,"net_income_final":-343129641,"pct_gp":8.6,"pct_oi":-9.6,"pct_ni":-11.5,"profitable":false,"y22":73064864,"y23":5917757457,"y24":4628565902,"y25":4087434608,"y26":1281263375,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":45,"tsh":"MENSI ALEXANDER","yoy":-11.7},{"code":"E683","name":"ERAFONE MB CIBADAK BALARAJA","category":"ERAFONE","type":"STREET","city":"0","net_sales":644459929,"gross_profit":62528999,"adv_promo":-860000,"salaries":-76777106,"total_se":-166647362,"total_ga":-439372150,"total_opex":-549432951,"operating_income":-473662173,"net_income":-485539922,"net_income_final":-488421675,"pct_gp":9.7,"pct_oi":-73.5,"pct_ni":-75.3,"profitable":false,"y22":0,"y23":2382275308,"y24":2918721516,"y25":644867979,"y26":0,"bep":0,"bep_reached":true,"cluster":"RECOVERY","health":32,"tsh":"Close","yoy":-77.9},{"code":"E684","name":"ERAFONE MB SANGIANG","category":"ERAFONE","type":"STREET","city":"KOTA TANGERANG","net_sales":6995697561,"gross_profit":626849473,"adv_promo":-14907000,"salaries":-340914012,"total_se":-508130493,"total_ga":-194545156,"total_opex":-631921050,"operating_income":147491842,"net_income":18557301,"net_income_final":-12724506,"pct_gp":9.0,"pct_oi":2.1,"pct_ni":0.3,"profitable":true,"y22":0,"y23":7798253188,"y24":9877341522,"y25":9479980654,"y26":2736967484,"bep":0,"bep_reached":true,"cluster":"STABLE","health":68,"tsh":"ARI HIDAYAT","yoy":-4.0},{"code":"E685","name":"ERAFONE MB PONDOK BETUNG","category":"ERAFONE","type":"STREET","city":"KOTA TANGERANG SELATAN","net_sales":4761453595,"gross_profit":416457255,"adv_promo":-10917000,"salaries":-316137839,"total_se":-507005186,"total_ga":-166745647,"total_opex":-606151593,"operating_income":-84540100,"net_income":-172296299,"net_income_final":-193587511,"pct_gp":8.7,"pct_oi":-1.8,"pct_ni":-3.6,"profitable":false,"y22":0,"y23":7158837867,"y24":7032511345,"y25":6574158518,"y26":1960622554,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":47,"tsh":"ARENGGA","yoy":-6.5},{"code":"E695","name":"ERAFONE MB BINONG","category":"ERAFONE","type":"STREET","city":"TANGERANG","net_sales":2980836620,"gross_profit":273360871,"adv_promo":-4005000,"salaries":-290125646,"total_se":-394678320,"total_ga":-124835600,"total_opex":-468619353,"operating_income":-147938172,"net_income":-202876624,"net_income_final":-216205668,"pct_gp":9.2,"pct_oi":-5.0,"pct_ni":-6.8,"profitable":false,"y22":0,"y23":3540600117,"y24":3461050638,"y25":4293777235,"y26":1241233606,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":60,"tsh":"RENDI JANUARDI","yoy":24.1},{"code":"E697","name":"ERAFONE MB PALMERAH UTARA","category":"ERAFONE","type":"STREET","city":"KODYA JAKARTA BARAT","net_sales":3251542504,"gross_profit":293307075,"adv_promo":-5996000,"salaries":-243532346,"total_se":-443724301,"total_ga":-114117687,"total_opex":-503027301,"operating_income":-135277240,"net_income":-195204950,"net_income_final":-209744476,"pct_gp":9.0,"pct_oi":-4.2,"pct_ni":-6.0,"profitable":false,"y22":0,"y23":4528934064,"y24":4470343581,"y25":4753942274,"y26":1329945306,"bep":0,"bep_reached":true,"cluster":"STABLE","health":73,"tsh":"Close","yoy":6.3},{"code":"E704","name":"ERAFONE MB  KH DEWANTARA CIPUT","category":"ERAFONE","type":"STREET","city":"KOTA TANGERANG SELATAN","net_sales":5287373299,"gross_profit":491998135,"adv_promo":-15194000,"salaries":-334229435,"total_se":-449675547,"total_ga":-153287824,"total_opex":-539637930,"operating_income":65698486,"net_income":-31750701,"net_income_final":-55393604,"pct_gp":9.3,"pct_oi":1.2,"pct_ni":-0.6,"profitable":false,"y22":253599827,"y23":7299045383,"y24":8079593874,"y25":6888543056,"y26":1834330095,"bep":0,"bep_reached":true,"cluster":"RECOVERY","health":63,"tsh":"ARENGGA","yoy":-14.7},{"code":"E705","name":"ERAFONE MB CIATER TANGSEL","category":"ERAFONE","type":"STREET","city":"KOTA TANGERANG SELATAN","net_sales":3529397240,"gross_profit":322585134,"adv_promo":-6385000,"salaries":-317755399,"total_se":-471344091,"total_ga":-144531764,"total_opex":-554585239,"operating_income":-147086165,"net_income":-212134890,"net_income_final":-227916866,"pct_gp":9.1,"pct_oi":-4.2,"pct_ni":-6.0,"profitable":false,"y22":0,"y23":5519828144,"y24":4926024914,"y25":5058588698,"y26":1273324915,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":51,"tsh":"EKA FUJI CHAERUL ANWAR","yoy":2.7},{"code":"E714","name":"ERAFONE MB  JATAKE","category":"ERAFONE","type":"STREET","city":"KOTA TANGERANG","net_sales":3823814277,"gross_profit":350310097,"adv_promo":-7584000,"salaries":-321073923,"total_se":-440997535,"total_ga":-161914778,"total_opex":-545008256,"operating_income":-109309197,"net_income":-179784189,"net_income_final":-196882674,"pct_gp":9.2,"pct_oi":-2.9,"pct_ni":-4.7,"profitable":false,"y22":0,"y23":3685170144,"y24":5117846023,"y25":5241920558,"y26":1346970111,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":51,"tsh":"ARI HIDAYAT","yoy":2.4},{"code":"E732","name":"ERAFONE SABANG JAKPUS","category":"ERAFONE","type":"STREET","city":"KODYA JAKARTA PUSAT","net_sales":8738815133,"gross_profit":793545550,"adv_promo":-32972000,"salaries":-385204746,"total_se":-746573236,"total_ga":-125373211,"total_opex":-788634287,"operating_income":237153203,"net_income":76092050,"net_income_final":37015755,"pct_gp":9.1,"pct_oi":2.7,"pct_ni":0.9,"profitable":true,"y22":365670454,"y23":11232936737,"y24":13839782331,"y25":12376538539,"y26":3021586790,"bep":0,"bep_reached":true,"cluster":"RECOVERY","health":65,"tsh":"LUKMAN WIBOWO","yoy":-10.6},{"code":"E744","name":"ERAFONE MB  RAJEK","category":"ERAFONE","type":"STREET","city":"TANGERANG","net_sales":4321142422,"gross_profit":373912556,"adv_promo":-8571000,"salaries":-316665735,"total_se":-406185161,"total_ga":-126559120,"total_opex":-480376181,"operating_income":-16531790,"net_income":-96172813,"net_income_final":-115495139,"pct_gp":8.7,"pct_oi":-0.4,"pct_ni":-2.2,"profitable":false,"y22":77602358,"y23":5095570563,"y24":6028728004,"y25":5880326709,"y26":1806649083,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":49,"tsh":"RENDI JANUARDI","yoy":-2.5},{"code":"E777","name":"ERAFONE CIHUNI GADING SERPONG","category":"ERAFONE","type":"STREET","city":"TANGERANG","net_sales":5230566309,"gross_profit":492256271,"adv_promo":-12401000,"salaries":-299826787,"total_se":-524337178,"total_ga":-118560300,"total_opex":-581214360,"operating_income":32158928,"net_income":-64243275,"net_income_final":-87632161,"pct_gp":9.4,"pct_oi":0.6,"pct_ni":-1.2,"profitable":false,"y22":0,"y23":7747227233,"y24":7665874655,"y25":8214050416,"y26":2790435465,"bep":0,"bep_reached":true,"cluster":"STABLE","health":73,"tsh":"SANDI MAULANA","yoy":7.2},{"code":"E787","name":"ERAFONE MB RUKOTIGARAKSA","category":"ERAFONE","type":"STREET","city":"TANGERANG","net_sales":5917632225,"gross_profit":547651860,"adv_promo":-5384000,"salaries":-359614386,"total_se":-448458307,"total_ga":-134719961,"total_opex":-522175075,"operating_income":166348648,"net_income":57283442,"net_income_final":30822287,"pct_gp":9.3,"pct_oi":2.8,"pct_ni":1.0,"profitable":true,"y22":0,"y23":5672767305,"y24":7851774035,"y25":8219031271,"y26":2334033969,"bep":0,"bep_reached":true,"cluster":"STABLE","health":72,"tsh":"RENDI JANUARDI","yoy":4.7},{"code":"E812","name":"ERAFONE MB KUTABUMI","category":"ERAFONE","type":"STREET","city":"TANGERANG","net_sales":5280385484,"gross_profit":483756535,"adv_promo":-15904000,"salaries":-327042749,"total_se":-450302922,"total_ga":-107559743,"total_opex":-501985775,"operating_income":91971167,"net_income":-5349231,"net_income_final":-28960888,"pct_gp":9.2,"pct_oi":1.7,"pct_ni":-0.1,"profitable":false,"y22":0,"y23":8556757247,"y24":7101948322,"y25":6892767526,"y26":1824998008,"bep":0,"bep_reached":true,"cluster":"STABLE","health":69,"tsh":"RENDI JANUARDI","yoy":-2.9},{"code":"E813","name":"ERAFONE MB SERPONG GARDEN CISA","category":"ERAFONE","type":"STREET","city":"TANGERANG","net_sales":4179187346,"gross_profit":367849744,"adv_promo":-6818000,"salaries":-281005979,"total_se":-381743737,"total_ga":-120804040,"total_opex":-449422643,"operating_income":9708074,"net_income":-67316639,"net_income_final":-86004202,"pct_gp":8.8,"pct_oi":0.2,"pct_ni":-1.6,"profitable":false,"y22":0,"y23":5032296796,"y24":5999854047,"y25":6009633468,"y26":2014184067,"bep":0,"bep_reached":true,"cluster":"STABLE","health":70,"tsh":"SANDI MAULANA","yoy":0.2},{"code":"E821","name":"ERAFONE MB ANYER","category":"ERAFONE","type":"STREET","city":"SERANG","net_sales":7253640586,"gross_profit":630495484,"adv_promo":-6987000,"salaries":-326621318,"total_se":-426434462,"total_ga":-125056229,"total_opex":-494492283,"operating_income":307913365,"net_income":174224793,"net_income_final":141789572,"pct_gp":8.7,"pct_oi":4.2,"pct_ni":2.4,"profitable":true,"y22":0,"y23":4583782832,"y24":8926199725,"y25":10245784971,"y26":3927491412,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":77,"tsh":"NURUL ZAMAN","yoy":14.8},{"code":"E822","name":"ERAFONE MB KRAGILAN","category":"ERAFONE","type":"STREET","city":"SERANG","net_sales":7951244941,"gross_profit":748696032,"adv_promo":-2496000,"salaries":-313629470,"total_se":-406558021,"total_ga":-148516091,"total_opex":-498290021,"operating_income":439153327,"net_income":292607524,"net_income_final":257052911,"pct_gp":9.4,"pct_oi":5.5,"pct_ni":3.7,"profitable":true,"y22":0,"y23":3281838326,"y24":7903671018,"y25":11138808968,"y26":4259551413,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":80,"tsh":"NURUL ZAMAN","yoy":40.9},{"code":"E848","name":"ERAFONE PASAR KEMIS","category":"ERAFONE","type":"STREET","city":"TANGERANG","net_sales":4339091645,"gross_profit":384816410,"adv_promo":-4961000,"salaries":-307276533,"total_se":-412379959,"total_ga":-116423644,"total_opex":-476954269,"operating_income":9267444,"net_income":-70704393,"net_income_final":-90106980,"pct_gp":8.9,"pct_oi":0.2,"pct_ni":-1.6,"profitable":false,"y22":0,"y23":3314247274,"y24":5386176030,"y25":5636676580,"y26":1407698769,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":52,"tsh":"RENDI JANUARDI","yoy":4.7},{"code":"E873","name":"ERAFONE MB LEGOK","category":"ERAFONE","type":"STREET","city":"TANGERANG","net_sales":4403246220,"gross_profit":375455421,"adv_promo":-7612000,"salaries":-318155633,"total_se":-439614311,"total_ga":-142121484,"total_opex":-525297203,"operating_income":-40187719,"net_income":-121341960,"net_income_final":-141031419,"pct_gp":8.5,"pct_oi":-0.9,"pct_ni":-2.8,"profitable":false,"y22":0,"y23":2113040400,"y24":4038503277,"y25":6274730873,"y26":2178281844,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":60,"tsh":"SANDI MAULANA","yoy":55.4},{"code":"E874","name":"ERAFONE MB DASANA INDAH","category":"ERAFONE","type":"STREET","city":"TANGERANG","net_sales":3110808416,"gross_profit":270211219,"adv_promo":-8345000,"salaries":-300043791,"total_se":-375937797,"total_ga":-125284026,"total_opex":-450988397,"operating_income":-101874633,"net_income":-159208537,"net_income_final":-173118760,"pct_gp":8.7,"pct_oi":-3.3,"pct_ni":-5.1,"profitable":false,"y22":0,"y23":3474022478,"y24":4142413296,"y25":4482597486,"y26":1521775296,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":54,"tsh":"SANDI MAULANA","yoy":8.2},{"code":"E875","name":"ERAFONE MB POS PENGUMBEN","category":"ERAFONE","type":"STREET","city":"KODYA JAKARTA BARAT","net_sales":6215164326,"gross_profit":554957298,"adv_promo":-4645000,"salaries":-330815259,"total_se":-515609372,"total_ga":-164044565,"total_opex":-612173060,"operating_income":85561324,"net_income":-28987560,"net_income_final":-56779154,"pct_gp":8.9,"pct_oi":1.4,"pct_ni":-0.5,"profitable":false,"y22":0,"y23":5256519755,"y24":9355786999,"y25":8527706648,"y26":2866322906,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":46,"tsh":"FEBRIAN TRI WIBOWO","yoy":-8.9},{"code":"E879","name":"ERAFONE MB CIPARE","category":"ERAFONE","type":"STREET","city":"KOTA SERANG","net_sales":8113710113,"gross_profit":724598867,"adv_promo":-15225000,"salaries":-352311488,"total_se":-475168886,"total_ga":-184839296,"total_opex":-593074598,"operating_income":318885065,"net_income":169344940,"net_income_final":133063851,"pct_gp":8.9,"pct_oi":3.9,"pct_ni":2.1,"profitable":true,"y22":0,"y23":4702898993,"y24":8645573378,"y25":11072360589,"y26":3657612794,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":80,"tsh":"NURUL ZAMAN","yoy":28.1},{"code":"E897","name":"ERAFONE MB CADAS","category":"ERAFONE","type":"STREET","city":"0","net_sales":455158078,"gross_profit":39574988,"adv_promo":-1247000,"salaries":-93305433,"total_se":-139343160,"total_ga":-431298284,"total_opex":-517863225,"operating_income":-469155406,"net_income":-477544218,"net_income_final":-479579493,"pct_gp":8.7,"pct_oi":-103.1,"pct_ni":-104.9,"profitable":false,"y22":0,"y23":1190354379,"y24":2323169111,"y25":455781442,"y26":0,"bep":0,"bep_reached":true,"cluster":"RECOVERY","health":30,"tsh":"Close","yoy":-80.4},{"code":"E898","name":"ERAFONE MB SAMANHUDI","category":"ERAFONE","type":"STREET","city":"KODYA JAKARTA PUSAT","net_sales":6357831668,"gross_profit":574330379,"adv_promo":-14611000,"salaries":-437840783,"total_se":-695746537,"total_ga":-184208716,"total_opex":-795479172,"operating_income":-83160251,"net_income":-200338573,"net_income_final":-228768114,"pct_gp":9.0,"pct_oi":-1.3,"pct_ni":-3.2,"profitable":false,"y22":0,"y23":5881451769,"y24":10062958309,"y25":8824474672,"y26":3000060515,"bep":0,"bep_reached":true,"cluster":"RECOVERY","health":64,"tsh":"MENSI ALEXANDER","yoy":-12.3},{"code":"E923","name":"ERAFONE MB JALAN PANJANG","category":"ERAFONE","type":"STREET","city":"KODYA JAKARTA BARAT","net_sales":2408405210,"gross_profit":191043950,"adv_promo":-7578000,"salaries":-240951161,"total_se":-485150641,"total_ga":-141414783,"total_opex":-565492655,"operating_income":-317193075,"net_income":-361581303,"net_income_final":-372350675,"pct_gp":7.9,"pct_oi":-13.2,"pct_ni":-15.0,"profitable":false,"y22":0,"y23":1856210546,"y24":3604940602,"y25":3734114728,"y26":1567917447,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":51,"tsh":"FEBRIAN TRI WIBOWO","yoy":3.6},{"code":"E941","name":"ERAFONE MB RAYA SERPONG","category":"ERAFONE","type":"STREET","city":"KOTA TANGERANG SELATAN","net_sales":3511089408,"gross_profit":291896735,"adv_promo":-7139040,"salaries":-254061712,"total_se":-364662586,"total_ga":-133116367,"total_opex":-449026636,"operating_income":-77849310,"net_income":-142560612,"net_income_final":-158260722,"pct_gp":8.3,"pct_oi":-2.2,"pct_ni":-4.1,"profitable":false,"y22":0,"y23":1455779187,"y24":4006578304,"y25":5339286201,"y26":1406377568,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":60,"tsh":"EKA FUJI CHAERUL ANWAR","yoy":33.3},{"code":"E942","name":"ERAFONE MB KEMBANGAN UTARA","category":"ERAFONE","type":"STREET","city":"KODYA JAKARTA BARAT","net_sales":5231967765,"gross_profit":514819383,"adv_promo":-5485000,"salaries":-350240727,"total_se":-498833593,"total_ga":-148479608,"total_opex":-584556678,"operating_income":32654511,"net_income":-63773522,"net_income_final":-87168675,"pct_gp":9.8,"pct_oi":0.6,"pct_ni":-1.2,"profitable":false,"y22":0,"y23":2677959149,"y24":7021659866,"y25":7172031115,"y26":2041027967,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":51,"tsh":"FEBRIAN TRI WIBOWO","yoy":2.1},{"code":"E943","name":"ERAFONE MB TAMAN RATU","category":"ERAFONE","type":"STREET","city":"KODYA JAKARTA BARAT","net_sales":4898797934,"gross_profit":458269022,"adv_promo":-3124000,"salaries":-279431104,"total_se":-524282140,"total_ga":-151309160,"total_opex":-612733426,"operating_income":-55643570,"net_income":-145931100,"net_income_final":-167836458,"pct_gp":9.4,"pct_oi":-1.1,"pct_ni":-3.0,"profitable":false,"y22":0,"y23":2841725756,"y24":6946282041,"y25":6675782812,"y26":2052528247,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":49,"tsh":"FEBRIAN TRI WIBOWO","yoy":-3.9},{"code":"E960","name":"ERAFONE MB MENCENG RAYA","category":"ERAFONE","type":"STREET","city":"KODYA JAKARTA BARAT","net_sales":6668100629,"gross_profit":593014220,"adv_promo":-9889000,"salaries":-336947601,"total_se":-521454325,"total_ga":-131537819,"total_opex":-589197535,"operating_income":144263183,"net_income":21366433,"net_income_final":-8450499,"pct_gp":8.9,"pct_oi":2.2,"pct_ni":0.3,"profitable":true,"y22":0,"y23":3034253823,"y24":7968081065,"y25":8991145045,"y26":1869898767,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":56,"tsh":"IRMAN PERMANA","yoy":12.8},{"code":"E986","name":"ERAFONE MB JEMBATAN BESI","category":"ERAFONE","type":"STREET","city":"KODYA JAKARTA BARAT","net_sales":4163323686,"gross_profit":344611567,"adv_promo":-5171000,"salaries":-298747415,"total_se":-492493222,"total_ga":-132807664,"total_opex":-565184512,"operating_income":-141652659,"net_income":-218384996,"net_income_final":-237001623,"pct_gp":8.3,"pct_oi":-3.4,"pct_ni":-5.2,"profitable":false,"y22":0,"y23":1379130724,"y24":4671704423,"y25":5590582233,"y26":1495611945,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":59,"tsh":"RENDY NUR SETIAWAN","yoy":19.7},{"code":"E991","name":"ERAFONE 2.5 KEMANGGISAN UTAMA","category":"ERAFONE","type":"STREET","city":"KODYA JAKARTA BARAT","net_sales":2868605043,"gross_profit":275295793,"adv_promo":-9202900,"salaries":-257485918,"total_se":-399482867,"total_ga":-127948006,"total_opex":-474030804,"operating_income":-132555601,"net_income":-185425564,"net_income_final":-198252755,"pct_gp":9.6,"pct_oi":-4.6,"pct_ni":-6.5,"profitable":false,"y22":0,"y23":1296319684,"y24":4364773174,"y25":4412623134,"y26":1590337537,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":50,"tsh":"RENDY NUR SETIAWAN","yoy":1.1},{"code":"E992","name":"ERAFONE 2.5 KAPUK CENGKARENG","category":"ERAFONE","type":"STREET","city":"KODYA JAKARTA UTARA","net_sales":10364876738,"gross_profit":963466198,"adv_promo":-3887000,"salaries":-353838615,"total_se":-564924250,"total_ga":-142001410,"total_opex":-642071776,"operating_income":543891996,"net_income":352861636,"net_income_final":306514280,"pct_gp":9.3,"pct_oi":5.2,"pct_ni":3.4,"profitable":true,"y22":0,"y23":3639441454,"y24":12315254098,"y25":14901508088,"y26":5347263169,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":80,"tsh":"IRMAN PERMANA","yoy":21.0},{"code":"E993","name":"ERAFONE 2.5 IMAM BONJOL","category":"ERAFONE","type":"STREET","city":"KOTA TANGERANG","net_sales":2117153202,"gross_profit":185591114,"adv_promo":-7867000,"salaries":-196593860,"total_se":-302340525,"total_ga":-119506345,"total_opex":-381577629,"operating_income":-143171030,"net_income":-182191323,"net_income_final":-191658339,"pct_gp":8.8,"pct_oi":-6.8,"pct_ni":-8.6,"profitable":false,"y22":0,"y23":1653986279,"y24":4494586195,"y25":2119650203,"y26":0,"bep":0,"bep_reached":true,"cluster":"RECOVERY","health":44,"tsh":"Close","yoy":-52.8},{"code":"F003","name":"ERAFONE 2.5 CILEDUG RAYA","category":"ERAFONE","type":"STREET","city":"KOTA TANGERANG","net_sales":6374505184,"gross_profit":522134320,"adv_promo":-14746000,"salaries":-326098880,"total_se":-600487114,"total_ga":-156230321,"total_opex":-682063350,"operating_income":-25423311,"net_income":-142908935,"net_income_final":-171413033,"pct_gp":8.2,"pct_oi":-0.4,"pct_ni":-2.2,"profitable":false,"y22":0,"y23":1916970324,"y24":8115715156,"y25":8767229155,"y26":3116555778,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":54,"tsh":"ABDILLAH","yoy":8.0},{"code":"F022","name":"ERAFONE 2.5 PAMULANG","category":"ERAFONE","type":"STREET","city":"KOTA TANGERANG SELATAN","net_sales":7698564856,"gross_profit":641161515,"adv_promo":-14804934,"salaries":-331138598,"total_se":-550519198,"total_ga":-193128014,"total_opex":-669916881,"operating_income":155757978,"net_income":13869208,"net_income_final":-20555526,"pct_gp":8.3,"pct_oi":2.0,"pct_ni":0.2,"profitable":true,"y22":0,"y23":2547347712,"y24":8846161907,"y25":10357055175,"y26":3099242425,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":58,"tsh":"EKA FUJI CHAERUL ANWAR","yoy":17.1},{"code":"F073","name":"ERAFONE AGORA MALL","category":"ERAFONE","type":"MALL","city":"KODYA JAKARTA PUSAT","net_sales":2760241212,"gross_profit":144971389,"adv_promo":-14974000,"salaries":-310153414,"total_se":-590836845,"total_ga":-134973828,"total_opex":-649676186,"operating_income":-429871899,"net_income":-510284392,"net_income_final":-522627026,"pct_gp":5.3,"pct_oi":-15.6,"pct_ni":-18.5,"profitable":false,"y22":0,"y23":0,"y24":266159449,"y25":4728899291,"y26":1864908481,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":60,"tsh":"MENSI ALEXANDER","yoy":1676.7},{"code":"F077","name":"ERAFONE BINTARO EXCHANGE II","category":"ERAFONE","type":"MALL","city":"KOTA TANGERANG SELATAN","net_sales":17621008415,"gross_profit":1470191558,"adv_promo":-4639000,"salaries":-527158371,"total_se":-1581487570,"total_ga":-162550841,"total_opex":-1567323259,"operating_income":336111479,"net_income":-121833786,"net_income_final":-200627503,"pct_gp":8.3,"pct_oi":1.9,"pct_ni":-0.7,"profitable":false,"y22":0,"y23":0,"y24":3649018284,"y25":27135521144,"y26":10808423615,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":80,"tsh":"ARENGGA","yoy":643.6},{"code":"F134","name":"ERAFONE MALL CIPUTRA 2.5 JAKAR","category":"ERAFONE","type":"MALL","city":"KODYA JAKARTA BARAT","net_sales":335896838,"gross_profit":3090504,"adv_promo":0,"salaries":0,"total_se":-24482935,"total_ga":-12918105,"total_opex":-22749657,"operating_income":-12395552,"net_income":-66186401,"net_income_final":-67688390,"pct_gp":0.9,"pct_oi":-3.7,"pct_ni":-19.7,"profitable":false,"y22":0,"y23":0,"y24":0,"y25":3969419540,"y26":4143574239,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":50,"tsh":"RENDY NUR SETIAWAN","yoy":0},{"code":"M013","name":"MEGASTORE SUPERMAL KARAWACI","category":"ERAFONE","type":"MALL","city":"TANGERANG","net_sales":27379282068,"gross_profit":2361670698,"adv_promo":-12064000,"salaries":-634101547,"total_se":-2741421604,"total_ga":-359836485,"total_opex":-2778438577,"operating_income":339056973,"net_income":-319725212,"net_income_final":-442153812,"pct_gp":8.6,"pct_oi":1.2,"pct_ni":-1.2,"profitable":false,"y22":48635158905,"y23":55287585076,"y24":43115686564,"y25":40005783248,"y26":13767534194,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":47,"tsh":"SANDI MAULANA","yoy":-7.2},{"code":"M015","name":"MEGASTORE ITC ROXY MAS","category":"ERAFONE","type":"MALL","city":"0","net_sales":6510700801,"gross_profit":646275003,"adv_promo":-16208000,"salaries":-275150401,"total_se":-797839900,"total_ga":-177495387,"total_opex":-921244631,"operating_income":-97546651,"net_income":-217542435,"net_income_final":-246655542,"pct_gp":9.9,"pct_oi":-1.5,"pct_ni":-3.3,"profitable":false,"y22":59486989394,"y23":50815083295,"y24":53918798108,"y25":6516988412,"y26":0,"bep":0,"bep_reached":true,"cluster":"RECOVERY","health":27,"tsh":"Close","yoy":-87.9},{"code":"M019","name":"MEGASTORE SUMMARECON MALL SERP","category":"ERAFONE","type":"MALL","city":"TANGERANG","net_sales":35021932844,"gross_profit":3078684855,"adv_promo":-15166000,"salaries":-655722867,"total_se":-3232450631,"total_ga":-247310583,"total_opex":-3123957361,"operating_income":883197646,"net_income":68982576,"net_income_final":-87620733,"pct_gp":8.8,"pct_oi":2.5,"pct_ni":0.2,"profitable":true,"y22":44750868916,"y23":63348872747,"y24":48475615579,"y25":52561611771,"y26":18768812912,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":74,"tsh":"SANDI MAULANA","yoy":8.4},{"code":"M032","name":"MEGASTORE ITC CEMPAKA MAS","category":"ERAFONE","type":"MALL","city":"KODYA JAKARTA PUSAT","net_sales":3943115603,"gross_profit":304999397,"adv_promo":-2350000,"salaries":-251297245,"total_se":-480309212,"total_ga":-180087076,"total_opex":-599431552,"operating_income":-156679877,"net_income":-229353658,"net_income_final":-246985608,"pct_gp":7.7,"pct_oi":-4.0,"pct_ni":-5.8,"profitable":false,"y22":16243148203,"y23":13315396226,"y24":10090339396,"y25":3946743043,"y26":0,"bep":0,"bep_reached":true,"cluster":"RECOVERY","health":40,"tsh":"Close","yoy":-60.9},{"code":"M048","name":"MEGASTORE RUKO CIKUPA","category":"ERAFONE","type":"STREET","city":"TANGERANG","net_sales":9597971228,"gross_profit":777152828,"adv_promo":-13255000,"salaries":-353930560,"total_se":-581147176,"total_ga":-179092900,"total_opex":-684692010,"operating_income":295294952,"net_income":118399081,"net_income_final":75481003,"pct_gp":8.1,"pct_oi":3.1,"pct_ni":1.2,"profitable":true,"y22":12618649311,"y23":13177589069,"y24":12133659273,"y25":12812365099,"y26":3238953034,"bep":0,"bep_reached":true,"cluster":"STABLE","health":72,"tsh":"RENDI JANUARDI","yoy":5.6},{"code":"M091","name":"MEGASTORE CENTRAL PARK 3.0","category":"ERAFONE","type":"MALL","city":"KODYA JAKARTA BARAT","net_sales":35518791258,"gross_profit":2784625173,"adv_promo":-10034448,"salaries":-594441943,"total_se":-2774541044,"total_ga":-582629414,"total_opex":-3064182284,"operating_income":618655901,"net_income":-164581638,"net_income_final":-323406689,"pct_gp":7.8,"pct_oi":1.7,"pct_ni":-0.5,"profitable":false,"y22":30408528932,"y23":48316862499,"y24":42096664552,"y25":53707913570,"y26":19037682606,"bep":0,"bep_reached":true,"cluster":"GROWTH","health":80,"tsh":"RENDY NUR SETIAWAN","yoy":27.6},{"code":"M093","name":"MEGASTORE RUKO CIPONDOH TANGER","category":"ERAFONE","type":"STREET","city":"KOTA TANGERANG","net_sales":9700220392,"gross_profit":723278514,"adv_promo":-9565000,"salaries":-373208051,"total_se":-596223876,"total_ga":-300572055,"total_opex":-805053799,"operating_income":-202359110,"net_income":-381139488,"net_income_final":-424514782,"pct_gp":7.5,"pct_oi":-2.1,"pct_ni":-3.9,"profitable":false,"y22":12879120786,"y23":14066187450,"y24":13120110813,"y25":12640870616,"y26":4124053185,"bep":0,"bep_reached":true,"cluster":"STABLE","health":69,"tsh":"ABDILLAH","yoy":-3.7},{"code":"M104","name":"MEGASTORE RUKO REMPOA CIPUTAT","category":"ERAFONE","type":"STREET","city":"KOTA TANGERANG SELATAN","net_sales":8045860309,"gross_profit":747562411,"adv_promo":-14187200,"salaries":-339367082,"total_se":-729521199,"total_ga":-237112808,"total_opex":-837738385,"operating_income":85858874,"net_income":-62430741,"net_income_final":-98408434,"pct_gp":9.3,"pct_oi":1.1,"pct_ni":-0.8,"profitable":false,"y22":3212016331,"y23":9333236036,"y24":11254054686,"y25":10861889944,"y26":3364888119,"bep":0,"bep_reached":false,"cluster":"CRITICAL","health":49,"tsh":"ARENGGA","yoy":-3.5},{"code":"M132","name":"MEGASTORE GROGOL PETAMBURAN","category":"ERAFONE","type":"STREET","city":"KODYA JAKARTA BARAT","net_sales":2045602371,"gross_profit":144509606,"adv_promo":-6757000,"salaries":-236901385,"total_se":-530510905,"total_ga":-251954898,"total_opex":-696866347,"operating_income":-507281036,"net_income":-544982608,"net_income_final":-554129679,"pct_gp":7.1,"pct_oi":-24.8,"pct_ni":-26.6,"profitable":false,"y22":1130856923,"y23":7894117518,"y24":5087242041,"y25":3353699801,"y26":965221079,"bep":0,"bep_reached":true,"cluster":"RECOVERY","health":53,"tsh":"Close","yoy":-34.1}];
+
+function fmtM(v){ // format to IDR Miliar/Juta
+  if(!v||v===0) return '-';
+  const a=Math.abs(v),s=v<0?'-':'';
+  if(a>=1e12) return s+(a/1e12).toFixed(2)+'T';
+  if(a>=1e9)  return s+(a/1e9).toFixed(1)+' M';
+  if(a>=1e6)  return s+(a/1e6).toFixed(0)+' Jt';
+  return s+a.toLocaleString();
+}
+function fmtB(v){ return v?(v/1e9).toFixed(1):0; } // billions
+function fmtJt(v){ return v?(v/1e6).toFixed(0):0; }
+function pct(v,base){ return base?((v/base)*100).toFixed(1)+'%':'-'; }
+function clrNI(v){ return v>0?'#10b981':v<0?'#ef4444':'#6b7280'; }
+function clrPill(v){ return v>0?'pg':v<0?'pr':''; }
+
+// ── INIT CHARTS ──────────────────────────────────────────────
+function initCharts(){
+  const profitable = PNL.filter(r=>r.profitable).length;
+  const loss = PNL.filter(r=>!r.profitable).length;
+  const NS = PNL.reduce((a,r)=>a+r.net_sales,0);
+  const GP = PNL.reduce((a,r)=>a+r.gross_profit,0);
+  const SE = PNL.reduce((a,r)=>a+r.total_se,0);
+  const GA = PNL.reduce((a,r)=>a+r.total_ga,0);
+  const OI = PNL.reduce((a,r)=>a+r.operating_income,0);
+  const NI = PNL.reduce((a,r)=>a+r.net_income,0);
+  const SAL = PNL.reduce((a,r)=>a+r.salaries,0);
+  const ADV = PNL.reduce((a,r)=>a+r.adv_promo,0);
+
+  // Donut
+  new Chart(document.getElementById('chartDonut'),{
+    type:'doughnut',
+    data:{labels:['Profitable','Loss'],datasets:[{data:[profitable,loss],backgroundColor:['#10b981','#ef4444'],borderWidth:0,hoverOffset:4}]},
+    options:{plugins:{legend:{position:'bottom',labels:{font:{size:12},padding:16}}},cutout:'70%',responsive:true,maintainAspectRatio:true}
+  });
+
+  // Cluster NI bar
+  const clusters=['GROWTH','STABLE','RECOVERY','CRITICAL'];
+  const clrMap={GROWTH:'#10b981',STABLE:'#3b82f6',RECOVERY:'#f59e0b',CRITICAL:'#ef4444'};
+  const clNI = clusters.map(c=>PNL.filter(r=>r.cluster===c).reduce((a,r)=>a+r.net_income,0)/1e9);
+  new Chart(document.getElementById('chartClusterNI'),{
+    type:'bar',
+    data:{labels:clusters,datasets:[{label:'Net Income (M IDR)',data:clNI,backgroundColor:clusters.map(c=>clrMap[c]+'cc'),borderRadius:6}]},
+    options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{display:false}},scales:{y:{grid:{color:'#f3f4f6'},ticks:{font:{size:11}},title:{display:true,text:'IDR Miliar',font:{size:10}}},x:{grid:{display:false},ticks:{font:{size:11}}}}}
+  });
+
+  // Waterfall main
+  buildWaterfallMain(NS,GP,SE,GA,OI,NI);
+  // Waterfall chart
+  buildWaterfallChart(NS,GP,SE,GA,OI,NI);
+  // Opex pie
+  const opexPieData=[-ADV,-SAL,(-SE-SAL-ADV),(-GA)];
+  new Chart(document.getElementById('chartOpexPie'),{
+    type:'doughnut',
+    data:{labels:['Adv & Promo','Salaries','Other SE','G&A'],datasets:[{data:opexPieData.map(v=>Math.abs(v)/1e9),backgroundColor:['#3b82f6','#ef4444','#f59e0b','#8b5cf6'],borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{position:'bottom',labels:{font:{size:11},padding:12}}},cutout:'60%'}
+  });
+
+  // OPEX Bar
+  const opexLabels=['Salaries','Total SE','G&A','Adv & Promo'];
+  const opexVals=[Math.abs(SAL),Math.abs(SE),Math.abs(GA),Math.abs(ADV)].map(v=>(v/NS*100).toFixed(2));
+  new Chart(document.getElementById('chartOpexBar'),{
+    type:'bar',
+    data:{labels:opexLabels,datasets:[{label:'% Net Sales',data:opexVals,backgroundColor:['#ef4444cc','#f59e0bcc','#8b5cf6cc','#3b82f6cc'],borderRadius:6}]},
+    options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{display:false}},scales:{y:{grid:{color:'#f3f4f6'},title:{display:true,text:'% Net Sales',font:{size:10}},ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}}}
+  });
+
+  // Salary ratio chart (top 20 by salary%)
+  const withSal = PNL.filter(r=>r.net_sales>0).map(r=>({...r,salPct:Math.abs(r.salaries)/r.net_sales*100})).sort((a,b)=>b.salPct-a.salPct).slice(0,20);
+  new Chart(document.getElementById('chartSalary'),{
+    type:'bar',
+    data:{labels:withSal.map(r=>r.name.replace('ERAFONE ','').replace('MEGASTORE ','').slice(0,20)),datasets:[{label:'Salary % Sales',data:withSal.map(r=>r.salPct.toFixed(1)),backgroundColor:withSal.map(r=>r.salPct>10?'#ef444480':'#3b82f680'),borderRadius:4}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:true,plugins:{legend:{display:false}},scales:{x:{grid:{color:'#f3f4f6'},ticks:{callback:v=>v+'%'}},y:{grid:{display:false},ticks:{font:{size:9}}}}}
+  });
+
+  // Cluster GP chart
+  const clGP = clusters.map(c=>{
+    const rows=PNL.filter(r=>r.cluster===c);
+    const ns=rows.reduce((a,r)=>a+r.net_sales,0);
+    const gp=rows.reduce((a,r)=>a+r.gross_profit,0);
+    return ns?((gp/ns)*100).toFixed(1):0;
+  });
+  new Chart(document.getElementById('chartClusterGP'),{
+    type:'bar',
+    data:{labels:clusters,datasets:[{label:'GP Margin %',data:clGP,backgroundColor:clusters.map(c=>clrMap[c]+'aa'),borderRadius:6}]},
+    options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{display:false}},scales:{y:{grid:{color:'#f3f4f6'},ticks:{callback:v=>v+'%'},title:{display:true,text:'Gross Profit Margin %',font:{size:10}}},x:{grid:{display:false}}}}
+  });
+
+  // Cluster scatter
+  const clScatter = clusters.map(c=>{
+    const rows=PNL.filter(r=>r.cluster===c);
+    return{x:(rows.reduce((a,r)=>a+r.net_sales,0)/1e9),y:(rows.reduce((a,r)=>a+r.net_income,0)/1e9),r:rows.length*3};
+  });
+  new Chart(document.getElementById('chartClusterScatter'),{
+    type:'bubble',
+    data:{datasets:clusters.map((c,i)=>({label:c,data:[clScatter[i]],backgroundColor:clrMap[c]+'99',borderColor:clrMap[c]}))},
+    options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}},scales:{x:{title:{display:true,text:'Net Sales (M IDR)',font:{size:10}}},y:{title:{display:true,text:'Net Income (M IDR)',font:{size:10}},grid:{color:'#f3f4f6'}}}}
+  });
+
+  buildTopLists();
+  buildWFTable();
+  buildOpexLists();
+  buildClusterCards();
+  buildClusterTables();
+  buildStoreList();
+  buildStoreSelect();
+}
+
+function buildWaterfallMain(NS,GP,SE,GA,OI,NI){
+  const NS_M=NS/1e9,GP_M=GP/1e9,SE_M=SE/1e9,GA_M=GA/1e9,OI_M=OI/1e9,NI_M=NI/1e9;
+  const rows=[
+    {label:'Net Sales',val:NS_M,pct:100,color:'#3b82f6',positive:true},
+    {label:'(-) COGS',val:-(NS_M-GP_M),pct:-(100-8.8),color:'#ef4444',positive:false},
+    {label:'= Gross Profit',val:GP_M,pct:8.8,color:'#10b981',positive:true,bold:true},
+    {label:'(-) Selling Expense',val:SE_M,pct:SE_M/NS_M*100,color:'#f59e0b',positive:false},
+    {label:'(-) G&A Expense',val:GA_M,pct:GA_M/NS_M*100,color:'#f59e0b',positive:false},
+    {label:'= Operating Income',val:OI_M,pct:OI_M/NS_M*100,color:'#6366f1',positive:true,bold:true},
+    {label:'(-) HO & Finance',val:NI_M-OI_M,pct:(NI_M-OI_M)/NS_M*100,color:'#8b5cf6',positive:false},
+    {label:'= Net Income',val:NI_M,pct:NI_M/NS_M*100,color:NI_M>=0?'#10b981':'#ef4444',positive:NI_M>=0,bold:true},
+  ];
+  const maxAbs = Math.max(...rows.map(r=>Math.abs(r.val)));
+  document.getElementById('waterfallMain').innerHTML = rows.map(r=>`
+    <div class="wrow" style="${r.bold?'border-top:2px solid var(--b2);margin-top:4px;':''}">
+      <div class="wlabel" style="${r.bold?'font-weight:700;color:var(--t)':''}"><span style="${r.positive?'':'color:var(--t3)'}">
+        ${r.bold?'':'—'} ${r.label}</span></div>
+      <div class="wtrack">
+        <div class="wbar" style="width:${(Math.abs(r.val)/maxAbs*100).toFixed(1)}%;background:${r.color};opacity:${r.bold?1:.8}"></div>
+      </div>
+      <div class="wval" style="color:${r.color};${r.bold?'font-weight:700':''}">${r.val>=0?'':''} ${fmtM(r.val*1e9)}</div>
+      <div class="wpct">${Math.abs(r.pct).toFixed(1)}%</div>
+    </div>
+  `).join('');
+}
+
+function buildWaterfallChart(NS,GP,SE,GA,OI,NI){
+  const labels=['Net Sales','Gross Profit','Oper. Income','Net Income'];
+  const vals=[NS,GP,OI,NI].map(v=>+(v/1e9).toFixed(1));
+  const colors=['#3b82f6','#10b981','#6366f1',NI>=0?'#10b981':'#ef4444'];
+  new Chart(document.getElementById('chartWaterfall'),{
+    type:'bar',
+    data:{labels,datasets:[{label:'IDR Miliar',data:vals,backgroundColor:colors.map(c=>c+'cc'),borderRadius:6}]},
+    options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' '+ctx.raw.toLocaleString()+' M IDR'}}},scales:{y:{grid:{color:'#f3f4f6'},ticks:{callback:v=>v+' M'}},x:{grid:{display:false}}}}
+  });
+}
+
+function buildTopLists(){
+  const sorted=[...PNL].sort((a,b)=>b.net_income-a.net_income);
+  const top10 = sorted.slice(0,10);
+  const bot10 = sorted.slice(-10).reverse();
+  const maxP=top10[0]?.net_income||1;
+  const maxL=Math.abs(bot10[0]?.net_income||1);
+
+  document.getElementById('topProfit').innerHTML = top10.map((r,i)=>`
+    <div class="ritem">
+      <div class="rnum ${i===0?'gold':i===1?'silver':i===2?'bronze':''}">${i+1}</div>
+      <div style="flex:1;min-width:0">
+        <div class="rname">${r.name}</div>
+        <div class="rsub">${r.category} · ${r.type}</div>
+        <div class="rbar-wrap" style="margin-top:4px"><div class="rbar-track"><div class="rbar-fill" style="width:${(r.net_income/maxP*100).toFixed(0)}%;background:#10b981"></div></div></div>
+      </div>
+      <div class="rval" style="color:#10b981">+${fmtM(r.net_income)}</div>
+    </div>`).join('');
+
+  document.getElementById('topLoss').innerHTML = bot10.map((r,i)=>`
+    <div class="ritem">
+      <div class="rnum">${i+1}</div>
+      <div style="flex:1;min-width:0">
+        <div class="rname">${r.name}</div>
+        <div class="rsub">${r.category} · NS: ${fmtM(r.net_sales)}</div>
+        <div class="rbar-wrap" style="margin-top:4px"><div class="rbar-track"><div class="rbar-fill" style="width:${(Math.abs(r.net_income)/maxL*100).toFixed(0)}%;background:#ef4444"></div></div></div>
+      </div>
+      <div class="rval" style="color:#ef4444">${fmtM(r.net_income)}</div>
+    </div>`).join('');
+}
+
+function buildWFTable(){
+  const sorted=[...PNL].sort((a,b)=>a.net_income-b.net_income);
+  document.getElementById('wfBody').innerHTML = sorted.map((r,i)=>`
+    <tr>
+      <td class="td-code" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--t2)">${r.code}</td>
+      <td style="font-weight:600;font-size:12px;min-width:180px;white-space:normal">${r.name}</td>
+      <td><span class="pill ${r.category==='ERAFONE'?'p-erafone':'p-eramore'}">${r.category}</span></td>
+      <td class="tmono">${fmtM(r.net_sales)}</td>
+      <td class="tmono" style="color:#10b981">${fmtM(r.gross_profit)}</td>
+      <td class="tmono">${r.pct_gp}%</td>
+      <td class="tmono" style="color:#ef4444">${fmtM(r.total_opex)}</td>
+      <td class="tmono" style="color:${clrNI(r.operating_income)}">${fmtM(r.operating_income)}</td>
+      <td class="tmono tbold" style="color:${clrNI(r.net_income)}">${fmtM(r.net_income)}</td>
+      <td class="tmono" style="color:${clrNI(r.net_income)}">${r.pct_ni}%</td>
+      <td><span class="pill ${r.profitable?'pg':'pr'}">${r.profitable?'Profit':'Loss'}</span></td>
+    </tr>`).join('');
+}
+
+function buildOpexLists(){
+  const withOpex = PNL.filter(r=>r.net_sales>0).map(r=>({...r,opexPct:Math.abs(r.total_opex)/r.net_sales*100}));
+  const high=[...withOpex].sort((a,b)=>b.opexPct-a.opexPct).slice(0,15);
+  const low=[...withOpex].filter(r=>r.opexPct>0).sort((a,b)=>a.opexPct-b.opexPct).slice(0,15);
+  const maxH=high[0]?.opexPct||1;
+
+  document.getElementById('topOpex').innerHTML = high.map((r,i)=>`
+    <div class="ritem">
+      <div class="rnum">${i+1}</div>
+      <div style="flex:1;min-width:0">
+        <div class="rname">${r.name}</div>
+        <div class="rsub">OPEX: ${fmtM(r.total_opex)} · NS: ${fmtM(r.net_sales)}</div>
+        <div class="rbar-wrap" style="margin-top:4px"><div class="rbar-track"><div class="rbar-fill" style="width:${Math.min(100,r.opexPct/maxH*100).toFixed(0)}%;background:#ef4444"></div></div></div>
+      </div>
+      <div class="rval" style="color:#ef4444">${r.opexPct.toFixed(1)}%</div>
+    </div>`).join('');
+
+  document.getElementById('lowOpex').innerHTML = low.map((r,i)=>`
+    <div class="ritem">
+      <div class="rnum ${i<3?'gold':''}">${i+1}</div>
+      <div style="flex:1;min-width:0">
+        <div class="rname">${r.name}</div>
+        <div class="rsub">OPEX: ${fmtM(r.total_opex)} · NS: ${fmtM(r.net_sales)}</div>
+        <div class="rbar-wrap" style="margin-top:4px"><div class="rbar-track"><div class="rbar-fill" style="width:${(r.opexPct/maxH*100).toFixed(0)}%;background:#10b981"></div></div></div>
+      </div>
+      <div class="rval" style="color:#10b981">${r.opexPct.toFixed(1)}%</div>
+    </div>`).join('');
+}
+
+function buildClusterCards(){
+  const clusters=['GROWTH','STABLE','RECOVERY','CRITICAL'];
+  const clrMap={GROWTH:{bg:'#f0fdf4',border:'#bbf7d0',text:'#16a34a',emoji:'🟢'},STABLE:{bg:'#eff6ff',border:'#bfdbfe',text:'#1d4ed8',emoji:'🔵'},RECOVERY:{bg:'#fffbeb',border:'#fde68a',text:'#d97706',emoji:'🟡'},CRITICAL:{bg:'#fef2f2',border:'#fecaca',text:'#dc2626',emoji:'🔴'}};
+  document.getElementById('clusterCards').innerHTML = clusters.map(c=>{
+    const rows=PNL.filter(r=>r.cluster===c);
+    const ns=rows.reduce((a,r)=>a+r.net_sales,0);
+    const ni=rows.reduce((a,r)=>a+r.net_income,0);
+    const cl=clrMap[c];
+    return `<div style="background:${cl.bg};border:1px solid ${cl.border};border-radius:10px;padding:16px">
+      <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:${cl.text};margin-bottom:8px">${cl.emoji} ${c}</div>
+      <div style="font-size:30px;font-weight:900;color:var(--t);margin-bottom:4px">${rows.length}</div>
+      <div style="font-size:11px;color:var(--t2);margin-bottom:2px">NS: ${fmtM(ns)}</div>
+      <div style="font-size:11px;font-weight:700;color:${ni>=0?'#16a34a':'#dc2626'}">NI: ${fmtM(ni)}</div>
+    </div>`;
+  }).join('');
+}
+
+function buildClusterTables(){
+  const clusters=['CRITICAL','RECOVERY'];
+  document.getElementById('clusterTables').innerHTML = clusters.map(c=>{
+    const rows=PNL.filter(r=>r.cluster===c).sort((a,b)=>a.net_income-b.net_income).slice(0,8);
+    return `<div class="card">
+      <div class="ch"><div><div class="ct">${c} Stores — Detail</div></div></div>
+      <div style="overflow-x:auto">
+        <table class="tbl"><thead><tr><th>Kode</th><th>Nama Toko</th><th style="text-align:right">Net Sales</th><th style="text-align:right">GP%</th><th style="text-align:right">Net Income</th><th style="text-align:right">NI%</th></tr></thead>
+        <tbody>${rows.map(r=>`<tr><td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--t2)">${r.code}</td><td style="font-weight:600;font-size:12px">${r.name}</td><td class="tmono">${fmtM(r.net_sales)}</td><td class="tmono">${r.pct_gp}%</td><td class="tmono tbold" style="color:${clrNI(r.net_income)}">${fmtM(r.net_income)}</td><td class="tmono" style="color:${clrNI(r.net_income)}">${r.pct_ni}%</td></tr>`).join('')}</tbody>
+        </table>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function buildStoreList(){
+  const sorted=[...PNL].sort((a,b)=>a.net_income-b.net_income);
+  document.getElementById('storeListBody').innerHTML = sorted.map((r,i)=>`
+    <tr style="cursor:pointer" onclick="selectStore('${r.code}')">
+      <td class="tcenter" style="color:var(--t3);font-size:11px">${i+1}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--t2)">${r.code}</td>
+      <td style="font-weight:600;font-size:12px;min-width:180px;white-space:normal">${r.name}</td>
+      <td><span class="pill ${r.category==='ERAFONE'?'p-erafone':'p-eramore'}">${r.category}</span></td>
+      <td style="font-size:11px;color:var(--t2)">${r.type}</td>
+      <td class="tmono">${fmtM(r.net_sales)}</td>
+      <td class="tmono" style="color:${r.pct_gp<5?'#ef4444':'#10b981'}">${r.pct_gp}%</td>
+      <td class="tmono tbold" style="color:${clrNI(r.net_income)}">${fmtM(r.net_income)}</td>
+      <td class="tmono" style="color:${clrNI(r.net_income)}">${r.pct_ni}%</td>
+      <td><span class="pill ${r.profitable?'pg':'pr'}">${r.profitable?'Profit':'Loss'}</span></td>
+    </tr>`).join('');
+}
+
+function buildStoreSelect(){
+  const sel = document.getElementById('storeSelect');
+  const sorted=[...PNL].sort((a,b)=>a.name.localeCompare(b.name));
+  sorted.forEach(r=>{
+    const o=document.createElement('option');
+    o.value=r.code; o.textContent=`${r.code} — ${r.name}`;
+    sel.appendChild(o);
+  });
+}
+
+let chartStorePL=null, chartStoreTrend=null, chartStoreOpex=null;
+function selectStore(code){
+  document.getElementById('storeSelect').value=code;
+  loadStore();
+  document.getElementById('pg-stores').scrollTop=0;
+  showTab('stores', document.querySelector('.tab:nth-child(3)'));
+}
+
+function loadStore(){
+  const code=document.getElementById('storeSelect').value;
+  if(!code){ document.getElementById('storeDetail').style.display='none'; return; }
+  const r=PNL.find(s=>s.code===code);
+  if(!r) return;
+  document.getElementById('storeDetail').style.display='block';
+
+  // KPI cards
+  document.getElementById('storeKPI').innerHTML = `
+    <div class="kpi kb"><div class="kl">Net Sales YTD</div><div class="kv" style="font-size:18px">${fmtM(r.net_sales)}</div><div class="ks">Sep 2025</div></div>
+    <div class="kpi ${r.gross_profit>0?'kg':'kr'}"><div class="kl">Gross Profit</div><div class="kv ${r.gross_profit>0?'g':'r'}" style="font-size:18px">${fmtM(r.gross_profit)}</div><div class="ks">GPM ${r.pct_gp}%</div></div>
+    <div class="kpi ${r.net_income>0?'kg':'kr'}"><div class="kl">Net Income</div><div class="kv ${r.net_income>0?'g':'r'}" style="font-size:18px">${fmtM(r.net_income)}</div><div class="ks">NIM ${r.pct_ni}%</div></div>
+  `;
+
+  // P&L waterfall chart
+  if(chartStorePL) chartStorePL.destroy();
+  chartStorePL = new Chart(document.getElementById('chartStorePL'),{
+    type:'bar',
+    data:{labels:['Net Sales','Gross Profit','Oper. Income','Net Income'],
+      datasets:[{data:[r.net_sales/1e9,r.gross_profit/1e9,r.operating_income/1e9,r.net_income/1e9].map(v=>+v.toFixed(1)),
+        backgroundColor:['#3b82f6cc','#10b981cc','#6366f1cc',(r.net_income>=0?'#10b981':'#ef4444')+'cc'],borderRadius:6}]},
+    options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{display:false}},scales:{y:{grid:{color:'#f3f4f6'},ticks:{callback:v=>v+' M'}},x:{grid:{display:false}}}}
+  });
+
+  // Trend chart
+  if(chartStoreTrend) chartStoreTrend.destroy();
+  const years=['2022','2023','2024','2025','2026'];
+  const vals=[r.y22,r.y23,r.y24,r.y25,r.y26].map(v=>+(v/1e9).toFixed(1));
+  chartStoreTrend = new Chart(document.getElementById('chartStoreTrend'),{
+    type:'line',
+    data:{labels:years,datasets:[{label:'Net Amount (M IDR)',data:vals,borderColor:'#3b82f6',backgroundColor:'#3b82f620',fill:true,tension:.4,pointRadius:5,pointBackgroundColor:'#3b82f6'}]},
+    options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{display:false}},scales:{y:{grid:{color:'#f3f4f6'},ticks:{callback:v=>v+' M'}},x:{grid:{display:false}}}}
+  });
+
+  // Opex breakdown
+  if(chartStoreOpex) chartStoreOpex.destroy();
+  chartStoreOpex = new Chart(document.getElementById('chartStoreOpex'),{
+    type:'bar',
+    data:{labels:['Adv & Promo','Salaries','Total SE','G&A'],
+      datasets:[{data:[Math.abs(r.adv_promo)/1e6,Math.abs(r.salaries)/1e6,Math.abs(r.total_se)/1e6,Math.abs(r.total_ga)/1e6].map(v=>+v.toFixed(0)),
+        backgroundColor:['#3b82f6cc','#ef4444cc','#f59e0bcc','#8b5cf6cc'],borderRadius:5}]},
+    options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{display:false}},scales:{y:{grid:{color:'#f3f4f6'},ticks:{callback:v=>v+' Jt'}},x:{grid:{display:false}}}}
+  });
+}
+
+// ── TABS ──────────────────────────────────────────────────────
+function showTab(id, btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('pg-'+id).classList.add('active');
+  if(btn) btn.classList.add('active');
+}
+
+// ── START ──────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', initCharts);
+</script>
+</body>
+</html>
