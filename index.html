@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ERA-ANALYTICS Preview</title>
+    <link rel="stylesheet" href="./styles.css?v=mobile-fix-2" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Navigasi utama">
+        <div class="brand">
+          <div class="brand-mark">EA</div>
+          <div>
+            <strong>ERA-ANALYTICS</strong>
+            <span>Region 5 Store Health</span>
+          </div>
+        </div>
+
+        <nav class="nav-list">
+          <a class="active" href="#dashboard">Dashboard</a>
+          <a href="#analytics">Analytics</a>
+          <a href="#pnl">P&L</a>
+          <a href="#ai-insights">AI Insights</a>
+          <a href="#mvp">MVP</a>
+          <a href="#stores">Toko Prioritas</a>
+          <a href="#tsh">TSH Ranking</a>
+          <a href="#workflow">Workflow</a>
+          <a href="#roadmap">Roadmap</a>
+          <a href="#architecture">Architecture</a>
+        </nav>
+
+        <div class="sidebar-note">
+          <span>Data source</span>
+          <strong>Sales vs Stock R5</strong>
+          <small>Jan 2022 - Mar 2026</small>
+        </div>
+      </aside>
+
+      <main class="content">
+        <section id="dashboard" class="topbar">
+          <div>
+            <p class="eyebrow">Executive Analytics</p>
+            <h1>ERA-ANALYTICS Store Diagnosis</h1>
+            <p class="subtitle">
+              Analisis singkat untuk melihat toko mana yang rugi, penyebabnya,
+              dan action apa yang harus dilakukan.
+            </p>
+          </div>
+          <div class="actions">
+            <button class="button secondary" type="button">Upload Excel</button>
+            <button class="button primary" type="button">Export Report</button>
+          </div>
+        </section>
+
+        <section class="filters" aria-label="Filter dashboard">
+          <label>
+            Period
+            <select>
+              <option>Q1 2026</option>
+              <option>2025 Full Year</option>
+              <option>Mar 2026</option>
+            </select>
+          </label>
+          <label>
+            Region
+            <select>
+              <option>Region 5</option>
+            </select>
+          </label>
+          <label>
+            Channel
+            <select>
+              <option>Erafone + Erafone &amp; More</option>
+              <option>Erafone</option>
+              <option>Erafone &amp; More</option>
+            </select>
+          </label>
+          <label>
+            TSH
+            <select id="tshFilter">
+              <option value="all">All TSH</option>
+            </select>
+          </label>
+        </section>
+
+        <section class="kpi-grid" aria-label="Ringkasan KPI">
+          <article class="kpi">
+            <span>Total Sales Q1 2026</span>
+            <strong id="totalSales">-</strong>
+            <small class="positive" id="q1Growth">-</small>
+          </article>
+          <article class="kpi">
+            <span>Mar BEP Achievement</span>
+            <strong id="bepAchievement">-</strong>
+            <small id="bepNote">Sales vs BEP</small>
+          </article>
+          <article class="kpi">
+            <span>Critical Stores</span>
+            <strong id="criticalStores">-</strong>
+            <small>Ach BEP di bawah 70%</small>
+          </article>
+          <article class="kpi">
+            <span>Stores Above BEP</span>
+            <strong id="aboveBepStores">-</strong>
+            <small>Target: tambah 10 toko</small>
+          </article>
+        </section>
+
+        <section id="analytics" class="analytics-panel" aria-label="Ringkasan analisis">
+          <div class="analytics-main">
+            <p class="eyebrow">Kesimpulan Analytics</p>
+            <h2>Region 5 tumbuh, tetapi 70 toko aktif masih belum mencapai BEP.</h2>
+            <p>
+              Total sales sudah sehat secara region. Risiko profit muncul karena
+              performance belum merata, terutama pada toko dengan gap BEP besar
+              dan sales yang masih terlalu bergantung pada device.
+            </p>
+          </div>
+          <div class="analytics-side">
+            <div class="insight-line">
+              <span>Masalah utama</span>
+              <strong>39 toko critical</strong>
+            </div>
+            <div class="insight-line">
+              <span>Root cause signal</span>
+              <strong>Device 89,4%</strong>
+            </div>
+            <div class="insight-line">
+              <span>Next action</span>
+              <strong>Prioritaskan gap BEP</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="diagnosis-strip" aria-label="Alur membaca analytics">
+          <div class="diagnosis-step">
+            <span>01</span>
+            <strong>Lihat gap BEP</strong>
+            <p>Prioritaskan toko paling jauh dari BEP.</p>
+          </div>
+          <div class="diagnosis-step">
+            <span>02</span>
+            <strong>Cek tren sales</strong>
+            <p>Pisahkan toko membaik, stagnan, dan turun.</p>
+          </div>
+          <div class="diagnosis-step">
+            <span>03</span>
+            <strong>Cek mix kategori</strong>
+            <p>Dorong bundle, accessories, dan protection.</p>
+          </div>
+          <div class="diagnosis-step">
+            <span>04</span>
+            <strong>Tentukan action</strong>
+            <p>Traffic, conversion, margin, stock, atau cost.</p>
+          </div>
+        </section>
+
+        <section id="pnl" class="panel pnl-panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">P&L Analytics</p>
+              <h2>Profitability Check YTD Sep 2025</h2>
+            </div>
+            <span class="badge danger">110 Loss Stores</span>
+          </div>
+
+          <div class="pnl-summary">
+            <article>
+              <span>Net Sales</span>
+              <strong>Rp1,15 T</strong>
+              <small>Erafone + Erafone &amp; More</small>
+            </article>
+            <article>
+              <span>Gross Profit</span>
+              <strong>Rp126,8 M</strong>
+              <small>GP 11,0%</small>
+            </article>
+            <article>
+              <span>Operating Income</span>
+              <strong>Rp16,8 M</strong>
+              <small>Sebelum HO &amp; finance cost</small>
+            </article>
+            <article>
+              <span>Net Income Final</span>
+              <strong class="loss-text">-Rp11,7 M</strong>
+              <small>After HO &amp; FICO</small>
+            </article>
+          </div>
+
+          <div class="pnl-grid">
+            <div class="pnl-block">
+              <p class="eyebrow">Profit vs Loss</p>
+              <div class="profit-bars">
+                <div>
+                  <span>Profit Store</span>
+                  <strong>46</strong>
+                  <div class="profit-track"><i style="width: 29%"></i></div>
+                </div>
+                <div>
+                  <span>Loss Store</span>
+                  <strong>110</strong>
+                  <div class="profit-track loss"><i style="width: 71%"></i></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pnl-block">
+              <p class="eyebrow">Cost Driver Utama</p>
+              <div class="driver-list">
+                <span>Selling salary <b>-4,1%</b></span>
+                <span>ROU depreciation <b>-2,3%</b></span>
+                <span>HO cost <b>-1,8%</b></span>
+                <span>Credit card <b>-1,4%</b></span>
+              </div>
+            </div>
+
+            <div class="pnl-block">
+              <p class="eyebrow">Root Cause Logic</p>
+              <ol class="logic-list">
+                <li>Sales vs BEP</li>
+                <li>Gross Profit %</li>
+                <li>OPEX to Sales</li>
+                <li>Net Income after HO &amp; FICO</li>
+              </ol>
+            </div>
+          </div>
+        </section>
+
+        <section id="ai-insights" class="panel ai-panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">AI Insights</p>
+              <h2>AI Store Diagnosis Assistant</h2>
+            </div>
+            <span class="badge">Decision Support</span>
+          </div>
+
+          <div class="ai-layout">
+            <div class="ai-hero">
+              <span class="ai-label">Auto-generated insight</span>
+              <h3>
+                Fokus utama bulan ini adalah menutup gap BEP di format besar
+                dan menaikkan mix accessories + repair contract.
+              </h3>
+              <p>
+                AI membaca kombinasi Sales vs BEP, P&L, GP%, OPEX to Sales,
+                dan Net Income after HO & FICO untuk menentukan root cause toko.
+              </p>
+              <div class="ai-confidence">
+                <span>Confidence</span>
+                <strong>High</strong>
+              </div>
+            </div>
+
+            <div class="ai-cards">
+              <article>
+                <span>Priority Store</span>
+                <strong>ERAFONE &amp; MORE EDC</strong>
+                <p>Loss besar, GP negatif, dan estimasi BEP April masih lemah.</p>
+              </article>
+              <article>
+                <span>Root Cause</span>
+                <strong>Cost structure heavy</strong>
+                <p>OPEX dan allocation cost menekan profit walau sales berjalan.</p>
+              </article>
+              <article>
+                <span>Recommended Action</span>
+                <strong>Cost review + margin lift</strong>
+                <p>Review format toko, HO/FICO impact, dan push high-margin attach.</p>
+              </article>
+            </div>
+          </div>
+
+          <div class="ai-workflow">
+            <div>
+              <span>01</span>
+              <strong>Data masuk</strong>
+              <p>Sales vs Stock, BEP, P&L, master toko, dan opening date.</p>
+            </div>
+            <div>
+              <span>02</span>
+              <strong>KPI dihitung</strong>
+              <p>MTD sales, GP%, OPEX%, operating income, dan net income.</p>
+            </div>
+            <div>
+              <span>03</span>
+              <strong>AI diagnosis</strong>
+              <p>AI memilih root cause: traffic, conversion, margin, cost, atau lifecycle.</p>
+            </div>
+            <div>
+              <span>04</span>
+              <strong>Action keluar</strong>
+              <p>Rekomendasi per toko, prioritas, owner, dan review cadence.</p>
+            </div>
+          </div>
+
+          <div class="ai-prompt-box">
+            <label for="aiQuestion">Tanya AI Insights</label>
+            <div>
+              <input
+                id="aiQuestion"
+                type="text"
+                value="Kenapa Erafone & More EDC rugi dan action apa yang harus dilakukan?"
+              />
+              <button type="button">Generate Insight</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="mvp" class="panel mvp-panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Minimum Viable Product</p>
+              <h2>MVP ERA-ANALYTICS</h2>
+            </div>
+            <span class="badge">Versi Awal</span>
+          </div>
+
+          <div class="mvp-hero">
+            <div>
+              <span>Definisi MVP</span>
+              <h3>Versi pertama yang sederhana, tapi sudah cukup untuk mengambil keputusan toko.</h3>
+              <p>
+                MVP ERA-ANALYTICS fokus dulu pada upload data Sales + P&L,
+                menghitung store health, menemukan toko rugi, lalu memberi
+                rekomendasi action prioritas.
+              </p>
+            </div>
+            <div class="mvp-score">
+              <strong>6</strong>
+              <span>fitur inti untuk launch awal</span>
+            </div>
+          </div>
+
+          <div class="mvp-grid">
+            <article>
+              <span>01</span>
+              <strong>Upload Sales vs Stock</strong>
+              <p>Input harian untuk sales MTD, category mix, TSH, dan toko aktif.</p>
+            </article>
+            <article>
+              <span>02</span>
+              <strong>Upload P&L</strong>
+              <p>Input profitability untuk GP, OPEX, operating income, dan net income.</p>
+            </article>
+            <article>
+              <span>03</span>
+              <strong>Store Health</strong>
+              <p>Status toko: Healthy, Watchlist, Critical berdasarkan BEP dan P&L.</p>
+            </article>
+            <article>
+              <span>04</span>
+              <strong>Priority Store List</strong>
+              <p>Daftar toko yang paling perlu action berdasarkan gap dan loss.</p>
+            </article>
+            <article>
+              <span>05</span>
+              <strong>Basic AI Insights</strong>
+              <p>Penjelasan root cause dan rekomendasi action dalam bahasa bisnis.</p>
+            </article>
+            <article>
+              <span>06</span>
+              <strong>Export Summary</strong>
+              <p>Ringkasan untuk monthly review, TSH review, dan management update.</p>
+            </article>
+          </div>
+
+          <div class="mvp-scope">
+            <div>
+              <p class="eyebrow">Masuk MVP</p>
+              <ul>
+                <li>Upload Excel manual</li>
+                <li>Sales vs BEP</li>
+                <li>P&L profitability check</li>
+                <li>Critical store ranking</li>
+                <li>Basic AI recommendation</li>
+              </ul>
+            </div>
+            <div>
+              <p class="eyebrow">Next Phase</p>
+              <ul>
+                <li>Google Sheets connector otomatis</li>
+                <li>Full AI chat per toko</li>
+                <li>Executive summary PDF otomatis</li>
+                <li>Footfall dan conversion integration</li>
+                <li>Workflow approval action plan</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="grid two-columns">
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+              <p class="eyebrow">Trend</p>
+                <h2>Analisis Sales Tahunan</h2>
+              </div>
+              <span class="badge">2022-2026</span>
+            </div>
+            <canvas id="yearChart" width="800" height="320"></canvas>
+          </article>
+
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+              <p class="eyebrow">Health</p>
+                <h2>Klasifikasi Kesehatan Toko</h2>
+              </div>
+              <span class="badge">Active Stores</span>
+            </div>
+            <canvas id="healthChart" width="800" height="320"></canvas>
+          </article>
+        </section>
+
+        <section class="grid two-columns">
+          <article id="tsh" class="panel">
+            <div class="panel-header">
+              <div>
+              <p class="eyebrow">Leaderboard</p>
+                <h2>Analisis Performance TSH</h2>
+              </div>
+              <span class="badge">Q1 YoY</span>
+            </div>
+            <div id="tshBars" class="bar-list"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+              <p class="eyebrow">Margin Signal</p>
+                <h2>Analisis Category Mix Q1 2026</h2>
+              </div>
+              <span class="badge warning">Device-heavy</span>
+            </div>
+            <div class="mix-layout">
+              <canvas id="mixChart" width="360" height="300"></canvas>
+              <div class="mix-copy">
+                <strong>Device masih 89,4%</strong>
+                <p>
+                  Target awal: dorong Accessories + Repair Contract dari 6,2%
+                  menuju 9-12% untuk membantu margin toko.
+                </p>
+                <div class="mini-targets">
+                  <span>Accessories 6-8%</span>
+                  <span>Repair 3-4%</span>
+                  <span>Bundle attach</span>
+                </div>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section id="stores" class="panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Priority</p>
+              <h2>Analisis Toko Prioritas</h2>
+            </div>
+            <span class="badge danger">BEP Gap</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Store</th>
+                  <th>TSH</th>
+                  <th>Mar Sales</th>
+                  <th>BEP</th>
+                  <th>Achievement</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="storeRows"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="workflow" class="panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Execution</p>
+              <h2>90-Day Turnaround Workflow</h2>
+            </div>
+            <span class="badge">Weekly review</span>
+          </div>
+          <div class="workflow">
+            <div class="step active">
+              <span>01</span>
+              <strong>Diagnose</strong>
+              <p>Sales vs BEP, gap, growth, category mix, dan TSH ownership.</p>
+            </div>
+            <div class="step">
+              <span>02</span>
+              <strong>Fix Traffic</strong>
+              <p>GBP, local ads, WA blast, event store, dan visibility toko.</p>
+            </div>
+            <div class="step">
+              <span>03</span>
+              <strong>Lift Margin</strong>
+              <p>Bundle accessories, repair contract, warranty, dan attach rate.</p>
+            </div>
+            <div class="step">
+              <span>04</span>
+              <strong>Review Cost</strong>
+              <p>Rent, manpower, opex, format toko, relokasi, atau resize.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="roadmap" class="panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Product Roadmap</p>
+              <h2>ERA-ANALYTICS Development Phases</h2>
+            </div>
+            <span class="badge">4 Phase Build</span>
+          </div>
+          <div class="roadmap-grid">
+            <article class="phase-card">
+              <div class="phase-top">
+                <span>Phase 1</span>
+                <strong>Setup & Data Ingestion</strong>
+              </div>
+              <ul>
+                <li>Struktur database per toko</li>
+                <li>Template input data Excel / Google Sheets connector</li>
+                <li>Historical data import sejak opening date</li>
+              </ul>
+            </article>
+            <article class="phase-card">
+              <div class="phase-top">
+                <span>Phase 2</span>
+                <strong>Core Analytics Engine</strong>
+              </div>
+              <ul>
+                <li>P&amp;L calculator per toko</li>
+                <li>Break-even tracker</li>
+                <li>Parameter scoring weighted scorecard</li>
+                <li>Root cause analysis engine</li>
+              </ul>
+            </article>
+            <article class="phase-card">
+              <div class="phase-top">
+                <span>Phase 3</span>
+                <strong>Dashboard & Visualization</strong>
+              </div>
+              <ul>
+                <li>Store health dashboard traffic light: Merah, Kuning, Hijau</li>
+                <li>Trend charts revenue, margin, footfall</li>
+                <li>Benchmark toko merugi vs toko profit</li>
+                <li>Heatmap parameter masalah</li>
+              </ul>
+            </article>
+            <article class="phase-card">
+              <div class="phase-top">
+                <span>Phase 4</span>
+                <strong>Report Generation</strong>
+              </div>
+              <ul>
+                <li>Monthly Store Review auto-report</li>
+                <li>Action recommendation per parameter</li>
+                <li>Executive summary PDF</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section id="architecture" class="panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">System Design</p>
+              <h2>Web Architecture Preview</h2>
+            </div>
+            <span class="badge">MVP Ready</span>
+          </div>
+          <div class="architecture">
+            <div class="arch-node">Excel Upload</div>
+            <div class="arch-arrow">→</div>
+            <div class="arch-node">ETL Cleaning</div>
+            <div class="arch-arrow">→</div>
+            <div class="arch-node">KPI Engine</div>
+            <div class="arch-arrow">→</div>
+            <div class="arch-node">Dashboard</div>
+            <div class="arch-arrow">→</div>
+            <div class="arch-node">Action Plan</div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

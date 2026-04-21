@@ -1,0 +1,10 @@
+# Large data files - store in Google Drive / iCloud
+*.xlsx
+*.xls
+*.csv
+
+# macOS
+.DS_Store
+
+# Output files (generated)
+outputs/
