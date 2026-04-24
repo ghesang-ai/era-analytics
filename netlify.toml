@@ -1,7 +1,7 @@
 [[redirects]]
   from = "/"
-  to = "/ERA_ANALYTICS_Architecture.html"
-  status = 302
+  to = "/index.html"
+  status = 200
 
 [[headers]]
   for = "/*"

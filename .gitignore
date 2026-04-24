@@ -5,6 +5,8 @@
 
 # macOS
 .DS_Store
+__pycache__/
 
 # Output files (generated)
 outputs/
+!outputs/dashboard_data_v2.json
