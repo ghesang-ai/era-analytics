@@ -559,8 +559,11 @@ function buildAiInsight(store) {
 
 function renderAi(store) {
   const insight = buildAiInsight(store);
+  const question = qs("aiQuestion") && qs("aiQuestion").value.trim();
   qs("aiHeadline").textContent = insight.headline;
-  qs("aiSummary").textContent = insight.summary;
+  qs("aiSummary").textContent = question
+    ? `Pertanyaan: "${question}" — ${insight.summary}`
+    : insight.summary;
   qs("aiConfidence").textContent = insight.rootCause.confidence;
   qs("aiPriorityStore").textContent = `${store.code} - ${store.name}`;
   qs("aiPriorityCopy").textContent = `${store.tsh} · ${store.channel} · status ${getBepLabel(store)} · P&L ${store.pnl}`;
@@ -568,7 +571,9 @@ function renderAi(store) {
   qs("aiRootCauseCopy").textContent = insight.rootCause.copy;
   qs("aiActionTitle").textContent = insight.action.title;
   qs("aiActionCopy").textContent = insight.action.copy;
-  qs("aiQuestion").value = `Kenapa ${store.name} ${store.bepGap >= 0 ? "harus dijaga" : "masih rugi"} dan action apa yang harus dilakukan?`;
+  if (!qs("aiQuestion").value.trim()) {
+    qs("aiQuestion").placeholder = `Kenapa ${store.name} ${store.bepGap >= 0 ? "harus dijaga" : "masih rugi"} dan action apa yang harus dilakukan?`;
+  }
 }
 
 function bindEvents() {
@@ -619,7 +624,10 @@ function bindEvents() {
 
   qs("aiGenerateButton").addEventListener("click", () => {
     const store = dashboardState.stores.find((item) => item.code === qs("aiStoreSelect").value);
-    if (!store) return;
+    if (!store) {
+      alert("Pilih toko terlebih dahulu dari dropdown.");
+      return;
+    }
     const btn = qs("aiGenerateButton");
     btn.disabled = true;
     btn.textContent = "Menganalisis...";
@@ -629,8 +637,11 @@ function bindEvents() {
       renderAi(store);
       btn.disabled = false;
       btn.textContent = "Generate Insight";
-      qs("aiGenerateButton").style.boxShadow = "0 0 0 3px rgba(229,75,69,0.35)";
-      setTimeout(() => { qs("aiGenerateButton").style.boxShadow = ""; }, 1200);
+      btn.style.boxShadow = "0 0 0 3px rgba(229,75,69,0.35)";
+      setTimeout(() => { btn.style.boxShadow = ""; }, 1200);
+      const ts = new Date().toLocaleString("id-ID", { day:"2-digit", month:"short", year:"numeric", hour:"2-digit", minute:"2-digit" });
+      const lg = qs("aiLastGenerated");
+      if (lg) lg.textContent = `Terakhir dianalisis: ${ts} · Toko: ${store.code} — ${store.name}`;
     }, 900);
   });
 

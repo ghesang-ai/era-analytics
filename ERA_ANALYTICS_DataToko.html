@@ -362,7 +362,7 @@ td{padding:9px 10px;color:var(--text);vertical-align:middle;white-space:nowrap}
 </div>
 
 <!-- DETAIL PANEL -->
-<div class="overlay" id="overlay" onclick="closeDetail()"></div>
+<div class="overlay" id="detailOverlay" onclick="closeDetail()"></div>
 <div class="detail-panel" id="detailPanel">
   <div class="dp-head">
     <div>
@@ -622,12 +622,12 @@ function openDetail(idx) {
   yoyEl.textContent = (s.yoy > 0 ? '+' : '') + s.yoy + '%';
   yoyEl.style.color = s.yoy > 0 ? '#16a34a' : s.yoy < 0 ? '#dc2626' : '#6b7280';
 
-  document.getElementById('overlay').classList.add('open');
+  document.getElementById('detailOverlay').classList.add('open');
   document.getElementById('detailPanel').classList.add('open');
 }
 
 function closeDetail() {
-  document.getElementById('overlay').classList.remove('open');
+  document.getElementById('detailOverlay').classList.remove('open');
   document.getElementById('detailPanel').classList.remove('open');
 }
 
