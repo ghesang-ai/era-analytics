@@ -189,9 +189,9 @@ select {
   padding: 30px 28px;
   margin-bottom: 16px;
   background:
-    radial-gradient(circle at 85% 35%, rgba(84, 167, 255, 0.55), transparent 26%),
-    radial-gradient(circle at 90% 70%, rgba(255, 255, 255, 0.16), transparent 20%),
-    linear-gradient(135deg, #071b57 0%, #0e2d86 58%, #143997 100%);
+    radial-gradient(ellipse at 70% 0%, rgba(220, 0, 0, 0.35) 0%, transparent 55%),
+    radial-gradient(ellipse at 100% 100%, rgba(180, 0, 0, 0.25) 0%, transparent 45%),
+    linear-gradient(135deg, #0d0d0d 0%, #1a0a0a 50%, #0f0505 100%);
   color: #fff;
   border-color: transparent;
 }
@@ -230,7 +230,7 @@ h3 {
 
 .page-header .subtitle {
   max-width: 720px;
-  color: #d8e1f6;
+  color: rgba(255,255,255,0.6);
   font-size: 16px;
 }
 
@@ -252,9 +252,9 @@ h3 {
   flex-direction: column;
   justify-content: center;
   padding: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(220,0,0,0.3);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(220,0,0,0.08);
   backdrop-filter: blur(10px);
   text-align: right;
 }
@@ -262,7 +262,7 @@ h3 {
 .hero-stat small,
 .hero-stat span {
   display: block;
-  color: #dbe4fb;
+  color: rgba(255,255,255,0.6);
 }
 
 .hero-stat strong {
@@ -293,17 +293,18 @@ h3 {
 .tab {
   min-height: 36px;
   padding: 0 16px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255,255,255,0.15);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.08);
-  color: #e5edff;
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.75);
   font-weight: 700;
 }
 
 .tab.is-active {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(220,0,0,0.75);
+  border-color: rgba(220,0,0,0.9);
   color: #fff;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+  box-shadow: 0 0 12px rgba(220,0,0,0.4);
 }
 
 .actions {
@@ -324,8 +325,8 @@ h3 {
 }
 
 .button.secondary {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.2);
   color: #fff;
 }
 
@@ -353,19 +354,19 @@ h3 {
 .streak-blue {
   left: -60px;
   bottom: 38px;
-  width: 520px;
-  background: linear-gradient(90deg, transparent, #1ea4ff, #97d9ff, transparent);
-  transform: rotate(-10deg);
-  box-shadow: 0 0 18px rgba(30, 164, 255, 0.55);
+  width: 600px;
+  background: linear-gradient(90deg, transparent, rgba(220,0,0,0.6), rgba(255,80,80,0.4), transparent);
+  transform: rotate(-8deg);
+  box-shadow: 0 0 20px rgba(220,0,0,0.35);
 }
 
 .streak-red {
-  right: -70px;
-  bottom: 22px;
-  width: 460px;
-  background: linear-gradient(90deg, transparent, #ff655f, #ffb1ad, transparent);
-  transform: rotate(-16deg);
-  box-shadow: 0 0 18px rgba(255, 101, 95, 0.55);
+  right: -40px;
+  bottom: 16px;
+  width: 500px;
+  background: linear-gradient(90deg, transparent, rgba(180,0,0,0.5), rgba(220,60,60,0.3), transparent);
+  transform: rotate(-14deg);
+  box-shadow: 0 0 16px rgba(200,0,0,0.3);
 }
 
 .kpi-strip,
