@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ERA-ANALYTICS Store Health Check - 12-Dimension Store Diagnostic Framework">
+    <meta name="author" content="ERA-ANALYTICS - Erajaya Digital Region 5">
+    <title>Store Health Check - ERA-ANALYTICS</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏥</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --primary-dark: #534AB7;
+            --success: #00D084;
+            --warning: #FFA500;
+            --danger: #FF4757;
+            --dark: #1a1a2e;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-400: #ced4da;
+            --gray-500: #adb5bd;
+            --gray-600: #6c757d;
+            --gray-700: #495057;
+            --gray-800: #343a40;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Store Info Section */
+        .store-info {
+            padding: 25px 30px;
+            background: var(--gray-100);
+            border-bottom: 1px solid var(--gray-300);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .info-field label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-600);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-field input,
+        .info-field select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.2s;
+        }
+
+        .info-field input:focus,
+        .info-field select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Progress Bar */
+        .progress-section {
+            padding: 20px 30px;
+            background: white;
+            border-bottom: 1px solid var(--gray-300);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .progress-text {
+            font-size: 14px;
+            color: var(--gray-700);
+            font-weight: 600;
+        }
+
+        .progress-percent {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .progress-bar-container {
+            height: 8px;
+            background: var(--gray-200);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        /* Tab Navigation */
+        .tabs {
+            display: flex;
+            overflow-x: auto;
+            background: white;
+            border-bottom: 2px solid var(--gray-200);
+            padding: 0 20px;
+        }
+
+        .tab {
+            padding: 16px 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-600);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .tab:hover {
+            color: var(--primary);
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab.completed::after {
+            content: '✓';
+            position: absolute;
+            top: 8px;
+            right: 4px;
+            width: 16px;
+            height: 16px;
+            background: var(--success);
+            color: white;
+            border-radius: 50%;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Content */
+        .content {
+            padding: 30px;
+            min-height: 400px;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            color: var(--gray-600);
+            margin-bottom: 25px;
+        }
+
+        /* Question */
+        .question {
+            margin-bottom: 30px;
+        }
+
+        .question-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .question-helper {
+            font-size: 13px;
+            color: var(--gray-600);
+            margin-bottom: 10px;
+        }
+
+        /* Radio Options */
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border: 2px solid var(--gray-300);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .radio-option:hover {
+            border-color: var(--primary);
+            background: #f8f7ff;
+        }
+
+        .radio-option input[type="radio"] {
+            margin-right: 12px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .radio-option.selected {
+            border-color: var(--primary);
+            background: #f8f7ff;
+        }
+
+        .option-text {
+            flex: 1;
+            font-size: 14px;
+            color: var(--gray-800);
+        }
+
+        .option-score {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-500);
+            padding: 4px 10px;
+            background: var(--gray-100);
+            border-radius: 12px;
+        }
+
+        /* Number Input */
+        .number-input-wrapper {
+            position: relative;
+            max-width: 300px;
+        }
+
+        .number-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .number-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Score Display */
+        .score-display {
+            margin-top: 15px;
+            padding: 16px;
+            background: linear-gradient(135deg, #f8f7ff 0%, #f0efff 100%);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .score-display-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-600);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .score-display-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Section Score Card */
+        .section-score-card {
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+        }
+
+        .section-score-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+
+        .section-score-value {
+            font-size: 48px;
+            font-weight: 700;
+        }
+
+        .section-score-status {
+            font-size: 14px;
+            margin-top: 8px;
+            padding: 6px 16px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        /* Navigation Buttons */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 1px solid var(--gray-300);
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-secondary {
+            background: var(--gray-200);
+            color: var(--gray-700);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-300);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+            font-size: 16px;
+            padding: 14px 32px;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 208, 132, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Summary Section */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            padding: 20px;
+            background: var(--gray-100);
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .summary-card-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-600);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .summary-card-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .summary-card-subtitle {
+            font-size: 13px;
+            color: var(--gray-600);
+            margin-top: 4px;
+        }
+
+        .summary-card.success {
+            border-left-color: var(--success);
+        }
+
+        .summary-card.success .summary-card-value {
+            color: var(--success);
+        }
+
+        .summary-card.warning {
+            border-left-color: var(--warning);
+        }
+
+        .summary-card.warning .summary-card-value {
+            color: var(--warning);
+        }
+
+        .summary-card.danger {
+            border-left-color: var(--danger);
+        }
+
+        .summary-card.danger .summary-card-value {
+            color: var(--danger);
+        }
+
+        .dimension-list {
+            margin-top: 30px;
+        }
+
+        .dimension-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background: white;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .dimension-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .dimension-score {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .decision-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f7ff 0%, #f0efff 100%);
+            border-radius: 12px;
+        }
+
+        .decision-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 16px;
+        }
+
+        .decision-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .decision-btn {
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .decision-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .decision-btn.keep {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .decision-btn.improve {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .decision-btn.relocate {
+            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+        }
+
+        .decision-btn.close {
+            background: linear-gradient(135deg, #ff4757 0%, #c81d2e 100%);
+        }
+
+        .decision-btn.selected {
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .decision-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .tabs {
+                padding: 0 10px;
+            }
+
+            .tab {
+                padding: 14px 12px;
+                font-size: 12px;
+            }
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--gray-600);
+        }
+
+        .spinner {
+            border: 3px solid var(--gray-300);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🏥 Store Health Check</h1>
+            <p>12-Dimension Store Diagnostic Framework - ERA-ANALYTICS</p>
+        </div>
+
+        <!-- Store Info -->
+        <div class="store-info">
+            <div class="info-grid" style="grid-template-columns: repeat(4, 1fr);">
+                <div class="info-field">
+                    <label>Nama Store</label>
+                    <select id="storeSelect" onchange="onStoreChange()">
+                        <option value="">Pilih Store</option>
+                    </select>
+                </div>
+                <div class="info-field">
+                    <label>TSH (Store Leader)</label>
+                    <input type="text" id="tshField" placeholder="Auto-isi dari store" readonly
+                           style="background:#f3f4f6;cursor:not-allowed;color:#374151;">
+                </div>
+                <div class="info-field">
+                    <label>Diisi oleh</label>
+                    <input type="text" id="filledBy" placeholder="Nama lengkap">
+                </div>
+                <div class="info-field">
+                    <label>Tanggal</label>
+                    <input type="date" id="assessmentDate">
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress -->
+        <div class="progress-section">
+            <div class="progress-header">
+                <span class="progress-text">Progress Pengisian</span>
+                <span class="progress-percent" id="progressPercent">0%</span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs" id="tabs"></div>
+
+        <!-- Content -->
+        <div class="content" id="content">
+            <!-- Sections will be dynamically generated -->
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // BACKEND CONFIGURATION
+        // ========================================
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzGGuY1fDBgeRyRh_pYjYYGntsJYoF1QlwV-bqmygvsjeBWjAow3a5AZaKf8UEjZuDt/exec';
+
+        // ========================================
+        // STORE MASTER DATA — 163 Toko Region 5
+        // ========================================
+        const STORES = [{"code":"E027","name":"ERAFONE DAAN MOGOT MALL","tsh":"IRMAN PERMANA","cluster":"Growth"},{"code":"E028","name":"ERAFONE MAL PURI INDAH","tsh":"FEBRIAN TRI WIBOWO","cluster":"Recovery"},{"code":"E029","name":"ERAFONE LIPPO MALL PURI","tsh":"FEBRIAN TRI WIBOWO","cluster":"Growth"},{"code":"E037","name":"ERAFONE GAJAH MADA PLAZA","tsh":"MENSI ALEXANDER","cluster":"Growth"},{"code":"E038","name":"ERAFONE MALL ATRIUM SENEN","tsh":"LUKMAN WIBOWO","cluster":"Recovery"},{"code":"E043","name":"ERAFONE PLAZA BINTARO JAYA","tsh":"ARENGGA","cluster":"Growth"},{"code":"E046","name":"ERAFONE 2 ITC CEMPAKA MAS","tsh":"Close","cluster":"Recovery"},{"code":"E047","name":"ERAFONE 1 ITC CEMPAKA MAS","tsh":"LUKMAN WIBOWO","cluster":"Growth"},{"code":"E051","name":"ERAFONE 2 MANGGA DUA SQUARE","tsh":"Close","cluster":"Recovery"},{"code":"E081","name":"ERAFONE MALL OF SERANG","tsh":"NURUL ZAMAN","cluster":"Growth"},{"code":"E082","name":"ERAFONE LIVING WORLD ALAM SUTERA","tsh":"EKA FUJI CHAERUL ANWAR","cluster":"Stable"},{"code":"E083","name":"ERAFONE SUMARECON DIGITAL CENT","tsh":"Close","cluster":"Recovery"},{"code":"E084","name":"ERAFONE 1 SUPERMALL KARAWACI","tsh":"SANDI MAULANA","cluster":"Critical"},{"code":"E086","name":"ERAFONE WTC SERPONG","tsh":"Close","cluster":"Recovery"},{"code":"E087","name":"ERAFONE ITC BSD","tsh":"EKA FUJI CHAERUL ANWAR","cluster":"Recovery"},{"code":"E088","name":"ERAFONE AEON MAL BSD CITY","tsh":"EKA FUJI CHAERUL ANWAR","cluster":"Growth"},{"code":"E089","name":"ERAFONE LOTTEMART II BINTARO","tsh":"Close","cluster":"Recovery"},{"code":"E095","name":"ERAFONE 3 ITC ROXY MAS","tsh":"Close","cluster":"Recovery"},{"code":"E096","name":"ERAFONE 2 ITC ROXY MAS","tsh":"MENSI ALEXANDER","cluster":"Critical"},{"code":"E108","name":"ERAFONE CBD CILEDUG","tsh":"Close","cluster":"Recovery"},{"code":"E113","name":"ERAFONE GRAND INDONESIA","tsh":"LUKMAN WIBOWO","cluster":"Critical"},{"code":"E119","name":"ERAFONE TANGERANG CITY MALL","tsh":"ARI HIDAYAT","cluster":"Growth"},{"code":"E124","name":"ERAFONE E-CENTER SUPERMAL KARA","tsh":"Close","cluster":"Recovery"},{"code":"E131","name":"ERAFONE 2 CBD CILEDUG","tsh":"Close","cluster":"Recovery"},{"code":"E137","name":"ERAFONE GREEN PRAMUKA SQUARE","tsh":"LUKMAN WIBOWO","cluster":"Critical"},{"code":"E150","name":"ERAFONE CILEGON CENTER MALL","tsh":"NURUL ZAMAN","cluster":"Growth"},{"code":"E158","name":"ERAFONE MAL CIPUTRA JAKARTA","tsh":"RENDY NUR SETIAWAN","cluster":"Recovery"},{"code":"E160","name":"ERAFONE RUKO CEGER TANGERANG","tsh":"ARENGGA","cluster":"Critical"},{"code":"E164","name":"ERAFONE MAL TAMAN ANGGREK","tsh":"RENDY NUR SETIAWAN","cluster":"Critical"},{"code":"E165","name":"ERAFONE PAMULANG SQUARE","tsh":"Close","cluster":"Recovery"},{"code":"E172","name":"ERAFONE RUKO KEBON JERUK BINUS","tsh":"RENDY NUR SETIAWAN","cluster":"Stable"},{"code":"E191","name":"ERAFONE RUKO SURYA KENCANA PAMULANG","tsh":"EKA FUJI CHAERUL ANWAR","cluster":"Growth"},{"code":"E193","name":"ERAFONE PLAZA SLIPI JAYA","tsh":"Close","cluster":"Recovery"},{"code":"E194","name":"ERAFONE RUKO RANGKASBITUNG","tsh":"NURUL ZAMAN","cluster":"Growth"},{"code":"E201","name":"ERAFONE RUKO KRESEK BALARAJA","tsh":"RENDI JANUARDI","cluster":"Critical"},{"code":"E206","name":"ERAFONE RUKO RADEN SALEH CILEDUG","tsh":"Close","cluster":"Recovery"},{"code":"E209","name":"ERAFONE RUKO AHMAD YANI SERANG","tsh":"NURUL ZAMAN","cluster":"Growth"},{"code":"E210","name":"HULUWA RUKO JUHDI SERANG","tsh":"Close","cluster":"Recovery"},{"code":"E215","name":"ERAFONE GREEN SEDAYU MALL","tsh":"IRMAN PERMANA","cluster":"Growth"},{"code":"E216","name":"ERAFONE SENAYAN PARK MALL","tsh":"MENSI ALEXANDER","cluster":"Critical"},{"code":"E221","name":"ERAFONE AND MORE CIPUTRA CITRA RAYA","tsh":"RENDI JANUARDI","cluster":"Growth"},{"code":"E231","name":"ERAFONE RUKO HOS COKROAMINOTO","tsh":"ABDILLAH","cluster":"Growth"},{"code":"E245","name":"ERAFONE RUKO BENDA RAYA PAMULANG","tsh":"EKA FUJI CHAERUL ANWAR","cluster":"Critical"},{"code":"E251","name":"ERAFONE RUKO CIMONE TANGERANG","tsh":"ARI HIDAYAT","cluster":"Critical"},{"code":"E253","name":"ERAFONE RUKO CURUG TANGERANG","tsh":"RENDI JANUARDI","cluster":"Critical"},{"code":"E259","name":"ERAFONE RUKO KELAPA DUA TANGERANG","tsh":"SANDI MAULANA","cluster":"Critical"},{"code":"E281","name":"ERAFONE SENAYAN CITY 3.0","tsh":"MENSI ALEXANDER","cluster":"Critical"},{"code":"E299","name":"ERAFONE RUKO CIRENDEU","tsh":"ARENGGA","cluster":"Critical"},{"code":"E308","name":"ERAFONE RUKO MAYOR SAFEI","tsh":"NURUL ZAMAN","cluster":"Growth"},{"code":"E320","name":"ERAFONE RUKO PANDEGLANG","tsh":"NURUL ZAMAN","cluster":"Recovery"},{"code":"E321","name":"ERAFONE RUKO SUDIMARA","tsh":"ARENGGA","cluster":"Recovery"},{"code":"E322","name":"ERAFONE RUKO MERUYA","tsh":"FEBRIAN TRI WIBOWO","cluster":"Critical"},{"code":"E336","name":"ERAFONE RUKO RADEN FATAH CILEDUG","tsh":"Close","cluster":"Recovery"},{"code":"E347","name":"ERAFONE RUKO JELAMBAR BARU","tsh":"Close","cluster":"Recovery"},{"code":"E381","name":"ERAFONE RUKO PETA BARAT JAKBAR","tsh":"IRMAN PERMANA","cluster":"Recovery"},{"code":"E391","name":"ERAFONE RUKO SUPRATMAN CIPUTAT","tsh":"ARENGGA","cluster":"Critical"},{"code":"E396","name":"ERAFONE & MORE RUKO ITC ROXY MAS","tsh":"MENSI ALEXANDER","cluster":"Critical"},{"code":"E413","name":"ERAFONE RUKO KEDOYA","tsh":"FEBRIAN TRI WIBOWO","cluster":"Recovery"},{"code":"E414","name":"ERAFONE RUKO PERCETAKAN NEGARA","tsh":"LUKMAN WIBOWO","cluster":"Growth"},{"code":"E417","name":"ERAFONE RUKO HASYIM ASYARI CILEDUG","tsh":"ARI HIDAYAT","cluster":"Critical"},{"code":"E418","name":"ERAFONE RUKO CIRUAS SERANG","tsh":"Close","cluster":"Recovery"},{"code":"E419","name":"ERAFONE RUKO RAWA BUNTU","tsh":"Close","cluster":"Recovery"},{"code":"E420","name":"ERAFONE RUKO CEMPAKA PUTIH","tsh":"Close","cluster":"Recovery"},{"code":"E422","name":"ERAFONE RUKO MOH TOHA TANGERANG","tsh":"ARI HIDAYAT","cluster":"Recovery"},{"code":"E453","name":"ERAFONE RUKO DURI KOSAMBI","tsh":"IRMAN PERMANA","cluster":"Critical"},{"code":"E465","name":"ERAFONE RUKO KEBAYORAN LAMA","tsh":"FEBRIAN TRI WIBOWO","cluster":"Critical"},{"code":"E484","name":"ERAFONE SERPONG PARADISE WALK","tsh":"EKA FUJI CHAERUL ANWAR","cluster":"Critical"},{"code":"E499","name":"ERAFONE LABUAN","tsh":"NURUL ZAMAN","cluster":"Growth"},{"code":"E508","name":"ERAFONE JEMBATAN LIMA","tsh":"RENDY NUR SETIAWAN","cluster":"Critical"},{"code":"E544","name":"ERAFONE CILEGON","tsh":"NURUL ZAMAN","cluster":"Recovery"},{"code":"E582","name":"ERAFONE RUKO SRENGSENG","tsh":"FEBRIAN TRI WIBOWO","cluster":"Critical"},{"code":"E585","name":"ERAFONE RUKO PONDOK CABE","tsh":"Close","cluster":"Recovery"},{"code":"E586","name":"ERAFONE RUKO GRAHA RAYA","tsh":"EKA FUJI CHAERUL ANWAR","cluster":"Critical"},{"code":"E589","name":"ERAFONE RUKO PANIMBANG","tsh":"NURUL ZAMAN","cluster":"Growth"},{"code":"E593","name":"ERAFONE RUKO MANGGA BESAR","tsh":"RENDY NUR SETIAWAN","cluster":"Stable"},{"code":"E612","name":"ERAFONE RUKO JOMBANG","tsh":"ARENGGA","cluster":"Critical"},{"code":"E616","name":"ERAFONE 2.5 MERUYA ILIR","tsh":"FEBRIAN TRI WIBOWO","cluster":"Critical"},{"code":"E620","name":"ERAFONE 2.5 PADJAJARAN PAMULANG","tsh":"ARENGGA","cluster":"Critical"},{"code":"E627","name":"ERAFONE RUKO CISOKA","tsh":"RENDI JANUARDI","cluster":"Recovery"},{"code":"E646","name":"ERAFONE BATU CEPER","tsh":"ABDILLAH","cluster":"Critical"},{"code":"E648","name":"ERAFONE RADEN SALEH CILEDUG 2","tsh":"Close","cluster":"Recovery"},{"code":"E663","name":"ERAFONE GARUDA KEMAYORAN","tsh":"LUKMAN WIBOWO","cluster":"Critical"},{"code":"E664","name":"ERAFONE TANJUNG DUREN","tsh":"RENDY NUR SETIAWAN","cluster":"Critical"},{"code":"E678","name":"ERAFONE MB BENDUNGAN HILIR","tsh":"MENSI ALEXANDER","cluster":"Critical"},{"code":"E679","name":"ERAFONE MB JOGLO RAYA","tsh":"FEBRIAN TRI WIBOWO","cluster":"Critical"},{"code":"E682","name":"ERAFONE MB KH MANSYUR TANAH ABANG","tsh":"MENSI ALEXANDER","cluster":"Critical"},{"code":"E683","name":"ERAFONE MB CIBADAK BALARAJA","tsh":"Close","cluster":"Recovery"},{"code":"E684","name":"ERAFONE MB SANGIANG","tsh":"ARI HIDAYAT","cluster":"Critical"},{"code":"E685","name":"ERAFONE MB PONDOK BETUNG","tsh":"ARENGGA","cluster":"Critical"},{"code":"E695","name":"ERAFONE MB BINONG","tsh":"RENDI JANUARDI","cluster":"Critical"},{"code":"E696","name":"ERAFONE MB RASUNA SAID","tsh":"ARI HIDAYAT","cluster":"Critical"},{"code":"E697","name":"ERAFONE MB PALMERAH UTARA","tsh":"Close","cluster":"Recovery"},{"code":"E699","name":"ERAFONE MB KASEMEN SERANG","tsh":"Close","cluster":"Recovery"},{"code":"E704","name":"ERAFONE MB KH DEWANTARA CIPUTAT","tsh":"ARENGGA","cluster":"Critical"},{"code":"E705","name":"ERAFONE MB CIATER TANGSEL","tsh":"EKA FUJI CHAERUL ANWAR","cluster":"Critical"},{"code":"E714","name":"ERAFONE MB JATAKE","tsh":"ARI HIDAYAT","cluster":"Critical"},{"code":"E715","name":"ERAFONE MB HAYAM WURUK","tsh":"Close","cluster":"Recovery"},{"code":"E727","name":"ERAFONE MB KRAMATWATU","tsh":"Close","cluster":"Recovery"},{"code":"E730","name":"ERAFONE GEROGOL CILEGON","tsh":"Close","cluster":"Recovery"},{"code":"E731","name":"ERAFONE MB GREEN VILLAGE PINANG","tsh":"Close","cluster":"Recovery"},{"code":"E732","name":"ERAFONE SABANG JAKPUS","tsh":"LUKMAN WIBOWO","cluster":"Critical"},{"code":"E744","name":"ERAFONE MB RAJEK","tsh":"RENDI JANUARDI","cluster":"Critical"},{"code":"E761","name":"ERAFONE MB KEDOYA DURI","tsh":"Close","cluster":"Recovery"},{"code":"E777","name":"ERAFONE CIHUNI GADING SERPONG","tsh":"SANDI MAULANA","cluster":"Critical"},{"code":"E787","name":"ERAFONE MB RUKOTIGARAKSA","tsh":"RENDI JANUARDI","cluster":"Critical"},{"code":"E812","name":"ERAFONE MB KUTABUMI","tsh":"RENDI JANUARDI","cluster":"Critical"},{"code":"E813","name":"ERAFONE MB SERPONG GARDEN CISAUK","tsh":"SANDI MAULANA","cluster":"Critical"},{"code":"E821","name":"ERAFONE MB ANYER","tsh":"NURUL ZAMAN","cluster":"Growth"},{"code":"E822","name":"ERAFONE MB KRAGILAN","tsh":"NURUL ZAMAN","cluster":"Growth"},{"code":"E848","name":"ERAFONE PASAR KEMIS","tsh":"RENDI JANUARDI","cluster":"Critical"},{"code":"E873","name":"ERAFONE MB LEGOK","tsh":"SANDI MAULANA","cluster":"Critical"},{"code":"E874","name":"ERAFONE MB DASANA INDAH","tsh":"SANDI MAULANA","cluster":"Critical"},{"code":"E875","name":"ERAFONE MB POS PENGUMBEN","tsh":"FEBRIAN TRI WIBOWO","cluster":"Critical"},{"code":"E879","name":"ERAFONE MB CIPARE","tsh":"NURUL ZAMAN","cluster":"Recovery"},{"code":"E897","name":"ERAFONE MB CADAS","tsh":"Close","cluster":"Recovery"},{"code":"E898","name":"ERAFONE MB SAMANHUDI","tsh":"MENSI ALEXANDER","cluster":"Critical"},{"code":"E923","name":"ERAFONE MB JALAN PANJANG","tsh":"FEBRIAN TRI WIBOWO","cluster":"Critical"},{"code":"E941","name":"ERAFONE MB RAYA SERPONG","tsh":"EKA FUJI CHAERUL ANWAR","cluster":"Critical"},{"code":"E942","name":"ERAFONE MB KEMBANGAN UTARA","tsh":"FEBRIAN TRI WIBOWO","cluster":"Critical"},{"code":"E943","name":"ERAFONE MB TAMAN RATU","tsh":"FEBRIAN TRI WIBOWO","cluster":"Critical"},{"code":"E960","name":"ERAFONE MB MENCENG RAYA","tsh":"IRMAN PERMANA","cluster":"Critical"},{"code":"E986","name":"ERAFONE MB JEMBATAN BESI","tsh":"RENDY NUR SETIAWAN","cluster":"Critical"},{"code":"E991","name":"ERAFONE 2.5 KEMANGGISAN UTAMA RAYA","tsh":"RENDY NUR SETIAWAN","cluster":"Critical"},{"code":"E992","name":"ERAFONE 2.5 KAPUK CENGKARENG","tsh":"IRMAN PERMANA","cluster":"Growth"},{"code":"E993","name":"ERAFONE 2.5 IMAM BONJOL","tsh":"Close","cluster":"Recovery"},{"code":"F003","name":"ERAFONE 2.5 CILEDUG RAYA","tsh":"ABDILLAH","cluster":"Critical"},{"code":"F022","name":"ERAFONE 2.5 PAMULANG","tsh":"EKA FUJI CHAERUL ANWAR","cluster":"Critical"},{"code":"F073","name":"ERAFONE AGORA MALL","tsh":"MENSI ALEXANDER","cluster":"Critical"},{"code":"F074","name":"ERAFONE DOSS CIDENG JAKARTA","tsh":"Close","cluster":"Recovery"},{"code":"F077","name":"ERAFONE BINTARO EXCHANGE II","tsh":"ARENGGA","cluster":"Recovery"},{"code":"F080","name":"ERAFONE MENARA JAKARTA","tsh":"LUKMAN WIBOWO","cluster":"Critical"},{"code":"F123","name":"SPECIAL STORE EDC","tsh":"VACANT","cluster":"Critical"},{"code":"F134","name":"ERAFONE MALL CIPUTRA 2.5 JAKARTA","tsh":"RENDY NUR SETIAWAN","cluster":"Critical"},{"code":"G493","name":"AGRES MANGGA DUA SQUARE","tsh":"MENSI ALEXANDER","cluster":"Critical"},{"code":"M013","name":"MEGASTORE SUPERMAL KARAWACI","tsh":"SANDI MAULANA","cluster":"Critical"},{"code":"M014","name":"ERAFONE AND MORE BINTARO X-CHANGE","tsh":"ARENGGA","cluster":"Stable"},{"code":"M015","name":"MEGASTORE ITC ROXY MAS","tsh":"Close","cluster":"Recovery"},{"code":"M019","name":"MEGASTORE SUMMARECON MALL SERPONG","tsh":"SANDI MAULANA","cluster":"Recovery"},{"code":"M021","name":"ERAFONE & MORE RUKO CILEDUG","tsh":"ABDILLAH","cluster":"Recovery"},{"code":"M027","name":"ERAFONE & MORE RUKO CIPUTAT","tsh":"ARENGGA","cluster":"Critical"},{"code":"M032","name":"MEGASTORE ITC CEMPAKA MAS","tsh":"Close","cluster":"Recovery"},{"code":"M048","name":"MEGASTORE RUKO CIKUPA","tsh":"RENDI JANUARDI","cluster":"Critical"},{"code":"M061","name":"ERAFONE & MORE RUKO JATIUWUNG","tsh":"ARI HIDAYAT","cluster":"Recovery"},{"code":"M068","name":"ERAFONE & MORE RUKO KAMAL CENGKAREN","tsh":"IRMAN PERMANA","cluster":"Recovery"},{"code":"M091","name":"MEGASTORE CENTRAL PARK 3.0","tsh":"RENDY NUR SETIAWAN","cluster":"Recovery"},{"code":"M093","name":"MEGASTORE RUKO CIPONDOH TANGERANG","tsh":"ABDILLAH","cluster":"Critical"},{"code":"M104","name":"MEGASTORE RUKO REMPOA CIPUTAT","tsh":"ARENGGA","cluster":"Critical"},{"code":"M132","name":"MEGASTORE GROGOL PETAMBURAN","tsh":"Close","cluster":"Recovery"},{"code":"M163","name":"ERAFONE & MORE SERPONG","tsh":"SANDI MAULANA","cluster":"Critical"},{"code":"M167","name":"ERAFONE & MORE TELUK NAGA","tsh":"RENDI JANUARDI","cluster":"Critical"},{"code":"M176","name":"ERAFONE & MORE KISAMAUN","tsh":"ARI HIDAYAT","cluster":"Critical"},{"code":"M193","name":"ERAFONE & MORE EDC","tsh":"VACANT","cluster":"Critical"},{"code":"M212","name":"ERAFONE & MORE RAWASARI","tsh":"LUKMAN WIBOWO","cluster":"Critical"},{"code":"M219","name":"ERAFONE & MORE PURI INDAH MALL 2","tsh":"FEBRIAN TRI WIBOWO","cluster":"Critical"},{"code":"M222","name":"ERAFONE & MORE EASTVARA MALL","tsh":"SANDI MAULANA","cluster":"Critical"},{"code":"N270","name":"ITMOS EDC PIK 2","tsh":"Close","cluster":"Recovery"},{"code":"N283","name":"LG EDC","tsh":"Close","cluster":"Recovery"},{"code":"N284","name":"TCL EDC","tsh":"Close","cluster":"Recovery"},{"code":"N285","name":"OPPO EDC","tsh":"VACANT","cluster":"Critical"},{"code":"N287","name":"REALME EDC","tsh":"Close","cluster":"Recovery"},{"code":"N288","name":"VIVO EDC","tsh":"VACANT","cluster":"Critical"},{"code":"N297","name":"TOSHIBA EDC","tsh":"Close","cluster":"Recovery"},{"code":"N343","name":"LOGITECH EDC PIK 2","tsh":"Close","cluster":"Recovery"}];
+
+        // Configuration
+        const dimensions = [
+            {
+                id: 1,
+                name: 'Location',
+                title: 'Location / Place',
+                emoji: '📍',
+                subtitle: 'SUPER CRITICAL - Pondasi Kesuksesan',
+                questions: [
+                    {
+                        id: 'foot_traffic',
+                        label: 'Estimasi walk-in per hari?',
+                        type: 'radio',
+                        options: [
+                            { text: '0-50 pengunjung', score: 20 },
+                            { text: '51-100 pengunjung', score: 40 },
+                            { text: '101-200 pengunjung', score: 70 },
+                            { text: '200+ pengunjung', score: 100 }
+                        ]
+                    },
+                    {
+                        id: 'location_type',
+                        label: 'Tipe lokasi store?',
+                        type: 'radio',
+                        options: [
+                            { text: 'Ruko standalone', score: 40 },
+                            { text: 'Street commercial area', score: 50 },
+                            { text: 'Mall Tier C', score: 60 },
+                            { text: 'Mall Tier B', score: 80 },
+                            { text: 'Mall Tier A / Premium', score: 100 }
+                        ]
+                    },
+                    {
+                        id: 'anchor_tenant',
+                        label: 'Anchor tenant di mall/area?',
+                        type: 'radio',
+                        options: [
+                            { text: 'Tidak ada anchor tenant', score: 30 },
+                            { text: 'Ada, tapi kurang ramai', score: 50 },
+                            { text: 'Ada anchor tenant sedang (supermarket)', score: 70 },
+                            { text: 'Ada anchor kuat (XXI, Hypermart, dept. store)', score: 100 }
+                        ]
+                    },
+                    {
+                        id: 'competitor_density',
+                        label: 'Jumlah kompetitor dalam radius 300m?',
+                        helper: 'Hitung: Oppo, Vivo, Samsung, Xiaomi store',
+                        type: 'radio',
+                        options: [
+                            { text: '5+ kompetitor (sangat ramai)', score: 30 },
+                            { text: '3-4 kompetitor', score: 60 },
+                            { text: '1-2 kompetitor', score: 85 },
+                            { text: 'Tidak ada kompetitor langsung', score: 100 }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 2,
+                name: 'Visibility',
+                title: 'Visibility (VMD)',
+                emoji: '👀',
+                subtitle: 'SUPER CRITICAL - Walk-in Driver',
+                questions: [
+                    {
+                        id: 'polesign_visibility',
+                        label: 'Polesign terlihat dari jarak berapa?',
+                        type: 'radio',
+                        options: [
+                            { text: 'Tidak terlihat / tertutup', score: 20 },
+                            { text: '< 10 meter', score: 40 },
+                            { text: '10-20 meter', score: 70 },
+                            { text: '20+ meter (sangat jelas)', score: 100 }
+                        ]
+                    },
+                    {
+                        id: 'lighting',
+                        label: 'Kualitas lighting store (siang & malam)?',
+                        type: 'radio',
+                        options: [
+                            { text: 'Gelap / kurang terang', score: 30 },
+                            { text: 'Cukup terang tapi tidak menonjol', score: 60 },
+                            { text: 'Terang dan menarik perhatian', score: 100 }
+                        ]
+                    },
+                    {
+                        id: 'window_display',
+                        label: 'Window display menarik?',
+                        type: 'radio',
+                        options: [
+                            { text: 'Tidak ada / berantakan', score: 20 },
+                            { text: 'Ada tapi kurang menarik', score: 50 },
+                            { text: 'Cukup menarik', score: 75 },
+                            { text: 'Sangat menarik & eye-catching', score: 100 }
+                        ]
+                    },
+                    {
+                        id: 'pop_clarity',
+                        label: 'POP (Point of Purchase) promo terbaca jelas?',
+                        type: 'radio',
+                        options: [
+                            { text: 'Tidak ada / tidak jelas', score: 30 },
+                            { text: 'Ada tapi kurang jelas', score: 60 },
+                            { text: 'Jelas dan informatif', score: 100 }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 3,
+                name: 'Financial',
+                title: 'Financial Performance',
+                emoji: '💰',
+                subtitle: 'CRITICAL - Profit Determiner',
+                questions: [
+                    {
+                        id: 'revenue_vs_target',
+                        label: 'Revenue vs Target (rata-rata 3 bulan terakhir)?',
+                        type: 'radio',
+                        options: [
+                            { text: 'Di bawah 70% target', score: 20 },
+                            { text: '70-85% target', score: 50 },
+                            { text: '85-100% target', score: 80 },
+                            { text: 'Di atas 100% target', score: 100 }
+                        ]
+                    },
+                    {
+                        id: 'profitability',
+                        label: 'Status profitabilitas store?',
+                        type: 'radio',
+                        options: [
+                            { text: 'LOSS (rugi)', score: 20 },
+                            { text: 'BEP (impas)', score: 60 },
+                            { text: 'Profit < 10%', score: 80 },
+                            { text: 'Profit 10%+', score: 100 }
+                        ]
+                    },
+                    {
+                        id: 'roi',
+                        label: 'ROI sejak opening?',
+                        type: 'radio',
+                        options: [
+                            { text: 'Negatif / belum balik modal', score: 20 },
+                            { text: 'ROI 0-50%', score: 50 },
+                            { text: 'ROI 50-100%', score: 80 },
+                            { text: 'ROI 100%+ (sudah balik modal)', score: 100 }
+                        ]
+                    },
+                    {
+                        id: 'sales_trend',
+                        label: 'Trend penjualan 3 bulan terakhir?',
+                        type: 'radio',
+                        options: [
+                            { text: 'Turun konsisten', score: 20 },
+                            { text: 'Flat / stagnan', score: 50 },
+                            { text: 'Naik bertahap', score: 80 },
+                            { text: 'Naik signifikan', score: 100 }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 4,
+                name: 'Product Mix',
+                title: 'Product Mix & Sales Quality',
+                emoji: '🛍️',
+                subtitle: 'Sales Strategy Indicator',
+                questions: [
+                    {
+                        id: 'attach_rate',
+                        label: 'Attach rate accessories per transaksi device?',
+                        helper: 'Target ideal: 2+ accessories per device',
+                        type: 'radio',
+                        options: [
+                            { text: '< 1 accessories', score: 30 },
+                            { text: '1-1.5 accessories', score: 60 },
+                            { text: '1.5-2 accessories', score: 85 },
+                            { text: '2+ accessories', score: 100 }
+                        ]
+                    },
+                    {
+                        id: 'margin_mix',
+                        label: 'Komposisi high margin vs low margin product?',
+                        type: 'radio',
+                        options: [
+                            { text: 'Didominasi low margin (80%+)', score: 30 },
+                            { text: 'Mix 60% low / 40% high', score: 60 },
+                            { text: 'Mix 50-50', score: 80 },
+                            { text: 'Didominasi high margin (60%+)', score: 100 }
+                        ]
+                    },
+                    {
+                        id: 'dead_stock',
+                        label: 'Dead stock / slow moving products?',
+                        type: 'radio',
+                        options: [
+                            { text: '> 20% inventory adalah dead stock', score: 20 },
+                            { text: '10-20% dead stock', score: 50 },
+                            { text: '5-10% dead stock', score: 80 },
+                            { text: '< 5% dead stock', score: 100 }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 5,
+                name: 'People',
+                title: 'People / Team Performance',
+                emoji: '👨‍💼',
+                subtitle: 'Human Capital Performance',
+                questions: [
+                    {
+                        id: 'conversion_rate',
+                        label: 'Conversion rate (walk-in to transaction)?',
+                        type: 'radio',
+                        options: [
+                            { text: '< 10%', score: 30 },
+                            { text: '10-20%', score: 60 },
+                            { text: '20-30%', score: 85 },
+                            { text: '30%+', score: 100 }
+                        ]
+                    },
+                    {
+                        id: 'product_knowledge',
+                        label: 'Product knowledge tim sales?',
+                        type: 'radio',
+                        options: [
+                            { text: 'Poor (sering tidak bisa jawab)', score: 30 },
+                            { text: 'Fair (basic knowledge)', score: 60 },
+                            { text: 'Good (bisa handle most products)', score: 85 },
+                            { text: 'Excellent (expert level)', score: 100 }
+                        ]
+                    },
+                    {
+                        id: 'upselling_skill',
+                        label: 'Upselling & cross-selling skill?',
+                        type: 'radio',
+                        options: [
+                            { text: 'Poor (jarang upsell)', score: 30 },
+                            { text: 'Fair (kadang-kadang)', score: 60 },
+                            { text: 'Good (konsisten upsell)', score: 85 },
+                            { text: 'Excellent (master closer)', score: 100 }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 6,
+                name: 'Promo',
+                title: 'Promo & Campaign Effectiveness',
+                emoji: '🎯',
+                subtitle: 'Marketing ROI Tracker',
+                questions: [
+                    {
+                        id: 'campaign_uplift',
+                        label: 'Campaign uplift (sales saat promo vs normal)?',
+                        type: 'radio',
+                        options: [
+                            { text: 'Tidak ada peningkatan / turun', score: 20 },
+                            { text: 'Naik < 20%', score: 50 },
+                            { text: 'Naik 20-50%', score: 80 },
+                            { text: 'Naik > 50%', score: 100 }
+                        ]
+                    },
+                    {
+                        id: 'voucher_redemption',
+                        label: 'Voucher redemption rate?',
+                        type: 'radio',
+                        options: [
+                            { text: '< 20%', score: 30 },
+                            { text: '20-40%', score: 60 },
+                            { text: '40-60%', score: 85 },
+                            { text: '> 60%', score: 100 }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 7,
+                name: 'Digital',
+                title: 'Digital & Social Media',
+                emoji: '📱',
+                subtitle: 'Online Presence Impact',
+                questions: [
+                    {
+                        id: 'social_activity',
+                        label: 'Instagram/TikTok store aktif posting?',
+                        type: 'radio',
+                        options: [
+                            { text: 'Tidak punya / tidak aktif', score: 20 },
+                            { text: 'Posting < 2x per minggu', score: 50 },
+                            { text: 'Posting 2-4x per minggu', score: 80 },
+                            { text: 'Posting 4x+ per minggu (aktif)', score: 100 }
+                        ]
+                    },
+                    {
+                        id: 'google_rating',
+                        label: 'Google Maps rating & review?',
+                        type: 'radio',
+                        options: [
+                            { text: '< 3.5 stars', score: 30 },
+                            { text: '3.5 - 4.0 stars', score: 60 },
+                            { text: '4.0 - 4.5 stars', score: 85 },
+                            { text: '4.5 - 5.0 stars', score: 100 }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 8,
+                name: 'Store Activity',
+                title: 'Store Activity & Events',
+                emoji: '🎉',
+                subtitle: 'Event-Driven Sales',
+                questions: [
+                    {
+                        id: 'event_frequency',
+                        label: 'Frekuensi event per bulan?',
+                        helper: 'Super Brand Day, Gadgetpedia, Tech Talk, dll',
+                        type: 'radio',
+                        options: [
+                            { text: 'Tidak pernah event', score: 20 },
+                            { text: '1 event per bulan', score: 50 },
+                            { text: '2-3 event per bulan', score: 80 },
+                            { text: '4+ event per bulan', score: 100 }
+                        ]
+                    },
+                    {
+                        id: 'event_impact',
+                        label: 'Traffic impact saat event vs normal?',
+                        type: 'radio',
+                        options: [
+                            { text: 'Tidak ada peningkatan', score: 20 },
+                            { text: 'Naik 20-50%', score: 60 },
+                            { text: 'Naik 50-100%', score: 85 },
+                            { text: 'Naik > 100%', score: 100 }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 9,
+                name: 'Traffic',
+                title: 'Traffic & Conversion',
+                emoji: '🚶',
+                subtitle: 'CRITICAL - Sales Funnel',
+                questions: [
+                    {
+                        id: 'daily_walkin',
+                        label: 'Estimasi walk-in per hari?',
+                        type: 'radio',
+                        options: [
+                            { text: '0-30 walk-in', score: 20 },
+                            { text: '30-60 walk-in', score: 50 },
+                            { text: '60-100 walk-in', score: 80 },
+                            { text: '100+ walk-in', score: 100 }
+                        ]
+                    },
+                    {
+                        id: 'peak_hour',
+                        label: 'Peak hour traffic konsisten?',
+                        type: 'radio',
+                        options: [
+                            { text: 'Sepi sepanjang hari', score: 20 },
+                            { text: 'Ada peak hour tapi singkat', score: 60 },
+                            { text: 'Peak hour 3-4 jam', score: 85 },
+                            { text: 'Ramai sepanjang hari', score: 100 }
+                        ]
+                    },
+                    {
+                        id: 'repeat_customer',
+                        label: 'Repeat customer rate?',
+                        type: 'radio',
+                        options: [
+                            { text: '< 10%', score: 30 },
+                            { text: '10-20%', score: 60 },
+                            { text: '20-30%', score: 85 },
+                            { text: '30%+', score: 100 }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 10,
+                name: 'Competitor',
+                title: 'Competitor Analysis',
+                emoji: '🧾',
+                subtitle: 'Market Position',
+                questions: [
+                    {
+                        id: 'price_competitiveness',
+                        label: 'Harga vs kompetitor?',
+                        type: 'radio',
+                        options: [
+                            { text: 'Lebih mahal (tidak kompetitif)', score: 30 },
+                            { text: 'Sama rata-rata', score: 60 },
+                            { text: 'Sedikit lebih murah', score: 85 },
+                            { text: 'Paling kompetitif di area', score: 100 }
+                        ]
+                    },
+                    {
+                        id: 'display_quality',
+                        label: 'Display quality vs kompetitor?',
+                        type: 'radio',
+                        options: [
+                            { text: 'Lebih buruk dari kompetitor', score: 30 },
+                            { text: 'Sama dengan kompetitor', score: 60 },
+                            { text: 'Lebih baik dari kompetitor', score: 85 },
+                            { text: 'Jauh lebih baik (dominan)', score: 100 }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 11,
+                name: 'Customer',
+                title: 'Customer Behavior Insight',
+                emoji: '🧠',
+                subtitle: 'Advanced Analytics',
+                questions: [
+                    {
+                        id: 'basket_size',
+                        label: 'Average basket size (transaksi)?',
+                        type: 'radio',
+                        options: [
+                            { text: '< Rp 2 juta', score: 30 },
+                            { text: 'Rp 2-5 juta', score: 60 },
+                            { text: 'Rp 5-10 juta', score: 85 },
+                            { text: '> Rp 10 juta', score: 100 }
+                        ]
+                    },
+                    {
+                        id: 'payment_method',
+                        label: 'Payment method dominan?',
+                        type: 'radio',
+                        options: [
+                            { text: 'Cash 80%+ (limited purchasing power)', score: 40 },
+                            { text: 'Cash 60% / Cicilan 40%', score: 70 },
+                            { text: 'Cicilan dominan 60%+', score: 100 }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 12,
+                name: 'Operational',
+                title: 'Operational Efficiency',
+                emoji: '⚙️',
+                subtitle: 'Hidden Problem Detector',
+                questions: [
+                    {
+                        id: 'operating_hours',
+                        label: 'Jam operasional vs peak traffic?',
+                        type: 'radio',
+                        options: [
+                            { text: 'Tutup saat peak hour (one shift)', score: 30 },
+                            { text: 'Buka tapi kurang optimal', score: 60 },
+                            { text: 'Buka sesuai peak hour', score: 85 },
+                            { text: 'Extended hours (cover semua peak)', score: 100 }
+                        ]
+                    },
+                    {
+                        id: 'stock_availability',
+                        label: 'Stock availability best seller products?',
+                        type: 'radio',
+                        options: [
+                            { text: 'Sering stockout (> 30%)', score: 20 },
+                            { text: 'Kadang stockout (10-30%)', score: 50 },
+                            { text: 'Jarang stockout (< 10%)', score: 80 },
+                            { text: 'Selalu ready stock', score: 100 }
+                        ]
+                    },
+                    {
+                        id: 'inventory_accuracy',
+                        label: 'Inventory accuracy (system vs fisik)?',
+                        type: 'radio',
+                        options: [
+                            { text: '< 80% accuracy', score: 30 },
+                            { text: '80-90% accuracy', score: 60 },
+                            { text: '90-95% accuracy', score: 85 },
+                            { text: '95%+ accuracy', score: 100 }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        // State Management
+        let currentSection = 0;
+        let responses = {};
+        let sectionScores = {};
+
+        // Populate store dropdown
+        function populateStoreDropdown() {
+            const sel = document.getElementById('storeSelect');
+            // Group by cluster for optgroups
+            const groups = { Critical: [], Recovery: [], Stable: [], Growth: [] };
+            STORES.forEach(s => {
+                const label = `${s.code} — ${s.name}`;
+                groups[s.cluster] = groups[s.cluster] || [];
+                groups[s.cluster].push({ value: s.code, label });
+            });
+            const order = ['Critical', 'Recovery', 'Stable', 'Growth'];
+            order.forEach(cluster => {
+                if (!groups[cluster] || !groups[cluster].length) return;
+                const og = document.createElement('optgroup');
+                og.label = `⚠️ ${cluster}`.replace('⚠️ Growth','✅ Growth').replace('⚠️ Stable','🟡 Stable');
+                groups[cluster].forEach(item => {
+                    const opt = document.createElement('option');
+                    opt.value = item.value;
+                    opt.textContent = item.label;
+                    og.appendChild(opt);
+                });
+                sel.appendChild(og);
+            });
+        }
+
+        // Auto-fill TSH when store is selected
+        function onStoreChange() {
+            const code = document.getElementById('storeSelect').value;
+            const store = STORES.find(s => s.code === code);
+            document.getElementById('tshField').value = store ? store.tsh : '';
+            saveToLocalStorage();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default date to today
+            document.getElementById('assessmentDate').valueAsDate = new Date();
+
+            populateStoreDropdown();
+            renderTabs();
+            renderSections();
+            updateProgress();
+            loadFromLocalStorage();
+        });
+
+        // Render Tabs
+        function renderTabs() {
+            const tabsContainer = document.getElementById('tabs');
+            dimensions.forEach((dim, index) => {
+                const tab = document.createElement('div');
+                tab.className = 'tab';
+                tab.textContent = `${dim.id}. ${dim.name}`;
+                tab.onclick = () => goToSection(index);
+                tabsContainer.appendChild(tab);
+            });
+            
+            // Summary tab
+            const summaryTab = document.createElement('div');
+            summaryTab.className = 'tab';
+            summaryTab.textContent = 'Summary';
+            summaryTab.onclick = () => goToSection(dimensions.length);
+            tabsContainer.appendChild(summaryTab);
+            
+            updateTabs();
+        }
+
+        // Render Sections
+        function renderSections() {
+            const contentContainer = document.getElementById('content');
+            
+            // Render dimension sections
+            dimensions.forEach((dim, dimIndex) => {
+                const section = document.createElement('div');
+                section.className = 'section';
+                section.id = `section-${dimIndex}`;
+                
+                let html = `
+                    <div class="section-title">${dim.emoji} ${dim.title}</div>
+                    <div class="section-subtitle">${dim.subtitle}</div>
+                `;
+                
+                dim.questions.forEach((q, qIndex) => {
+                    html += `
+                        <div class="question">
+                            <label class="question-label">${qIndex + 1}. ${q.label}</label>
+                            ${q.helper ? `<div class="question-helper">${q.helper}</div>` : ''}
+                            <div class="radio-group">
+                    `;
+                    
+                    q.options.forEach((opt, optIndex) => {
+                        const inputId = `${dim.id}_${q.id}_${optIndex}`;
+                        html += `
+                            <label class="radio-option" data-input="${inputId}">
+                                <input type="radio" 
+                                       name="${dim.id}_${q.id}" 
+                                       value="${opt.score}"
+                                       id="${inputId}"
+                                       onchange="handleRadioChange(${dim.id}, '${q.id}', ${opt.score})">
+                                <span class="option-text">${opt.text}</span>
+                                <span class="option-score">${opt.score} pts</span>
+                            </label>
+                        `;
+                    });
+                    
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                // Section score display
+                html += `
+                    <div class="section-score-card">
+                        <div class="section-score-label">Section Score</div>
+                        <div class="section-score-value" id="section-score-${dimIndex}">-</div>
+                        <div class="section-score-status" id="section-status-${dimIndex}">Not completed</div>
+                    </div>
+                `;
+                
+                // Navigation buttons
+                html += `
+                    <div class="nav-buttons">
+                        <button class="btn btn-secondary" onclick="previousSection()" ${dimIndex === 0 ? 'style="visibility:hidden"' : ''}>
+                            ← Previous
+                        </button>
+                        <button class="btn btn-primary" onclick="nextSection()">
+                            ${dimIndex === dimensions.length - 1 ? 'Go to Summary →' : 'Next →'}
+                        </button>
+                    </div>
+                `;
+                
+                section.innerHTML = html;
+                contentContainer.appendChild(section);
+            });
+            
+            // Render summary section
+            renderSummarySection();
+            
+            // Show first section
+            goToSection(0);
+        }
+
+        // Render Summary Section
+        function renderSummarySection() {
+            const contentContainer = document.getElementById('content');
+            const summarySection = document.createElement('div');
+            summarySection.className = 'section';
+            summarySection.id = `section-${dimensions.length}`;
+            
+            summarySection.innerHTML = `
+                <div class="section-title">📊 Health Check Summary</div>
+                <div class="section-subtitle">Overall Store Diagnostic Results</div>
+                
+                <div class="summary-grid">
+                    <div class="summary-card" id="overall-card">
+                        <div class="summary-card-title">Overall Health Score</div>
+                        <div class="summary-card-value" id="overall-score">-</div>
+                        <div class="summary-card-subtitle" id="overall-status">-</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-card-title">Dimensions Completed</div>
+                        <div class="summary-card-value" id="completed-count">0/12</div>
+                        <div class="summary-card-subtitle">Fill all sections</div>
+                    </div>
+                </div>
+                
+                <div class="dimension-list" id="dimension-scores-list"></div>
+                
+                <div class="decision-section">
+                    <div class="decision-title">💡 Recommended Decision</div>
+                    <div class="decision-buttons">
+                        <div class="decision-btn keep" onclick="selectDecision('keep')">KEEP</div>
+                        <div class="decision-btn improve" onclick="selectDecision('improve')">IMPROVE</div>
+                        <div class="decision-btn relocate" onclick="selectDecision('relocate')">RELOCATE</div>
+                        <div class="decision-btn close" onclick="selectDecision('close')">CLOSE</div>
+                    </div>
+                </div>
+                
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" onclick="previousSection()">← Previous</button>
+                    <button class="btn btn-success" onclick="submitForm()">✓ Submit Health Check</button>
+                </div>
+            `;
+            
+            contentContainer.appendChild(summarySection);
+        }
+
+        // Handle Radio Change
+        function handleRadioChange(dimId, questionId, score) {
+            // Store response
+            if (!responses[dimId]) responses[dimId] = {};
+            responses[dimId][questionId] = score;
+            
+            // Update UI for selected option
+            const radioInputs = document.querySelectorAll(`input[name="${dimId}_${questionId}"]`);
+            radioInputs.forEach(input => {
+                const label = input.closest('.radio-option');
+                if (input.checked) {
+                    label.classList.add('selected');
+                } else {
+                    label.classList.remove('selected');
+                }
+            });
+            
+            // Calculate section score
+            calculateSectionScore(dimId);
+            
+            // Save to localStorage
+            saveToLocalStorage();
+            
+            // Update progress
+            updateProgress();
+        }
+
+        // Calculate Section Score
+        function calculateSectionScore(dimId) {
+            const dimension = dimensions.find(d => d.id === dimId);
+            if (!dimension) return;
+            
+            const dimResponses = responses[dimId] || {};
+            const scores = Object.values(dimResponses);
+            
+            if (scores.length === 0) return;
+            
+            const sectionScore = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
+            sectionScores[dimId] = sectionScore;
+            
+            // Update display
+            const scoreElement = document.getElementById(`section-score-${dimId - 1}`);
+            const statusElement = document.getElementById(`section-status-${dimId - 1}`);
+            
+            if (scoreElement) {
+                scoreElement.textContent = sectionScore;
+                
+                let status = '';
+                if (sectionScore >= 80) status = 'Excellent';
+                else if (sectionScore >= 60) status = 'Good - Need Improvement';
+                else status = 'Critical - Urgent Action';
+                
+                statusElement.textContent = status;
+            }
+            
+            // Update tab completion
+            updateTabs();
+        }
+
+        // Update Tabs
+        function updateTabs() {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach((tab, index) => {
+                tab.classList.remove('active', 'completed');
+                
+                if (index === currentSection) {
+                    tab.classList.add('active');
+                }
+                
+                // Check if section is completed
+                if (index < dimensions.length) {
+                    const dimId = dimensions[index].id;
+                    const dimension = dimensions[index];
+                    const dimResponses = responses[dimId] || {};
+                    
+                    if (Object.keys(dimResponses).length === dimension.questions.length) {
+                        tab.classList.add('completed');
+                    }
+                }
+            });
+        }
+
+        // Update Progress
+        function updateProgress() {
+            let totalQuestions = 0;
+            let answeredQuestions = 0;
+            
+            dimensions.forEach(dim => {
+                totalQuestions += dim.questions.length;
+                const dimResponses = responses[dim.id] || {};
+                answeredQuestions += Object.keys(dimResponses).length;
+            });
+            
+            const progress = Math.round((answeredQuestions / totalQuestions) * 100);
+            
+            document.getElementById('progressPercent').textContent = `${progress}%`;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            
+            // Update summary if on summary page
+            if (currentSection === dimensions.length) {
+                updateSummary();
+            }
+        }
+
+        // Update Summary
+        function updateSummary() {
+            const completedCount = Object.keys(sectionScores).length;
+            document.getElementById('completed-count').textContent = `${completedCount}/12`;
+            
+            // Calculate overall score
+            if (completedCount > 0) {
+                const scores = Object.values(sectionScores);
+                const overallScore = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
+                
+                document.getElementById('overall-score').textContent = overallScore;
+                
+                let status = '';
+                let cardClass = '';
+                if (overallScore >= 80) {
+                    status = 'Excellent Performance';
+                    cardClass = 'success';
+                } else if (overallScore >= 60) {
+                    status = 'Good - Need Improvement';
+                    cardClass = 'warning';
+                } else {
+                    status = 'Critical - Urgent Action';
+                    cardClass = 'danger';
+                }
+                
+                document.getElementById('overall-status').textContent = status;
+                document.getElementById('overall-card').className = `summary-card ${cardClass}`;
+            }
+            
+            // Render dimension scores
+            const listContainer = document.getElementById('dimension-scores-list');
+            listContainer.innerHTML = '';
+            
+            dimensions.forEach(dim => {
+                const score = sectionScores[dim.id] || 0;
+                const item = document.createElement('div');
+                item.className = 'dimension-item';
+                
+                let scoreClass = '';
+                if (score >= 80) scoreClass = 'success';
+                else if (score >= 60) scoreClass = 'warning';
+                else scoreClass = 'danger';
+                
+                item.innerHTML = `
+                    <span class="dimension-name">${dim.emoji} ${dim.title}</span>
+                    <span class="dimension-score" style="color: var(--${scoreClass})">${score || '-'}</span>
+                `;
+                
+                listContainer.appendChild(item);
+            });
+        }
+
+        // Navigation
+        function goToSection(index) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(`section-${index}`).classList.add('active');
+            currentSection = index;
+            updateTabs();
+            
+            if (index === dimensions.length) {
+                updateSummary();
+            }
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function nextSection() {
+            if (currentSection < dimensions.length) {
+                goToSection(currentSection + 1);
+            }
+        }
+
+        function previousSection() {
+            if (currentSection > 0) {
+                goToSection(currentSection - 1);
+            }
+        }
+
+        // Decision Selection
+        let selectedDecision = null;
+        function selectDecision(decision) {
+            selectedDecision = decision;
+            document.querySelectorAll('.decision-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+        }
+
+        // Submit Form
+        async function submitForm() {
+            const storeCode    = document.getElementById('storeSelect').value;
+            const tsh          = document.getElementById('tshField').value;
+            const filledBy     = document.getElementById('filledBy').value;
+            const assessmentDate = document.getElementById('assessmentDate').value;
+
+            if (!storeCode || !filledBy || !assessmentDate) {
+                alert('Lengkapi: Nama Store, Diisi Oleh, dan Tanggal!');
+                return;
+            }
+
+            const store = STORES.find(s => s.code === storeCode);
+            const storeName = store ? store.name : storeCode;
+
+            const completedCount = Object.keys(sectionScores).length;
+            if (completedCount < 12) {
+                const ok = window.confirm(`Baru ${completedCount}/12 dimensi diisi. Submit sekarang?`);
+                if (!ok) return;
+            }
+
+            const submitBtn = event.target;
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = '⏳ Menyimpan...';
+            submitBtn.disabled = true;
+
+            // Map section scores → dim fields expected by Code.gs
+            const dimKeys = [
+                'dim1_location','dim2_visibility','dim3_financial','dim4_product_mix',
+                'dim5_people','dim6_promo','dim7_digital','dim8_store_activity',
+                'dim9_traffic','dim10_competitor','dim11_customer','dim12_operational'
+            ];
+            const dimPayload = {};
+            dimensions.forEach((dim, i) => {
+                dimPayload[dimKeys[i]] = sectionScores[dim.id] || 0;
+            });
+
+            // Overall score & status — use computed values
+            const scores = Object.values(sectionScores);
+            const overallScore = scores.length
+                ? Math.round(scores.reduce((a,b) => a+b, 0) / scores.length)
+                : 0;
+            const status   = overallScore >= 80 ? 'Excellent' : overallScore >= 60 ? 'Good' : 'Critical';
+            const decision = selectedDecision
+                ? selectedDecision.toUpperCase()
+                : (overallScore >= 80 ? 'KEEP' : overallScore >= 60 ? 'IMPROVE' : overallScore >= 40 ? 'RELOCATE' : 'CLOSE');
+
+            const payload = {
+                store_code: storeCode,
+                store_name: storeName,
+                tsh,
+                filled_by: filledBy,
+                assessment_date: assessmentDate,
+                ...dimPayload,
+                overall_score: overallScore,
+                status,
+                decision,
+                detailed_responses: responses
+            };
+
+            try {
+                const res  = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const json = await res.json();
+
+                if (json.success) {
+                    alert(`✅ Health Check berhasil disimpan!\n\nToko: ${storeName}\nSkor: ${overallScore}/100\nStatus: ${status}\nDecision: ${decision}\n\nData tampil di ERA-ANALYTICS → Store Analytics.`);
+                    localStorage.removeItem('healthCheckData');
+                    if (window.confirm('Mulai assessment baru?')) {
+                        location.reload();
+                    } else {
+                        submitBtn.textContent = '✓ Tersimpan';
+                        submitBtn.style.background = 'var(--success)';
+                    }
+                } else {
+                    throw new Error(json.error || 'Server error');
+                }
+
+            } catch (error) {
+                console.error('Submission error:', error);
+                alert(`⚠️ Gagal menyimpan: ${error.message}\n\nCoba refresh dan submit ulang.`);
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+
+        // LocalStorage Management
+        function saveToLocalStorage() {
+            const data = {
+                responses,
+                sectionScores,
+                storeCode:      document.getElementById('storeSelect').value,
+                filledBy:       document.getElementById('filledBy').value,
+                assessmentDate: document.getElementById('assessmentDate').value
+            };
+            localStorage.setItem('healthCheckData', JSON.stringify(data));
+        }
+
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('healthCheckData');
+            if (!saved) return;
+            const data = JSON.parse(saved);
+            responses     = data.responses     || {};
+            sectionScores = data.sectionScores || {};
+
+            if (data.storeCode) {
+                document.getElementById('storeSelect').value = data.storeCode;
+                onStoreChange();
+            }
+            if (data.filledBy)       document.getElementById('filledBy').value       = data.filledBy;
+            if (data.assessmentDate) document.getElementById('assessmentDate').value = data.assessmentDate;
+
+            // Restore radio selections
+            Object.keys(responses).forEach(dimId => {
+                Object.keys(responses[dimId]).forEach(qId => {
+                    const value = responses[dimId][qId];
+                    const input = document.querySelector(`input[name="${dimId}_${qId}"][value="${value}"]`);
+                    if (input) {
+                        input.checked = true;
+                        input.closest('.radio-option').classList.add('selected');
+                    }
+                });
+                calculateSectionScore(parseInt(dimId));
+            });
+
+            updateProgress();
+            updateTabs();
+        }
+    </script>
+</body>
+</html>
