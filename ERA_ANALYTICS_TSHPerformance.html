@@ -307,7 +307,16 @@ function fmt(n){return (n/1e9).toFixed(1)+'B'}
 function fmtM(n){return (n/1e6).toFixed(0)+'M'}
 function fmtB2(n){return (n/1e9).toFixed(2)+'B'}
 function fmtPct(n){return n.toFixed(1)+'%'}
-function shortTSH(t){const parts=t.split(' ');return parts[parts.length-1]}
+function shortTSH(t){
+  const map={
+    'ABDILLAH':'ABDILLAH','ARENGGA':'ARENGGA','ARI HIDAYAT':'ARI HIDAYAT',
+    'EKA FUJI CHAERUL ANWAR':'EKA FUJI','FEBRIAN TRI WIBOWO':'FEBRIAN',
+    'IRMAN PERMANA':'IRMAN','LUKMAN WIBOWO':'LUKMAN','MENSI ALEXANDER':'MENSI',
+    'NURUL ZAMAN':'NURUL ZAMAN','RENDI JANUARDI':'RENDI','RENDY NUR SETIAWAN':'RENDY',
+    'SANDI MAULANA':'SANDI'
+  };
+  return map[t]||t.split(' ')[0];
+}
 
 function tshStats(){
   return ACTIVE_TSH.map(tsh=>{
