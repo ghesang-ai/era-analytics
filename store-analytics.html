@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Store Analytics — ERA-ANALYTICS</title>
+    <link rel="stylesheet" href="./styles.css?v=era-red-2" />
+    <style>
+      /* ── Score bar ── */
+      .score-bar-wrap { display: flex; align-items: center; gap: 8px; }
+      .score-bar-track {
+        flex: 1; height: 6px; background: #e5e7eb; border-radius: 99px; overflow: hidden;
+      }
+      .score-bar-fill { height: 100%; border-radius: 99px; transition: width .3s; }
+      .score-val { font-size: 13px; font-weight: 700; font-family: 'JetBrains Mono', monospace; min-width: 30px; text-align: right; }
+      .score-excellent .score-bar-fill { background: #16a34a; }
+      .score-excellent .score-val  { color: #16a34a; }
+      .score-good .score-bar-fill  { background: #d97706; }
+      .score-good .score-val       { color: #d97706; }
+      .score-critical .score-bar-fill { background: #dc2626; }
+      .score-critical .score-val   { color: #dc2626; }
+
+      /* ── Status / Decision badges ── */
+      .badge-status, .badge-decision {
+        display: inline-block; padding: 2px 9px; border-radius: 99px;
+        font-size: 11px; font-weight: 700; letter-spacing: .02em; white-space: nowrap;
+      }
+      .badge-excellent { background: #dcfce7; color: #15803d; }
+      .badge-good      { background: #fef3c7; color: #b45309; }
+      .badge-critical  { background: #fee2e2; color: #b91c1c; }
+      .badge-keep      { background: #dbeafe; color: #1d4ed8; }
+      .badge-improve   { background: #fef3c7; color: #b45309; }
+      .badge-relocate  { background: #ede9fe; color: #6d28d9; }
+      .badge-close     { background: #fee2e2; color: #b91c1c; }
+
+      /* ── Action buttons in table ── */
+      .tbl-btn {
+        padding: 4px 10px; border-radius: 5px; font-size: 11px; font-weight: 600;
+        cursor: pointer; border: 1px solid; font-family: inherit; transition: opacity .15s;
+      }
+      .tbl-btn:hover { opacity: .8; }
+      .tbl-btn-view { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+      .tbl-btn-new  { background: #f0fdf4; color: #15803d; border-color: #bbf7d0; }
+
+      /* ── Modal overlay ── */
+      .modal-overlay {
+        display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45);
+        z-index: 200; align-items: center; justify-content: center; padding: 16px;
+      }
+      .modal-overlay.open { display: flex; }
+      .modal-box {
+        background: #fff; border-radius: 12px; width: 100%; max-width: 680px;
+        max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 64px rgba(0,0,0,.18);
+      }
+      .modal-head {
+        padding: 20px 24px 16px; border-bottom: 1px solid #e5e7eb;
+        display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; position: sticky; top: 0; background: #fff; z-index: 1;
+      }
+      .modal-head h2 { font-size: 16px; margin-bottom: 2px; }
+      .modal-head p  { font-size: 12px; color: var(--muted); }
+      .modal-close {
+        background: none; border: none; cursor: pointer; font-size: 18px; color: var(--muted);
+        line-height: 1; padding: 4px; flex-shrink: 0;
+      }
+      .modal-body { padding: 20px 24px 24px; }
+      .modal-score-hero {
+        display: flex; align-items: center; justify-content: space-between;
+        background: #f8fafc; border-radius: 8px; padding: 14px 18px; margin-bottom: 18px;
+      }
+      .modal-score-hero .big-score {
+        font-size: 48px; font-weight: 900; font-family: 'JetBrains Mono', monospace; line-height: 1;
+      }
+      .modal-score-hero .score-meta { font-size: 12px; color: var(--muted); margin-top: 3px; }
+      .modal-dims { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 20px; }
+      .modal-dim-row { display: flex; flex-direction: column; gap: 4px; }
+      .modal-dim-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+      .modal-dim-bar { display: flex; align-items: center; gap: 8px; }
+      .modal-dim-bar-track { flex: 1; height: 8px; background: #e5e7eb; border-radius: 99px; overflow: hidden; }
+      .modal-dim-bar-fill  { height: 100%; border-radius: 99px; }
+      .modal-dim-val { font-size: 13px; font-weight: 700; min-width: 28px; text-align: right; font-family: 'JetBrains Mono', monospace; }
+
+      /* ── Loading / empty states ── */
+      .state-box {
+        padding: 52px 24px; text-align: center; color: var(--muted);
+      }
+      .state-box .state-icon { font-size: 40px; margin-bottom: 10px; }
+      .state-box p { font-size: 14px; }
+      .spinner {
+        width: 32px; height: 32px; border: 3px solid #e5e7eb;
+        border-top-color: var(--blue); border-radius: 50%;
+        animation: spin .7s linear infinite; margin: 0 auto 12px;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+
+      /* ── Filter bar tweaks for 4 controls ── */
+      .filter-toolbar-4 {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr 1fr 1fr auto auto;
+        gap: 10px; margin-bottom: 12px;
+      }
+      @media (max-width: 900px)  { .filter-toolbar-4 { grid-template-columns: 1fr 1fr 1fr; } }
+      @media (max-width: 640px)  { .filter-toolbar-4 { grid-template-columns: 1fr; } }
+      @media (max-width: 640px)  { .modal-dims { grid-template-columns: 1fr; } }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+
+      <!-- ── Sidebar ─────────────────────────────────────────────────── -->
+      <aside class="sidebar" aria-label="Navigasi utama">
+        <div class="brand">
+          <div class="brand-mark">EA</div>
+          <div>
+            <strong>ERA-ANALYTICS</strong>
+            <span>Sales Intelligence</span>
+          </div>
+          <span class="ai-tag">AI</span>
+        </div>
+
+        <div class="nav-group">
+          <span class="nav-caption">Monitoring</span>
+          <nav class="nav-list">
+            <a href="index.html#dashboard">Dashboard</a>
+            <a href="index.html#data-toko">Data Toko</a>
+            <a href="index.html#tsh-performance">TSH Performance</a>
+            <a href="index.html#bep-tracker">BEP Tracker</a>
+          </nav>
+        </div>
+
+        <div class="nav-group">
+          <span class="nav-caption">Analytics</span>
+          <nav class="nav-list">
+            <a href="index.html#pnl">P&amp;L Analytics</a>
+            <a href="index.html#ai-insights">AI Insights</a>
+            <a class="active" href="store-analytics.html">🏥 Store Analytics</a>
+            <a href="index.html#workflow">Workflow</a>
+            <a href="index.html#architecture">Architecture</a>
+          </nav>
+        </div>
+
+        <div class="nav-group">
+          <span class="nav-caption">Manage</span>
+          <nav class="nav-list">
+            <a href="index.html#upload-data">Upload Data</a>
+            <a href="index.html#reports">Reports</a>
+            <a href="index.html#settings">Settings</a>
+          </nav>
+        </div>
+
+        <div class="sidebar-note">
+          <span>Analytics Active</span>
+          <strong>ERA-ANALYTICS v1.0</strong>
+          <small>Region 5 · 2022-2026</small>
+        </div>
+      </aside>
+
+      <!-- ── Main content ─────────────────────────────────────────────── -->
+      <main class="content">
+
+        <!-- Page header -->
+        <section class="page-header">
+          <div class="hero-copy">
+            <span class="eyebrow hero-eyebrow">Store Diagnostics</span>
+            <h1>Store Analytics</h1>
+            <p class="subtitle">Health check 12 dimensi per toko — scoring, status, dan rekomendasi keputusan.</p>
+          </div>
+          <div class="header-actions">
+            <div class="tab-strip">
+              <button class="tab is-active" type="button">Overview</button>
+              <button class="tab" type="button" id="tabCritical">Critical Stores</button>
+            </div>
+            <div class="actions">
+              <button class="button secondary" type="button" id="btnRefresh">↺ Refresh</button>
+              <a href="https://era-store-healthcheck.netlify.app" target="_blank" rel="noopener" class="button primary">+ New Assessment</a>
+            </div>
+          </div>
+          <div class="hero-stat">
+            <small>Data Source</small>
+            <strong id="heroTotal">—</strong>
+            <span>Total assessments</span>
+          </div>
+          <div class="light-streak streak-blue"></div>
+          <div class="light-streak streak-red"></div>
+        </section>
+
+        <!-- KPI cards -->
+        <section class="kpi-strip" aria-label="Health KPI" id="kpiStrip">
+          <article class="metric-card accent-blue">
+            <span>Total Assessments</span>
+            <strong id="kpiTotal">—</strong>
+            <small id="kpiTotalNote">Seluruh toko</small>
+          </article>
+          <article class="metric-card accent-green">
+            <span>Avg Health Score</span>
+            <strong id="kpiAvg">—</strong>
+            <small>Score /100</small>
+          </article>
+          <article class="metric-card accent-red">
+            <span>Critical Stores</span>
+            <strong id="kpiCritical">—</strong>
+            <small id="kpiCriticalNote">Butuh perhatian</small>
+          </article>
+          <article class="metric-card accent-amber">
+            <span>Last Assessment</span>
+            <strong id="kpiLastDate">—</strong>
+            <small>Tanggal terbaru</small>
+          </article>
+        </section>
+
+        <!-- Cluster overview -->
+        <section class="cluster-section" id="clusterSection">
+          <div class="section-heading">
+            <h2>Health Clusters</h2>
+          </div>
+          <div class="cluster-grid">
+            <article class="cluster-card growth">
+              <span>Excellent</span>
+              <strong id="clusterExcellent">—</strong>
+              <p>Skor ≥ 80 · Toko sehat dan optimal.</p>
+            </article>
+            <article class="cluster-card stable">
+              <span>Good</span>
+              <strong id="clusterGood">—</strong>
+              <p>Skor 60–79 · Perlu perbaikan minor.</p>
+            </article>
+            <article class="cluster-card recovery">
+              <span>Critical</span>
+              <strong id="clusterCritical">—</strong>
+              <p>Skor &lt; 60 · Butuh intervensi segera.</p>
+            </article>
+            <article class="cluster-card critical">
+              <span>CLOSE</span>
+              <strong id="clusterClose">—</strong>
+              <p>Rekomendasi penutupan toko.</p>
+            </article>
+          </div>
+        </section>
+
+        <!-- Data table panel -->
+        <section class="panel" id="tablePanel">
+          <div class="panel-header">
+            <div>
+              <h2>Assessment Results</h2>
+              <p class="muted" id="tableSubtitle">Memuat data…</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <span class="badge" id="tableCount">0</span>
+            </div>
+          </div>
+
+          <!-- Filter bar -->
+          <div class="filter-toolbar-4">
+            <input class="search-input" id="filterSearch" placeholder="Cari toko, kode, TSH…" type="search" />
+            <select class="search-input" id="filterStore"><option value="">Semua Toko</option></select>
+            <select class="search-input" id="filterStatus">
+              <option value="">Semua Status</option>
+              <option value="Excellent">Excellent</option>
+              <option value="Good">Good</option>
+              <option value="Critical">Critical</option>
+            </select>
+            <select class="search-input" id="filterDecision">
+              <option value="">Semua Decision</option>
+              <option value="KEEP">KEEP</option>
+              <option value="IMPROVE">IMPROVE</option>
+              <option value="RELOCATE">RELOCATE</option>
+              <option value="CLOSE">CLOSE</option>
+            </select>
+            <input class="search-input" id="filterDateFrom" type="date" title="Dari tanggal" style="min-width:130px;" />
+            <input class="search-input" id="filterDateTo"   type="date" title="Sampai tanggal" style="min-width:130px;" />
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Kode</th>
+                  <th>Nama Toko</th>
+                  <th>TSH</th>
+                  <th style="min-width:160px;">Health Score</th>
+                  <th>Status</th>
+                  <th>Decision</th>
+                  <th>Tanggal</th>
+                  <th style="min-width:160px;">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="tableBody">
+                <tr>
+                  <td colspan="8">
+                    <div class="state-box">
+                      <div class="spinner"></div>
+                      <p>Memuat data dari Google Sheets…</p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </main>
+    </div><!-- /.app-shell -->
+
+    <!-- ── Detail modal ─────────────────────────────────────────────── -->
+    <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-box">
+        <div class="modal-head">
+          <div>
+            <h2 id="modalTitle">Detail Toko</h2>
+            <p id="modalSubtitle">—</p>
+          </div>
+          <button class="modal-close" id="modalClose" aria-label="Tutup modal">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="modal-score-hero">
+            <div>
+              <div class="big-score" id="modalOverallScore">—</div>
+              <div class="score-meta">Overall Health Score</div>
+            </div>
+            <div style="text-align:right;">
+              <div id="modalStatusBadge"></div>
+              <div style="margin-top:6px;" id="modalDecisionBadge"></div>
+              <div style="font-size:11px;color:var(--muted);margin-top:6px;" id="modalDate">—</div>
+            </div>
+          </div>
+          <p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:10px;">12 Dimensi</p>
+          <div class="modal-dims" id="modalDims"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+    (() => {
+      'use strict';
+
+      const API = 'https://script.google.com/macros/s/AKfycbzGGuY1fDBgeRyRh_pYjYYGntsJYoF1QlwV-bqmygvsjeBWjAow3a5AZaKf8UEjZuDt/exec';
+
+      const DIMS = [
+        { key: 'Dim1_Location',       label: 'Location' },
+        { key: 'Dim2_Visibility',      label: 'Visibility' },
+        { key: 'Dim3_Financial',       label: 'Financial' },
+        { key: 'Dim4_Product_Mix',     label: 'Product Mix' },
+        { key: 'Dim5_People',          label: 'People' },
+        { key: 'Dim6_Promo',           label: 'Promo' },
+        { key: 'Dim7_Digital',         label: 'Digital' },
+        { key: 'Dim8_Store_Activity',  label: 'Store Activity' },
+        { key: 'Dim9_Traffic',         label: 'Traffic' },
+        { key: 'Dim10_Competitor',     label: 'Competitor' },
+        { key: 'Dim11_Customer',       label: 'Customer' },
+        { key: 'Dim12_Operational',    label: 'Operational' },
+      ];
+
+      // ── State ──────────────────────────────────────────────────────
+      let allRows = [];
+      let filteredRows = [];
+
+      // ── DOM refs ───────────────────────────────────────────────────
+      const $ = id => document.getElementById(id);
+      const tableBody   = $('tableBody');
+      const filterSearch   = $('filterSearch');
+      const filterStore    = $('filterStore');
+      const filterStatus   = $('filterStatus');
+      const filterDecision = $('filterDecision');
+      const filterDateFrom = $('filterDateFrom');
+      const filterDateTo   = $('filterDateTo');
+      const tableCount     = $('tableCount');
+      const tableSubtitle  = $('tableSubtitle');
+
+      // ── Fetch data ─────────────────────────────────────────────────
+      async function fetchData() {
+        setLoading(true);
+        try {
+          const res  = await fetch(`${API}?action=list`, { cache: 'no-store' });
+          const json = await res.json();
+          if (!json.success) throw new Error(json.error || 'API error');
+          allRows = json.data || [];
+          populateStoreDropdown(allRows);
+          applyFilters();
+          updateKPIs(allRows);
+          updateClusters(allRows);
+          $('heroTotal').textContent = allRows.length;
+        } catch (err) {
+          console.error(err);
+          showError(err.message);
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      function setLoading(on) {
+        if (on) {
+          tableBody.innerHTML = `<tr><td colspan="8"><div class="state-box"><div class="spinner"></div><p>Memuat data…</p></div></td></tr>`;
+        }
+      }
+
+      function showError(msg) {
+        tableBody.innerHTML = `<tr><td colspan="8"><div class="state-box"><div class="state-icon">⚠️</div><p style="color:#dc2626;font-weight:600;">Gagal memuat data</p><p style="font-size:12px;margin-top:6px;color:#6b7280;">${escHtml(msg)}</p></div></td></tr>`;
+        tableSubtitle.textContent = 'Error — coba refresh';
+      }
+
+      // ── Populate store dropdown ────────────────────────────────────
+      function populateStoreDropdown(rows) {
+        const seen = new Set();
+        const opts = ['<option value="">Semua Toko</option>'];
+        rows.forEach(r => {
+          const code = r.Store_Code || '';
+          if (code && !seen.has(code)) {
+            seen.add(code);
+            opts.push(`<option value="${escHtml(code)}">${escHtml(code)} — ${escHtml(r.Store_Name || '')}</option>`);
+          }
+        });
+        filterStore.innerHTML = opts.join('');
+      }
+
+      // ── KPI cards ─────────────────────────────────────────────────
+      function updateKPIs(rows) {
+        const n = rows.length;
+        $('kpiTotal').textContent = n;
+        $('kpiTotalNote').textContent = `${n} assessment tercatat`;
+
+        const avgScore = n
+          ? Math.round(rows.reduce((s, r) => s + Number(r.Overall_Score || 0), 0) / n * 10) / 10
+          : 0;
+        $('kpiAvg').textContent = avgScore;
+
+        const critical = rows.filter(r => r.Status === 'Critical').length;
+        $('kpiCritical').textContent = critical;
+        $('kpiCriticalNote').textContent = `${critical} dari ${n} toko`;
+
+        const dates = rows.map(r => r.Assessment_Date).filter(Boolean).sort();
+        $('kpiLastDate').textContent = dates.length ? dates[dates.length - 1] : '—';
+      }
+
+      // ── Cluster counts ─────────────────────────────────────────────
+      function updateClusters(rows) {
+        $('clusterExcellent').textContent = rows.filter(r => r.Status === 'Excellent').length;
+        $('clusterGood').textContent      = rows.filter(r => r.Status === 'Good').length;
+        $('clusterCritical').textContent  = rows.filter(r => r.Status === 'Critical').length;
+        $('clusterClose').textContent     = rows.filter(r => r.Decision === 'CLOSE').length;
+      }
+
+      // ── Filters ────────────────────────────────────────────────────
+      function applyFilters() {
+        const q        = filterSearch.value.toLowerCase().trim();
+        const store    = filterStore.value;
+        const status   = filterStatus.value;
+        const decision = filterDecision.value;
+        const dateFrom = filterDateFrom.value;
+        const dateTo   = filterDateTo.value;
+
+        filteredRows = allRows.filter(r => {
+          if (q && ![r.Store_Code, r.Store_Name, r.TSH, r.Filled_By]
+            .join(' ').toLowerCase().includes(q)) return false;
+          if (store    && r.Store_Code  !== store)    return false;
+          if (status   && r.Status      !== status)   return false;
+          if (decision && r.Decision    !== decision) return false;
+          if (dateFrom && r.Assessment_Date < dateFrom) return false;
+          if (dateTo   && r.Assessment_Date > dateTo)   return false;
+          return true;
+        });
+
+        renderTable(filteredRows);
+        tableCount.textContent = filteredRows.length;
+        tableSubtitle.textContent = `${filteredRows.length} dari ${allRows.length} assessment`;
+      }
+
+      // ── Table render ───────────────────────────────────────────────
+      function renderTable(rows) {
+        if (rows.length === 0) {
+          tableBody.innerHTML = `<tr><td colspan="8"><div class="state-box"><div class="state-icon">📭</div><p>Tidak ada data yang cocok.</p></div></td></tr>`;
+          return;
+        }
+
+        tableBody.innerHTML = rows.map((r, i) => {
+          const score   = Number(r.Overall_Score || 0);
+          const cls     = scoreClass(score);
+          const stBadge = statusBadge(r.Status);
+          const dcBadge = decisionBadge(r.Decision);
+
+          return `<tr>
+            <td><span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;">${escHtml(r.Store_Code || '—')}</span></td>
+            <td>${escHtml(r.Store_Name || '—')}</td>
+            <td>${escHtml(r.TSH || '—')}</td>
+            <td>
+              <div class="score-bar-wrap ${cls}">
+                <div class="score-bar-track"><div class="score-bar-fill" style="width:${score}%"></div></div>
+                <span class="score-val">${score}</span>
+              </div>
+            </td>
+            <td>${stBadge}</td>
+            <td>${dcBadge}</td>
+            <td style="font-size:12px;color:var(--muted);">${escHtml(r.Assessment_Date || '—')}</td>
+            <td>
+              <button class="tbl-btn tbl-btn-view" data-idx="${i}" onclick="openModal(${i})">Detail</button>
+              <a href="https://era-store-healthcheck.netlify.app?store=${encodeURIComponent(r.Store_Code || '')}" target="_blank" rel="noopener" class="tbl-btn tbl-btn-new" style="text-decoration:none;margin-left:4px;">+ Assessment</a>
+            </td>
+          </tr>`;
+        }).join('');
+      }
+
+      // ── Modal ──────────────────────────────────────────────────────
+      window.openModal = function(idx) {
+        const r = filteredRows[idx];
+        if (!r) return;
+
+        const score = Number(r.Overall_Score || 0);
+        $('modalTitle').textContent    = `${r.Store_Code || ''} — ${r.Store_Name || ''}`;
+        $('modalSubtitle').textContent = `TSH: ${r.TSH || '—'} · Diisi oleh: ${r.Filled_By || '—'}`;
+        $('modalDate').textContent     = `Tanggal: ${r.Assessment_Date || '—'}`;
+
+        const scoreCls = scoreClass(score);
+        const colorMap = { 'score-excellent': '#16a34a', 'score-good': '#d97706', 'score-critical': '#dc2626' };
+        const col = colorMap[scoreCls] || '#374151';
+        $('modalOverallScore').textContent = score;
+        $('modalOverallScore').style.color = col;
+
+        $('modalStatusBadge').innerHTML   = statusBadge(r.Status);
+        $('modalDecisionBadge').innerHTML = decisionBadge(r.Decision);
+
+        $('modalDims').innerHTML = DIMS.map(d => {
+          const v   = Number(r[d.key] || 0);
+          const cls = scoreClass(v);
+          const colorMap2 = { 'score-excellent': '#16a34a', 'score-good': '#d97706', 'score-critical': '#dc2626' };
+          const c   = colorMap2[cls] || '#6b7280';
+          return `<div class="modal-dim-row">
+            <div class="modal-dim-label">${d.label}</div>
+            <div class="modal-dim-bar">
+              <div class="modal-dim-bar-track">
+                <div class="modal-dim-bar-fill" style="width:${v}%;background:${c};"></div>
+              </div>
+              <span class="modal-dim-val" style="color:${c};">${v}</span>
+            </div>
+          </div>`;
+        }).join('');
+
+        $('modalOverlay').classList.add('open');
+        document.body.style.overflow = 'hidden';
+      };
+
+      function closeModal() {
+        $('modalOverlay').classList.remove('open');
+        document.body.style.overflow = '';
+      }
+
+      $('modalClose').addEventListener('click', closeModal);
+      $('modalOverlay').addEventListener('click', e => { if (e.target === $('modalOverlay')) closeModal(); });
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+      // ── Tab switching (Critical filter shortcut) ───────────────────
+      $('tabCritical').addEventListener('click', () => {
+        filterStatus.value = 'Critical';
+        applyFilters();
+        $('tabCritical').classList.add('is-active');
+        document.querySelector('.tab.is-active:not(#tabCritical)')?.classList.remove('is-active');
+      });
+      document.querySelector('.tab.is-active').addEventListener('click', () => {
+        filterStatus.value = '';
+        applyFilters();
+      });
+
+      // ── Event listeners ────────────────────────────────────────────
+      [filterSearch, filterStore, filterStatus, filterDecision, filterDateFrom, filterDateTo]
+        .forEach(el => el.addEventListener('input', applyFilters));
+
+      $('btnRefresh').addEventListener('click', fetchData);
+
+      // ── Helpers ────────────────────────────────────────────────────
+      function scoreClass(s) {
+        if (s >= 80) return 'score-excellent';
+        if (s >= 60) return 'score-good';
+        return 'score-critical';
+      }
+
+      function statusBadge(s) {
+        const map = { Excellent: 'badge-excellent', Good: 'badge-good', Critical: 'badge-critical' };
+        return `<span class="badge-status ${map[s] || ''}">${escHtml(s || '—')}</span>`;
+      }
+
+      function decisionBadge(d) {
+        const map = { KEEP: 'badge-keep', IMPROVE: 'badge-improve', RELOCATE: 'badge-relocate', CLOSE: 'badge-close' };
+        return `<span class="badge-decision ${map[d] || ''}">${escHtml(d || '—')}</span>`;
+      }
+
+      function escHtml(s) {
+        return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+      }
+
+      // ── Init ───────────────────────────────────────────────────────
+      fetchData();
+    })();
+    </script>
+  </body>
+</html>
