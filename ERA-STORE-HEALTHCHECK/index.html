@@ -77,8 +77,8 @@
 
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
         }
 
         .info-field label {
@@ -560,13 +560,56 @@
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
             .info-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 0;
+                background: white;
+            }
+
+            .container {
+                border-radius: 0;
+                box-shadow: none;
+                min-height: 100vh;
+            }
+
+            .header {
+                padding: 20px 16px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .store-info {
+                padding: 16px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+
+            .progress-section {
+                padding: 14px 16px;
+            }
+
+            .content {
+                padding: 20px 16px;
+            }
+
+            .section-title {
+                font-size: 18px;
             }
 
             .summary-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
             }
 
             .decision-buttons {
@@ -574,12 +617,34 @@
             }
 
             .tabs {
-                padding: 0 10px;
+                padding: 0 8px;
             }
 
             .tab {
-                padding: 14px 12px;
+                padding: 12px 10px;
                 font-size: 12px;
+            }
+
+            .nav-buttons {
+                margin-top: 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-card-value {
+                font-size: 26px;
             }
         }
 
@@ -616,7 +681,7 @@
 
         <!-- Store Info -->
         <div class="store-info">
-            <div class="info-grid" style="grid-template-columns: repeat(4, 1fr);">
+            <div class="info-grid">
                 <div class="info-field">
                     <label>Nama Store</label>
                     <select id="storeSelect" onchange="onStoreChange()">
@@ -624,9 +689,9 @@
                     </select>
                 </div>
                 <div class="info-field">
-                    <label>TSH (Store Leader)</label>
-                    <input type="text" id="tshField" placeholder="Auto-isi dari store" readonly
-                           style="background:#f3f4f6;cursor:not-allowed;color:#374151;">
+                    <label>Store Leader</label>
+                    <input type="text" id="tshField" placeholder="Otomatis terisi" readonly
+                           style="background:#f3f4f6;cursor:not-allowed;color:#374151;font-weight:600;">
                 </div>
                 <div class="info-field">
                     <label>Diisi oleh</label>
