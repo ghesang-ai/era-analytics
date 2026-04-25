@@ -25,9 +25,9 @@
       "Critical": 79
     },
     "summaryTitle": "Mixed - Turnaround Needed",
-    "condition": "152 toko Region 5 terbaca di Analysis EAR. Loss pattern terbesar ada di 6 toko, sedangkan profit pattern terbesar ada di 28 toko.",
-    "analysis": "Pattern dominan profit: PROFIT because their Sales is BELOW , their GP% is BELOW and their OPEX is BELOW. Pattern dominan loss: LOSS because their Sales is ABOVE , their GP% is ABOVE and their OPEX is BELOW.",
-    "action": "Prioritaskan toko yang masuk loss pattern terbesar, terutama yang sales masih below dan OPEX masih above, lalu tindak lanjutkan per owner dan format toko."
+    "condition": "152 toko Region 5 terbaca di Analysis EAR. Pola rugi terbesar terdeteksi di 6 toko, sedangkan pola profit terbesar ada di 28 toko.",
+    "analysis": "Pola dominan PROFIT: Toko profit karena penjualan masih di bawah potensi, GPM di bawah rata-rata, dan OPEX sudah terkendali. Pola dominan LOSS: Toko rugi meskipun penjualan di atas target, GPM cukup baik, namun OPEX belum efisien.",
+    "action": "Prioritaskan toko yang masuk pola rugi terbesar, terutama yang penjualan masih di bawah dan OPEX masih tinggi. Tindak lanjut per owner dan evaluasi format toko."
   },
   "actions": [
     {

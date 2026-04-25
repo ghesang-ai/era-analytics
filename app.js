@@ -619,7 +619,19 @@ function bindEvents() {
 
   qs("aiGenerateButton").addEventListener("click", () => {
     const store = dashboardState.stores.find((item) => item.code === qs("aiStoreSelect").value);
-    if (store) renderAi(store);
+    if (!store) return;
+    const btn = qs("aiGenerateButton");
+    btn.disabled = true;
+    btn.textContent = "Menganalisis...";
+    qs("aiHeadline").textContent = "Sedang menganalisis data toko...";
+    qs("aiSummary").textContent = "AI sedang membaca BEP, cluster, health, trend, dan pola OPEX toko yang dipilih.";
+    setTimeout(() => {
+      renderAi(store);
+      btn.disabled = false;
+      btn.textContent = "Generate Insight";
+      qs("aiGenerateButton").style.boxShadow = "0 0 0 3px rgba(229,75,69,0.35)";
+      setTimeout(() => { qs("aiGenerateButton").style.boxShadow = ""; }, 1200);
+    }, 900);
   });
 
   qs("uploadExcelButton").addEventListener("click", () => {
