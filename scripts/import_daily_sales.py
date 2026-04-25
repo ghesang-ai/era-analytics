@@ -14,14 +14,15 @@ CURRENT_DIR = BASE_DIR / "data" / "current"
 ARCHIVE_DIR = BASE_DIR / "data" / "archive"
 TARGET_PATH = CURRENT_DIR / "Sales_vs_Stock_R5_Latest.xlsx"
 DEFAULT_DOWNLOADS = Path.home() / "Downloads"
+SALES_DIR = BASE_DIR / "SALES"
 
 
 def find_latest_download() -> Path | None:
-    matches = sorted(
-        DEFAULT_DOWNLOADS.glob("Sales vs Stock * R5_Master.xlsx"),
-        key=lambda p: p.stat().st_mtime,
-        reverse=True,
-    )
+    candidates = []
+    for folder in [SALES_DIR, DEFAULT_DOWNLOADS]:
+        if folder.exists():
+            candidates.extend(folder.glob("Sales vs Stock * R5_Master.xlsx"))
+    matches = sorted(candidates, key=lambda p: p.stat().st_mtime, reverse=True)
     return matches[0] if matches else None
 
 
@@ -42,7 +43,11 @@ def archive_previous() -> None:
     ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     archived = ARCHIVE_DIR / f"Sales_vs_Stock_R5_{timestamp}.xlsx"
-    shutil.copy2(TARGET_PATH, archived)
+    shutil.move(str(TARGET_PATH), str(archived))
+
+    archives = sorted(ARCHIVE_DIR.glob("Sales_vs_Stock_R5_*.xlsx"), key=lambda p: p.stat().st_mtime, reverse=True)
+    for old_file in archives[3:]:
+        old_file.unlink(missing_ok=True)
 
 
 def main() -> None:

@@ -1,6 +1,9 @@
 const dashboardDataUrl = "./outputs/dashboard_data_v2.json";
+const importUrl = "./cgi-bin/import_sales.py";
 
 let dashboardState = null;
+let selectedUpload = null;
+let listenersBound = false;
 
 function qs(id) {
   return document.getElementById(id);
@@ -23,6 +26,12 @@ function formatIdrCompact(value) {
   if (abs >= 1_000_000_000) return `Rp${(value / 1_000_000_000).toFixed(1)} M`;
   if (abs >= 1_000_000) return `Rp${(value / 1_000_000).toFixed(1)} jt`;
   return `Rp${value.toFixed(0)}`;
+}
+
+function slugDate() {
+  const now = new Date();
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}`;
 }
 
 function channelClass(channel) {
@@ -114,11 +123,13 @@ function renderExecutive(data) {
   qs("metricRevenue2025").textContent = executive.revenue2025;
   qs("metricRevenue2025Note").textContent = executive.revenue2025Note || "Net Amount (IDR)";
   qs("metricYoy").textContent = `${executive.yoy > 0 ? "+" : ""}${executive.yoy}%`;
-  qs("metricYoyNote").textContent = "2024 ke 2025";
+  qs("metricYoyNote").textContent = executive.yoyNote || "2024 ke 2025";
   qs("metricAvgHealth").textContent = executive.avgHealth;
   qs("metricDataPeriod").textContent = executive.dataPeriod;
   qs("metricDataRange").textContent = executive.dataRange;
   qs("executiveSummarySubtitle").textContent = executive.summarySubtitle || "Kondisi Region 5";
+  qs("heroDataPeriod").textContent = executive.dataPeriod;
+  qs("heroDataNote").textContent = executive.summaryTitle;
 
   qs("clusterGrowthCount").textContent = executive.clusters.Growth;
   qs("clusterStableCount").textContent = executive.clusters.Stable;
@@ -151,6 +162,103 @@ function renderImportStatus(data) {
   const generated = source.generatedAt || "-";
   qs("activeSalesSource").textContent = active;
   qs("generatedAtValue").textContent = generated.replace("T", " ");
+  if (!qs("importStatusValue").textContent.trim()) {
+    qs("importStatusValue").textContent = "Siap import";
+  }
+}
+
+function updateUploadButton() {
+  qs("uploadExcelButton").textContent = selectedUpload ? "Import File Terpilih" : "1-Click Import Latest Sales";
+}
+
+function setActiveTab(targetId) {
+  document.querySelectorAll(".tab-strip .tab").forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.target === targetId);
+  });
+}
+
+function scrollToSection(targetId) {
+  const target = document.getElementById(targetId);
+  if (!target) return;
+  target.scrollIntoView({ behavior: "smooth", block: "start" });
+  setActiveTab(targetId);
+}
+
+function exportCurrentReport() {
+  const data = dashboardState;
+  if (!data) return;
+  const executive = data.executive || {};
+  const pnl = data.pnl || {};
+  const actions = data.actions || [];
+  const topCritical = data.topCritical || [];
+
+  const html = `<!doctype html>
+  <html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <title>ERA-ANALYTICS Region 5 Report</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 32px; color: #1f2937; }
+      h1,h2,h3 { margin: 0 0 12px; }
+      .muted { color: #6b7280; margin-bottom: 20px; }
+      .grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; margin-bottom: 24px; }
+      .card { border: 1px solid #dbe4ef; border-radius: 8px; padding: 16px; }
+      .kpi { font-size: 28px; font-weight: 700; margin-top: 8px; }
+      table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+      th, td { border-bottom: 1px solid #e5e7eb; padding: 10px; text-align: left; }
+      th { font-size: 12px; text-transform: uppercase; color: #6b7280; }
+      ul { padding-left: 18px; }
+    </style>
+  </head>
+  <body>
+    <h1>ERA-ANALYTICS Region 5 Report</h1>
+    <div class="muted">Generated ${new Date().toLocaleString("id-ID")} · Data period ${executive.dataPeriod || "-"}</div>
+    <div class="grid">
+      <div class="card"><div>Total Toko</div><div class="kpi">${executive.totalStores || 0}</div><div>${executive.totalStoresNote || ""}</div></div>
+      <div class="card"><div>BEP Reached</div><div class="kpi">${executive.bepReached || 0}</div><div>${executive.bepReachedNote || ""}</div></div>
+      <div class="card"><div>Below BEP</div><div class="kpi">${executive.belowBep || 0}</div><div>${executive.belowBepNote || ""}</div></div>
+      <div class="card"><div>Revenue 2025</div><div class="kpi">${executive.revenue2025 || "-"}</div><div>${executive.revenue2025Note || ""}</div></div>
+    </div>
+    <div class="card">
+      <h2>Executive Summary</h2>
+      <p><b>Kondisi:</b> ${executive.condition || "-"}</p>
+      <p><b>Analisis:</b> ${executive.analysis || "-"}</p>
+      <p><b>Tindakan:</b> ${executive.action || "-"}</p>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <h2>Action Zone</h2>
+        <ul>${actions.map((item) => `<li><b>${item.title}</b>: ${item.note}</li>`).join("")}</ul>
+      </div>
+      <div class="card">
+        <h2>P&L Summary</h2>
+        <p><b>Net Sales:</b> ${formatIdrCompact(pnl.grand?.netSales || 0)}</p>
+        <p><b>Gross Profit:</b> ${formatIdrCompact(pnl.grand?.grossProfit || 0)}</p>
+        <p><b>Operating Income:</b> ${formatIdrCompact(pnl.grand?.operatingIncome || 0)}</p>
+        <p><b>Net Final:</b> ${formatIdrCompact(pnl.grand?.netFinal || 0)}</p>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Critical Store Watchlist</h2>
+      <table>
+        <thead><tr><th>Kode</th><th>Store</th><th>TSH</th><th>Gap BEP</th><th>P&L</th></tr></thead>
+        <tbody>
+          ${topCritical.map((store) => `<tr><td>${store.code}</td><td>${store.name}</td><td>${store.tsh}</td><td>${formatIdrCompact(store.bepGap)}</td><td>${store.pnl}</td></tr>`).join("")}
+        </tbody>
+      </table>
+    </div>
+  </body>
+  </html>`;
+
+  const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `ERA_ANALYTICS_Region5_Report_${slugDate()}.html`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
 }
 
 function renderTshSection(data) {
@@ -217,7 +325,7 @@ function renderTshSection(data) {
 }
 
 function populateFilters(stores) {
-  const tshs = ["Semua TSH", ...new Set(stores.map((store) => store.tsh))];
+  const tshs = ["Semua TSH", ...new Set(stores.map((store) => store.tsh).filter((tsh) => tsh && tsh !== "Close"))];
   const channels = ["Semua Channel", ...new Set(stores.map((store) => store.channel))];
   const clusters = ["Semua Cluster", ...new Set(stores.map((store) => store.cluster))];
   const statuses = ["Semua Status", "BEP", "RUGI"];
@@ -235,7 +343,7 @@ function populateFilters(stores) {
 }
 
 function getFilteredStores() {
-  const stores = dashboardState.stores;
+  const stores = dashboardState.stores.filter((store) => store.tsh !== "Close");
   const search = qs("searchStore").value.trim().toLowerCase();
   const tsh = qs("filterTsh").value;
   const channel = qs("filterChannel").value;
@@ -361,9 +469,12 @@ function renderBepTracker() {
 
 function renderPnl(pnl) {
   const grand = pnl.grand;
-  const profitCount = dashboardState.stores.filter((store) => store.status === "Aktif" && store.pnl === "Profit").length;
-  const lossCount = dashboardState.stores.filter((store) => store.status === "Aktif" && store.pnl === "Loss").length;
+  const profitCount = dashboardState.stores.filter((store) => store.pnl === "Profit").length;
+  const lossCount = dashboardState.stores.filter((store) => store.pnl === "Loss").length;
   const total = Math.max(profitCount + lossCount, 1);
+  const analysis = pnl.analysis || {};
+  const topProfit = analysis.topProfit;
+  const topLoss = analysis.topLoss;
 
   qs("pnlPeriodLabel").textContent = pnl.periodLabel;
   qs("pnlLossBadge").textContent = `${lossCount} Loss Stores`;
@@ -381,6 +492,14 @@ function renderPnl(pnl) {
   qs("pnlCostDrivers").innerHTML = pnl.costDrivers
     .map(([name, value]) => `<span>${name} <b>${formatIdrCompact(value)}</b></span>`)
     .join("");
+  qs("pnlAnalysisSummary").innerHTML = `
+    <span>Total analysis <b>${analysis.grand?.regionTotal || 0} toko</b></span>
+    <span>Top profit pattern <b>${topProfit ? topProfit.regionTotal : 0} toko</b></span>
+    <span>Top loss pattern <b>${topLoss ? topLoss.regionTotal : 0} toko</b></span>
+    <span>Mall vs Street <b>${analysis.grand?.mallTotal || 0} / ${analysis.grand?.streetTotal || 0}</b></span>
+    ${topProfit ? `<span>Profit dominan <b>${topProfit.remark.replace("This store is ", "").replace("because their ", "")}</b></span>` : ""}
+    ${topLoss ? `<span>Loss dominan <b>${topLoss.remark.replace("This store is ", "").replace("because their ", "")}</b></span>` : ""}
+  `;
 }
 
 function buildAiInsight(store) {
@@ -453,6 +572,9 @@ function renderAi(store) {
 }
 
 function bindEvents() {
+  if (listenersBound) return;
+  listenersBound = true;
+
   ["searchStore", "filterTsh", "filterChannel", "filterCluster", "filterStatus", "sortStore"].forEach((id) => {
     qs(id).addEventListener("input", renderStoreTable);
     qs(id).addEventListener("change", renderStoreTable);
@@ -501,14 +623,63 @@ function bindEvents() {
   });
 
   qs("uploadExcelButton").addEventListener("click", () => {
-    qs("uploadExcelInput").click();
+    const formData = new FormData();
+    if (selectedUpload) {
+      formData.append("file", selectedUpload);
+    }
+    qs("uploadExcelButton").disabled = true;
+    qs("importStatusValue").textContent = selectedUpload ? "Importing file terpilih..." : "Importing latest sales...";
+
+    fetch(importUrl, {
+      method: "POST",
+      body: formData,
+    })
+      .then(async (response) => {
+        const payload = await response.json();
+        if (!response.ok || !payload.ok) {
+          throw new Error(payload.error || "Import gagal.");
+        }
+        qs("importStatusValue").textContent = `Sukses: ${payload.filename}`;
+        return fetch(`${dashboardDataUrl}?t=${Date.now()}`).then((res) => res.json());
+      })
+      .then((data) => {
+        renderAll(data);
+        selectedUpload = null;
+        qs("uploadExcelInput").value = "";
+        qs("selectedUploadFile").textContent = "Belum ada";
+        updateUploadButton();
+        window.location.hash = "#dashboard";
+      })
+      .catch((error) => {
+        qs("importStatusValue").textContent = `Gagal: ${error.message}`;
+      })
+      .finally(() => {
+        qs("uploadExcelButton").disabled = false;
+      });
   });
 
   qs("uploadExcelInput").addEventListener("change", (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
+    selectedUpload = file;
     qs("selectedUploadFile").textContent = file.name;
+    qs("importStatusValue").textContent = "File siap di-import";
+    updateUploadButton();
     window.location.hash = "#daily-import";
+  });
+
+  qs("selectedUploadFile").closest("span")?.addEventListener("click", () => {
+    qs("uploadExcelInput").click();
+  });
+
+  document.querySelectorAll(".tab-strip .tab").forEach((button) => {
+    button.addEventListener("click", () => {
+      scrollToSection(button.dataset.target);
+    });
+  });
+
+  qs("exportReportButton").addEventListener("click", () => {
+    exportCurrentReport();
   });
 }
 
@@ -526,6 +697,7 @@ function renderAll(data) {
     qs("aiStoreSelect").value = defaultStore.code;
     renderAi(defaultStore);
   }
+  updateUploadButton();
   bindEvents();
 }
 

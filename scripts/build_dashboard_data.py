@@ -52,6 +52,8 @@ def build_sales_data():
     wb = load_workbook(resolve_sales_path(), read_only=True, data_only=True)
     ws = wb["BY STORE"]
     total_cols = month_total_columns(ws)
+    latest_month = max((month for _, month in total_cols if month.year == 2026), default=None)
+    latest_month_num = latest_month.month if latest_month else 12
 
     totals_by_year = defaultdict(float)
     stores = []
@@ -73,15 +75,15 @@ def build_sales_data():
             "y2023": sum(monthly.get(f"2023-{m:02d}", 0) for m in range(1, 13)),
             "y2024": sum(monthly.get(f"2024-{m:02d}", 0) for m in range(1, 13)),
             "y2025": sum(monthly.get(f"2025-{m:02d}", 0) for m in range(1, 13)),
-            "y2026": sum(monthly.get(f"2026-{m:02d}", 0) for m in range(1, 3 + 1)),
+            "y2026": sum(monthly.get(f"2026-{m:02d}", 0) for m in range(1, latest_month_num + 1)),
         }
 
-        q125 = sum(monthly.get(f"2025-{m:02d}", 0) for m in range(1, 4))
-        q126 = sum(monthly.get(f"2026-{m:02d}", 0) for m in range(1, 4))
-        mar26 = monthly.get("2026-03", 0)
+        q125 = sum(monthly.get(f"2025-{m:02d}", 0) for m in range(1, latest_month_num + 1))
+        q126 = sum(monthly.get(f"2026-{m:02d}", 0) for m in range(1, latest_month_num + 1))
+        latest_period_sales = monthly.get(latest_month.strftime("%Y-%m"), 0) if latest_month else 0
         bep = float(row[1] or 0)
         yoy = ((q126 / q125) - 1) if q125 else 0
-        bep_ach = (mar26 / bep) if bep else 0
+        bep_ach = (latest_period_sales / bep) if bep else 0
         status = row[0] or "Unknown"
         tsh = row[4] or "Unknown"
 
@@ -122,17 +124,21 @@ def build_sales_data():
                 "q125": q125,
                 "q126": q126,
                 "yoy": yoy * 100,
-                "mar26": mar26,
+                "mar26": latest_period_sales,
+                "latestPeriodSales": latest_period_sales,
+                "latestPeriodLabel": latest_month.strftime("%b %Y") if latest_month else "Latest",
                 "bep": bep,
                 "bep_ach": bep_ach,
                 "annualTotal": yearly["y2022"] + yearly["y2023"] + yearly["y2024"] + yearly["y2025"] + yearly["y2026"],
-                "bepGap": mar26 - bep if bep else 0,
+                "bepGap": latest_period_sales - bep if bep else 0,
             }
         )
 
     return {
         "stores": stores,
         "yearTotals": {str(year): value for year, value in sorted(totals_by_year.items())},
+        "latestMonthLabel": latest_month.strftime("%b %Y") if latest_month else "Latest",
+        "latestMonthNumber": latest_month_num,
     }
 
 
@@ -171,6 +177,43 @@ def parse_r5_summary():
         "erafoneNetFinal": erafone_total["netFinal"],
         "eraMoreNetFinal": eam_total["netFinal"],
         "costDrivers": cost_drivers,
+    }
+
+
+def parse_analysis_of_store_ear():
+    wb = load_workbook(PNL_PATH, read_only=True, data_only=True)
+    ws = wb["Analysis of Store EAR"]
+
+    rows = []
+    for row_idx in range(121, 137):
+        remark = str(ws.cell(row_idx, 3).value or "").strip()
+        rows.append(
+            {
+                "rank": str(ws.cell(row_idx, 1).value or "").strip(),
+                "remark": remark,
+                "regionTotal": int(ws.cell(row_idx, 40).value or 0),  # AN
+                "mallTotal": int(ws.cell(row_idx, 79).value or 0),  # CA
+                "streetTotal": int(ws.cell(row_idx, 118).value or 0),  # DN
+            }
+        )
+
+    grand = {
+        "regionTotal": int(ws.cell(138, 40).value or 0),
+        "mallTotal": int(ws.cell(138, 79).value or 0),
+        "streetTotal": int(ws.cell(138, 118).value or 0),
+        "erafoneTotal": sum(int(ws.cell(138, col).value or 0) for col in range(5, 9)),
+        "eraMoreTotal": sum(int(ws.cell(138, col).value or 0) for col in range(10, 14)),
+    }
+
+    top_profit = max((row for row in rows if "PROFIT" in row["remark"]), key=lambda x: x["regionTotal"], default=None)
+    top_loss = max((row for row in rows if "LOSS" in row["remark"]), key=lambda x: x["regionTotal"], default=None)
+
+    return {
+        "regionLabel": str(ws.cell(118, 3).value or "REGION 5"),
+        "grand": grand,
+        "topProfit": top_profit,
+        "topLoss": top_loss,
+        "rows": rows,
     }
 
 
@@ -360,13 +403,14 @@ def build_tsh_stats(stores, tsh_summary):
     return sorted(result, key=lambda x: x["total2025"], reverse=True)
 
 
-def build_actions(stores, tsh_stats):
+def build_actions(stores, tsh_stats, analysis_summary):
     critical = sorted(
         [s for s in stores if s["cluster"] == "Critical" and s["status"] == "Aktif"],
         key=lambda x: x["bepGap"],
     )[:25]
     biggest_gap = critical[0] if critical else None
     worst_tsh = sorted(tsh_stats, key=lambda x: x["loss"], reverse=True)[0] if tsh_stats else None
+    top_loss = analysis_summary.get("topLoss")
     return [
         {
             "title": f"Review {len(critical)} toko critical",
@@ -379,8 +423,8 @@ def build_actions(stores, tsh_stats):
             "tag": "Kritis",
         },
         {
-            "title": f"{sum(1 for s in stores if s['bepGap'] >= 0)} toko sudah capai BEP",
-            "note": "Gunakan toko sehat sebagai benchmark bundle, attach, dan cadangan best practice.",
+            "title": f"{top_loss['regionTotal']} toko masuk loss pattern utama" if top_loss else f"{sum(1 for s in stores if s['bepGap'] >= 0)} toko sudah capai BEP",
+            "note": top_loss["remark"].replace("This store is ", "") if top_loss else "Gunakan toko sehat sebagai benchmark bundle, attach, dan cadangan best practice.",
             "tag": "Info",
         },
         {
@@ -391,15 +435,38 @@ def build_actions(stores, tsh_stats):
     ]
 
 
-def build_executive(stores, sales_year_totals, tsh_stats, region_meta):
+def build_executive(stores, sales_year_totals, tsh_stats, region_meta, analysis_summary, sales_meta):
     active = [s for s in stores if s["status"] == "Aktif"]
     growth = sum(1 for s in stores if s["cluster"] == "Growth" and s["status"] == "Aktif")
     stable = sum(1 for s in stores if s["cluster"] == "Stable" and s["status"] == "Aktif")
     recovery = sum(1 for s in stores if s["cluster"] == "Recovery" and s["status"] == "Aktif")
     critical = sum(1 for s in stores if s["cluster"] == "Critical" and s["status"] == "Aktif")
     avg_health = round(sum(s["health"] for s in active) / len(active), 1) if active else 0
-    yoy = ((sales_year_totals.get("2025", 0) / sales_year_totals.get("2024", 1)) - 1) * 100
+    yoy = (
+        (
+            sum(s["q126"] for s in stores if s["status"] == "Aktif")
+            / max(sum(s["q125"] for s in stores if s["status"] == "Aktif"), 1)
+        )
+        - 1
+    ) * 100
     critical_tsh = sorted(tsh_stats, key=lambda x: x["loss"], reverse=True)[0]["tsh"] if tsh_stats else "-"
+    top_profit = analysis_summary.get("topProfit")
+    top_loss = analysis_summary.get("topLoss")
+
+    summary_title = "Good - On Track Recovery" if critical < recovery + growth else "Mixed - Turnaround Needed"
+    condition = f"{growth + stable} dari {len(active)} toko aktif masuk Growth/Stable. Fokus review ada pada {critical} toko critical dengan gap BEP terbesar."
+    analysis = f"TSH {critical_tsh} memiliki konsentrasi toko loss tertinggi. Store format besar dan owner vacant menjadi sinyal utama root cause operasional."
+    action = "Mulai dari cluster Critical, validasi cost structure, dorong traffic lokal, lalu replikasi best practice dari store Growth."
+    if top_profit and top_loss:
+        condition = (
+            f"{analysis_summary['grand']['regionTotal']} toko Region 5 terbaca di Analysis EAR. "
+            f"Loss pattern terbesar ada di {top_loss['regionTotal']} toko, sedangkan profit pattern terbesar ada di {top_profit['regionTotal']} toko."
+        )
+        analysis = (
+            f"Pattern dominan profit: {top_profit['remark'].replace('This store is ', '')}. "
+            f"Pattern dominan loss: {top_loss['remark'].replace('This store is ', '')}."
+        )
+        action = "Prioritaskan toko yang masuk loss pattern terbesar, terutama yang sales masih below dan OPEX masih above, lalu tindak lanjutkan per owner dan format toko."
 
     return {
         "totalStores": len(stores),
@@ -412,30 +479,34 @@ def build_executive(stores, sales_year_totals, tsh_stats, region_meta):
         "revenue2025": compact_idr(region_meta["active2025"] or sales_year_totals.get("2025", 0)),
         "yoy": round(yoy, 1),
         "avgHealth": avg_health,
-        "dataPeriod": "Mar 2026",
+        "dataPeriod": sales_meta["latestMonthLabel"],
         "dataRange": "2022 - 2026",
         "totalStoresNote": f"{len(active)} aktif + {len(stores) - len(active)} close (summary 2022-2026)",
         "bepReachedNote": f"{growth + stable} Growth/Stable aktif · annual BEP {region_meta['annualBep']}",
         "belowBepNote": f"{critical + recovery} recovery/critical aktif · annual rugi {region_meta['annualRugi']}",
         "revenue2025Note": "Historical annual resmi dari workbook summary",
-        "summarySubtitle": "Hybrid view: summary 2022-2026 + operational Mar 2026",
+        "yoyNote": f"Jan-{sales_meta['latestMonthLabel'].split()[0]} 2026 vs Jan-{sales_meta['latestMonthLabel'].split()[0]} 2025",
+        "summarySubtitle": "Hybrid view: REPORT YTD + Analysis of Store EAR REGION 5 + sales operational",
         "clusters": {"Growth": growth, "Stable": stable, "Recovery": recovery, "Critical": critical},
-        "summaryTitle": "Good - On Track Recovery" if critical < recovery + growth else "Mixed - Turnaround Needed",
-        "condition": f"{growth + stable} dari {len(active)} toko aktif masuk Growth/Stable. Fokus review ada pada {critical} toko critical dengan gap BEP terbesar.",
-        "analysis": f"TSH {critical_tsh} memiliki konsentrasi toko loss tertinggi. Store format besar dan owner vacant menjadi sinyal utama root cause operasional.",
-        "action": "Mulai dari cluster Critical, validasi cost structure, dorong traffic lokal, lalu replikasi best practice dari store Growth.",
+        "summaryTitle": summary_title,
+        "condition": condition,
+        "analysis": analysis,
+        "action": action,
     }
 
 
 def build_dashboard_data():
     sales = build_sales_data()
     pnl_summary = parse_r5_summary()
+    analysis_summary = parse_analysis_of_store_ear()
     pnl_store_map = parse_pnl_store_details()
     region_summary = parse_region_summary()
     stores = enrich_stores(sales["stores"], pnl_store_map, region_summary)
     tsh_stats = build_tsh_stats(stores, region_summary["tshSummary"])
-    actions = build_actions(stores, tsh_stats)
-    executive = build_executive(stores, sales["yearTotals"], tsh_stats, region_summary["meta"])
+    actions = build_actions(stores, tsh_stats, analysis_summary)
+    executive = build_executive(stores, sales["yearTotals"], tsh_stats, region_summary["meta"], analysis_summary, sales)
+
+    pnl_summary["analysis"] = analysis_summary
 
     top_critical = sorted([s for s in stores if s["cluster"] == "Critical"], key=lambda x: x["bepGap"])[:6]
 
