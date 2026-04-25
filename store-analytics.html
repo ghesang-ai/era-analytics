@@ -101,6 +101,63 @@
       @media (max-width: 900px)  { .filter-toolbar-4 { grid-template-columns: 1fr 1fr 1fr; } }
       @media (max-width: 640px)  { .filter-toolbar-4 { grid-template-columns: 1fr; } }
       @media (max-width: 640px)  { .modal-dims { grid-template-columns: 1fr; } }
+
+      /* ── Header action buttons — modern redesign ── */
+      .header-actions {
+        display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 16px;
+      }
+      .tab-strip {
+        display: flex; gap: 3px;
+        background: rgba(255,255,255,0.07);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 10px; padding: 4px;
+        backdrop-filter: blur(6px);
+      }
+      .tab-strip .tab {
+        padding: 7px 20px; border-radius: 7px; border: none;
+        font-size: 12.5px; font-weight: 600; cursor: pointer;
+        background: transparent; color: rgba(255,255,255,0.55);
+        transition: all .2s ease; letter-spacing: .03em;
+        font-family: inherit;
+      }
+      .tab-strip .tab.is-active {
+        background: linear-gradient(135deg, rgba(220,0,0,0.9), rgba(180,0,0,0.85));
+        color: #fff;
+        box-shadow: 0 2px 12px rgba(220,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.15);
+      }
+      .tab-strip .tab:hover:not(.is-active) {
+        background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.85);
+      }
+      .header-actions .actions {
+        display: flex; gap: 8px; align-items: center;
+      }
+      .header-actions .actions .button {
+        padding: 8px 18px; border-radius: 8px; font-size: 12.5px;
+        font-weight: 600; cursor: pointer;
+        display: inline-flex; align-items: center; gap: 6px;
+        text-decoration: none; transition: all .2s ease;
+        letter-spacing: .02em; font-family: inherit; line-height: 1;
+      }
+      .header-actions .actions .button.secondary {
+        background: rgba(255,255,255,0.08);
+        color: rgba(255,255,255,0.8);
+        border: 1px solid rgba(255,255,255,0.18);
+      }
+      .header-actions .actions .button.secondary:hover {
+        background: rgba(255,255,255,0.15);
+        color: #fff; border-color: rgba(255,255,255,0.3);
+        transform: translateY(-1px);
+      }
+      .header-actions .actions .button.primary {
+        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        color: #fff; border: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 3px 14px rgba(220,38,38,0.45), inset 0 1px 0 rgba(255,255,255,0.12);
+      }
+      .header-actions .actions .button.primary:hover {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 5px 18px rgba(220,38,38,0.55), inset 0 1px 0 rgba(255,255,255,0.15);
+      }
     </style>
   </head>
   <body>
@@ -427,7 +484,7 @@
         $('kpiCriticalNote').textContent = `${critical} dari ${n} toko`;
 
         const dates = rows.map(r => r.Assessment_Date).filter(Boolean).sort();
-        $('kpiLastDate').textContent = dates.length ? dates[dates.length - 1] : '—';
+        $('kpiLastDate').textContent = dates.length ? fmtDate(dates[dates.length - 1]) : '—';
       }
 
       // ── Cluster counts ─────────────────────────────────────────────
@@ -579,6 +636,16 @@
       function decisionBadge(d) {
         const map = { KEEP: 'badge-keep', IMPROVE: 'badge-improve', RELOCATE: 'badge-relocate', CLOSE: 'badge-close' };
         return `<span class="badge-decision ${map[d] || ''}">${escHtml(d || '—')}</span>`;
+      }
+
+      function fmtDate(s) {
+        if (!s) return '—';
+        try {
+          const d = new Date(s);
+          if (isNaN(d)) return s;
+          return d.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })
+            + ', ' + d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        } catch(e) { return s; }
       }
 
       function escHtml(s) {
