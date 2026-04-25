@@ -14,7 +14,7 @@
   </div>
 </div>
 <div class="page" id="pg-scatter">
-  <div class="card" style="margin-bottom:16px"><div class="ch"><div><div class="ct">Net Sales vs Net Income — Scatter per Toko</div><div class="cs">Warna = cluster · Ukuran = relatif net sales</div></div><span class="cb2 cbgr">137 toko</span></div><div class="cw tall"><canvas id="chartScatter"></canvas></div></div>
+  <div class="card" style="margin-bottom:16px"><div class="ch"><div><div class="ct">Net Sales vs Net Income — Scatter per Toko</div><div class="cs">Warna = cluster · Ukuran = relatif net sales</div></div><span class="cb2 cbgr">235 toko</span></div><div class="cw tall"><canvas id="chartScatter"></canvas></div></div>
   <div class="g2">
     <div class="card"><div class="ch"><div><div class="ct">Top 15 — Net Income Tertinggi</div><div class="cs">Toko paling profit</div></div><span class="cb2 cbg">Profit</span></div><div class="cbody" style="padding:0 16px"><div id="topProfitList"></div></div></div>
     <div class="card"><div class="ch"><div><div class="ct">Top 15 — Net Income Terendah</div><div class="cs">Toko paling rugi</div></div><span class="cb2 cbr">Loss</span></div><div class="cbody" style="padding:0 16px"><div id="topLossList"></div></div></div>
@@ -22,7 +22,7 @@
 </div>
 <div class="page" id="pg-table">
   <div class="card">
-    <div class="ch"><div><div class="ct">Semua Toko — BEP & P&L Overview</div><div class="cs">Sorted by Net Income</div></div><span class="cb2 cbgr" id="bepCount">137 toko</span></div>
+    <div class="ch"><div><div class="ct">Semua Toko — BEP & P&L Overview</div><div class="cs">Sorted by Net Income</div></div><span class="cb2 cbgr" id="bepCount">235 toko</span></div>
     <div style="padding:8px 16px;border-bottom:1px solid var(--b);display:flex;gap:8px">
       <input id="bepSearch" placeholder="Cari toko..." style="padding:6px 10px;border:1px solid var(--b2);border-radius:6px;font-size:12px;font-family:Inter,sans-serif;width:240px" oninput="filterBep()">
       <select id="bepCluster" onchange="filterBep()" style="font-size:12px;padding:6px 10px;border:1px solid var(--b2);border-radius:6px;font-family:Inter,sans-serif"><option value="">Semua Cluster</option><option>GROWTH</option><option>STABLE</option><option>RECOVERY</option><option>CRITICAL</option></select>
