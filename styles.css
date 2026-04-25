@@ -181,9 +181,9 @@ select {
   position: relative;
   overflow: hidden;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto 180px;
+  grid-template-columns: minmax(0, 1fr) minmax(420px, 520px) 190px;
   align-items: start;
-  gap: 20px;
+  gap: 24px;
   min-height: 300px;
   padding: 30px 28px;
   margin-bottom: 16px;
@@ -239,7 +239,17 @@ h3 {
   z-index: 2;
 }
 
+.hero-copy {
+  max-width: 760px;
+  padding-top: 4px;
+}
+
 .hero-stat {
+  width: 100%;
+  min-height: 196px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   padding: 18px;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 8px;
@@ -266,11 +276,17 @@ h3 {
   flex-direction: column;
   align-items: flex-end;
   gap: 12px;
+  width: 100%;
+  justify-self: end;
+  position: relative;
+  z-index: 2;
 }
 
 .tab-strip {
-  display: inline-flex;
+  display: flex;
   gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .tab {
@@ -292,6 +308,8 @@ h3 {
 .actions {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .button {
@@ -301,6 +319,7 @@ h3 {
   border: 1px solid transparent;
   cursor: pointer;
   font-weight: 800;
+  white-space: nowrap;
 }
 
 .button.secondary {
@@ -321,13 +340,7 @@ h3 {
 }
 
 .hero-orbit {
-  inset: 22px auto auto 22px;
-  width: 68%;
-  height: calc(100% - 44px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 24px;
-  clip-path: polygon(4% 0%, 94% 0%, 100% 8%, 100% 92%, 96% 100%, 2% 100%, 0% 92%, 0% 8%);
-  opacity: 0.7;
+  display: none;
 }
 
 .light-streak {
