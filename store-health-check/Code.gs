@@ -365,12 +365,22 @@ function getDataRows(sheet) {
   const lastRow = sheet.getLastRow();
   if (lastRow < 2) return [];
 
+  const tz     = Session.getScriptTimeZone();
   const values = sheet.getRange(2, 1, lastRow - 1, COLUMNS.length).getValues();
   return values
-    .filter(row => row[0] !== "") // skip empty rows
+    .filter(row => row[0] !== "")
     .map(row => {
       const obj = {};
-      COLUMNS.forEach((col, i) => { obj[col] = row[i]; });
+      COLUMNS.forEach((col, i) => {
+        let val = row[i];
+        if (val instanceof Date) {
+          // Timestamp → ISO string, date-only fields → YYYY-MM-DD
+          val = col === "Timestamp"
+            ? val.toISOString()
+            : Utilities.formatDate(val, tz, "yyyy-MM-dd");
+        }
+        obj[col] = val;
+      });
       return obj;
     });
 }

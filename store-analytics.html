@@ -572,7 +572,8 @@
 
       function statusBadge(s) {
         const map = { Excellent: 'badge-excellent', Good: 'badge-good', Critical: 'badge-critical' };
-        return `<span class="badge-status ${map[s] || ''}">${escHtml(s || '—')}</span>`;
+        const key = Object.keys(map).find(k => String(s || '').toLowerCase().includes(k.toLowerCase())) || '';
+        return `<span class="badge-status ${map[key] || 'badge-good'}">${escHtml(s || '—')}</span>`;
       }
 
       function decisionBadge(d) {
