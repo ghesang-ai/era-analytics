@@ -3,6 +3,66 @@ const importUrl = "./cgi-bin/import_sales.py";
 
 let dashboardState = null;
 let selectedUpload = null;
+
+// ── Store Detail Panel ─────────────────────────────────────────────────────
+function openStoreDetail(code) {
+  if (!dashboardState) return;
+  const s = dashboardState.stores.find(x => x.code === code);
+  if (!s) return;
+
+  const fmtB = v => v ? 'Rp ' + (v / 1e9).toFixed(2) + ' M' : 'Tidak tersedia';
+  const hc = s.health >= 70 ? '#16a34a' : s.health >= 50 ? '#d97706' : '#dc2626';
+
+  document.getElementById('sdpName').textContent = s.name;
+  document.getElementById('sdpPills').innerHTML = `
+    <span class="cluster-tag ${s.channel === 'Erafone' ? 'channel-erafone' : 'channel-more'}">${s.channel}</span>
+    <span class="cluster-tag ${clusterClass(s.cluster)}">${s.cluster}</span>`;
+
+  const hEl = document.getElementById('sdpHealth');
+  hEl.textContent = s.health;
+  hEl.style.color = hc;
+  const hbar = document.getElementById('sdpHbar');
+  hbar.style.width = s.health + '%';
+  hbar.style.background = hc;
+
+  document.getElementById('sdpBep').textContent = s.bep ? fmtB(s.bep) : 'Tidak tersedia';
+  document.getElementById('sdpBest').textContent = fmtB(s.bestMonthSales);
+  const gapEl = document.getElementById('sdpGap');
+  gapEl.textContent = (s.bepGap >= 0 ? '+' : '') + fmtB(s.bepGap);
+  gapEl.style.color = s.bepGap >= 0 ? '#16a34a' : '#dc2626';
+  document.getElementById('sdpBepStatus').innerHTML =
+    `<span class="bep-tag ${bepClass(s)}">${getBepLabel(s)}</span>`;
+
+  const ys = [s.sales.y2022, s.sales.y2023, s.sales.y2024, s.sales.y2025, s.sales.y2026];
+  const maxY = Math.max(...ys) || 1;
+  const cols = ['#94a3b8','#60a5fa','#3b82f6','#10b981','#6366f1'];
+  document.getElementById('sdpBars').innerHTML = ['2022','2023','2024','2025','2026'].map((yr, i) => `
+    <div class="sdp-bar-row">
+      <span class="sdp-yr">${yr}</span>
+      <div class="sdp-bar-track"><div class="sdp-bar-fill" style="width:${ys[i]?Math.round(ys[i]/maxY*100):0}%;background:${cols[i]}"></div></div>
+      <span class="sdp-bar-val">${(ys[i]/1e9).toFixed(1)} M</span>
+    </div>`).join('');
+
+  document.getElementById('sdpTsh').textContent = s.tsh;
+  document.getElementById('sdpChannel').innerHTML =
+    `<span class="cluster-tag ${s.channel === 'Erafone' ? 'channel-erafone' : 'channel-more'}">${s.channel}</span>`;
+  document.getElementById('sdpCode').textContent = s.code;
+  document.getElementById('sdpStatus').textContent = s.status || '—';
+  const yoyEl = document.getElementById('sdpYoy');
+  yoyEl.textContent = (s.yoy > 0 ? '+' : '') + s.yoy + '%';
+  yoyEl.style.color = s.yoy > 0 ? '#16a34a' : s.yoy < 0 ? '#dc2626' : '#6b7280';
+
+  document.getElementById('storeOverlay').classList.add('open');
+  document.getElementById('storeDetailPanel').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeStoreDetail() {
+  document.getElementById('storeOverlay').classList.remove('open');
+  document.getElementById('storeDetailPanel').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeStoreDetail(); });
 let listenersBound = false;
 
 function qs(id) {
@@ -408,7 +468,7 @@ function renderStoreTable() {
           <td><strong>${(store.annualTotal / 1_000_000_000).toFixed(1)} M</strong></td>
           <td class="${store.yoy >= 0 ? "positive" : "negative"}">${formatPct(store.yoy)}</td>
           <td><span class="bep-tag ${bepClass(store)}">${getBepLabel(store)}</span></td>
-          <td><a class="detail-link" href="#ai-insights">Detail →</a></td>
+          <td><button class="detail-link" onclick="openStoreDetail('${store.code}')" style="cursor:pointer;background:none;border:none;font-family:inherit;font-size:inherit;padding:0;">Detail →</button></td>
         </tr>
       `,
     )
