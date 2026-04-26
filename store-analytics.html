@@ -545,7 +545,7 @@
             </td>
             <td>${stBadge}</td>
             <td>${dcBadge}</td>
-            <td style="font-size:12px;color:var(--muted);">${escHtml(r.Assessment_Date || '—')}</td>
+            <td style="font-size:12px;color:var(--muted);">${escHtml(fmtDate(r.Assessment_Date) || '—')}</td>
             <td>
               <button class="tbl-btn tbl-btn-view" data-idx="${i}" onclick="openModal(${i})">Detail</button>
               <a href="https://era-store-healthcheck.netlify.app?store=${encodeURIComponent(r.Store_Code || '')}" target="_blank" rel="noopener" class="tbl-btn tbl-btn-new" style="text-decoration:none;margin-left:4px;">+ Assessment</a>
@@ -562,7 +562,7 @@
         const score = Number(r.Overall_Score || 0);
         $('modalTitle').textContent    = `${r.Store_Code || ''} — ${r.Store_Name || ''}`;
         $('modalSubtitle').textContent = `TSH: ${r.TSH || '—'} · Diisi oleh: ${r.Filled_By || '—'}`;
-        $('modalDate').textContent     = `Tanggal: ${r.Assessment_Date || '—'}`;
+        $('modalDate').textContent     = `Tanggal: ${fmtDate(r.Assessment_Date) || '—'}`;
 
         const scoreCls = scoreClass(score);
         const colorMap = { 'score-excellent': '#16a34a', 'score-good': '#d97706', 'score-critical': '#dc2626' };
