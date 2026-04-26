@@ -39,8 +39,35 @@
         cursor: pointer; border: 1px solid; font-family: inherit; transition: opacity .15s;
       }
       .tbl-btn:hover { opacity: .8; }
-      .tbl-btn-view { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
-      .tbl-btn-new  { background: #f0fdf4; color: #15803d; border-color: #bbf7d0; }
+      .tbl-btn-view   { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+      .tbl-btn-new    { background: #f0fdf4; color: #15803d; border-color: #bbf7d0; }
+      .tbl-btn-delete { background: #fff1f2; color: #be123c; border-color: #fecdd3; }
+      .tbl-btn-delete:hover { background: #ffe4e6; }
+
+      /* ── Confirm delete modal ── */
+      .confirm-overlay {
+        display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5);
+        z-index: 300; align-items: center; justify-content: center;
+      }
+      .confirm-overlay.open { display: flex; }
+      .confirm-box {
+        background: #fff; border-radius: 12px; padding: 28px 28px 24px;
+        width: 100%; max-width: 400px; box-shadow: 0 24px 64px rgba(0,0,0,.2);
+        text-align: center;
+      }
+      .confirm-icon { font-size: 36px; margin-bottom: 12px; }
+      .confirm-box h3 { font-size: 16px; margin-bottom: 8px; }
+      .confirm-box p  { font-size: 13px; color: #6b7280; margin-bottom: 20px; }
+      .confirm-actions { display: flex; gap: 10px; justify-content: center; }
+      .confirm-actions button {
+        padding: 8px 22px; border-radius: 8px; font-size: 13px; font-weight: 600;
+        cursor: pointer; border: none; font-family: inherit;
+      }
+      .btn-cancel-del { background: #f3f4f6; color: #374151; }
+      .btn-cancel-del:hover { background: #e5e7eb; }
+      .btn-confirm-del { background: #dc2626; color: #fff; }
+      .btn-confirm-del:hover { background: #b91c1c; }
+      .btn-confirm-del:disabled { background: #fca5a5; cursor: not-allowed; }
 
       /* ── Modal overlay ── */
       .modal-overlay {
@@ -546,9 +573,10 @@
             <td>${stBadge}</td>
             <td>${dcBadge}</td>
             <td style="font-size:12px;color:var(--muted);">${escHtml(fmtDate(r.Assessment_Date) || '—')}</td>
-            <td>
-              <button class="tbl-btn tbl-btn-view" data-idx="${i}" onclick="openModal(${i})">Detail</button>
-              <a href="https://era-store-healthcheck.netlify.app?store=${encodeURIComponent(r.Store_Code || '')}" target="_blank" rel="noopener" class="tbl-btn tbl-btn-new" style="text-decoration:none;margin-left:4px;">+ Assessment</a>
+            <td style="display:flex;gap:4px;flex-wrap:wrap;align-items:center;">
+              <button class="tbl-btn tbl-btn-view" onclick="openModal(${i})">Detail</button>
+              <a href="https://era-store-healthcheck.netlify.app?store=${encodeURIComponent(r.Store_Code || '')}" target="_blank" rel="noopener" class="tbl-btn tbl-btn-new" style="text-decoration:none;">+ Assessment</a>
+              <button class="tbl-btn tbl-btn-delete" onclick="confirmDelete('${escHtml(r.Store_Code||'')}','${escHtml(r.Assessment_Date||'')}','${escHtml(r.Store_Name||'')}')">🗑 Hapus</button>
             </td>
           </tr>`;
         }).join('');
@@ -655,6 +683,69 @@
       // ── Init ───────────────────────────────────────────────────────
       fetchData();
     })();
+
+    // ── Delete assessment ──────────────────────────────────────────────
+    let _deletePayload = null;
+
+    window.confirmDelete = function(storeCode, assessDate, storeName) {
+      _deletePayload = { storeCode, assessDate };
+      document.getElementById('confirmStoreName').textContent = storeName || storeCode;
+      document.getElementById('confirmStoreDate').textContent = fmtDateGlobal(assessDate);
+      document.getElementById('confirmOverlay').classList.add('open');
+    };
+
+    function fmtDateGlobal(s) {
+      if (!s) return '—';
+      try {
+        const d = new Date(s);
+        if (isNaN(d)) return s;
+        return d.toLocaleDateString('id-ID', { day:'2-digit', month:'long', year:'numeric' })
+          + ', ' + d.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
+      } catch(e) { return s; }
+    }
+
+    document.getElementById('cancelDelete').addEventListener('click', () => {
+      document.getElementById('confirmOverlay').classList.remove('open');
+      _deletePayload = null;
+    });
+
+    document.getElementById('doDelete').addEventListener('click', async () => {
+      if (!_deletePayload) return;
+      const btn = document.getElementById('doDelete');
+      btn.disabled = true;
+      btn.textContent = 'Menghapus…';
+      const API = 'https://script.google.com/macros/s/AKfycbzGGuY1fDBgeRyRh_pYjYYGntsJYoF1QlwV-bqmygvsjeBWjAow3a5AZaKf8UEjZuDt/exec';
+      try {
+        const url = `${API}?action=delete&store_code=${encodeURIComponent(_deletePayload.storeCode)}&assessment_date=${encodeURIComponent(_deletePayload.assessDate)}`;
+        const res  = await fetch(url, { cache: 'no-store' });
+        const json = await res.json();
+        if (!json.success) throw new Error(json.error || 'Gagal menghapus');
+        document.getElementById('confirmOverlay').classList.remove('open');
+        _deletePayload = null;
+        // Reload data
+        window.location.reload();
+      } catch(err) {
+        btn.disabled = false;
+        btn.textContent = 'Ya, Hapus';
+        alert('Gagal: ' + err.message);
+      }
+    });
     </script>
+    <!-- Confirm Delete Modal -->
+    <div class="confirm-overlay" id="confirmOverlay">
+      <div class="confirm-box">
+        <div class="confirm-icon">🗑️</div>
+        <h3>Hapus Assessment?</h3>
+        <p>Anda akan menghapus assessment untuk:<br>
+          <strong id="confirmStoreName"></strong><br>
+          <span style="font-size:12px;color:#6b7280;" id="confirmStoreDate"></span>
+        </p>
+        <p style="font-size:12px;color:#dc2626;font-weight:600;">Tindakan ini tidak bisa dibatalkan.</p>
+        <div class="confirm-actions">
+          <button class="btn-cancel-del" id="cancelDelete">Batal</button>
+          <button class="btn-confirm-del" id="doDelete">Ya, Hapus</button>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
