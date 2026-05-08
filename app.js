@@ -792,9 +792,18 @@ function bindEvents() {
   if (listenersBound) return;
   listenersBound = true;
 
-  // Brand switcher
+  // Brand switcher — touchstart for mobile Safari (avoids 300ms click delay)
   document.querySelectorAll("#brandSwitcher .brand-pill").forEach((btn) => {
-    btn.addEventListener("click", () => switchBrand(btn.dataset.brand));
+    let tapped = false;
+    btn.addEventListener("touchstart", (e) => {
+      tapped = true;
+      e.preventDefault();
+      switchBrand(btn.dataset.brand);
+    }, { passive: false });
+    btn.addEventListener("click", () => {
+      if (!tapped) switchBrand(btn.dataset.brand);
+      tapped = false;
+    });
   });
 
   // Brand P&L store filters

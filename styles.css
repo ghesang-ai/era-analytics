@@ -1484,6 +1484,8 @@ td {
   gap: 6px;
   margin-bottom: 10px;
   flex-wrap: wrap;
+  position: relative;
+  z-index: 10;
 }
 
 .brand-pill {
@@ -1500,6 +1502,11 @@ td {
   cursor: pointer;
   transition: background 0.15s, color 0.15s, border-color 0.15s;
   letter-spacing: 0.01em;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  min-height: 36px;
 }
 
 .brand-pill:hover {
