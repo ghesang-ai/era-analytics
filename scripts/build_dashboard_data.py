@@ -14,6 +14,7 @@ CURRENT_SALES_PATH = BASE_DIR / "data" / "current" / "Sales_vs_Stock_R5_Latest.x
 SALES_DIR = BASE_DIR / "SALES"
 REGION_SUMMARY_PATH = BASE_DIR / "ERA_ANALYTICS_Region5_Summary.xlsx"
 OUTPUT_PATH = BASE_DIR / "outputs" / "dashboard_data_v2.json"
+EAR_PNL_OUTPUT_PATH = BASE_DIR / "outputs" / "dashboard_data_ear_pnl.json"
 IBOX_OUTPUT_PATH = BASE_DIR / "outputs" / "dashboard_data_ibox.json"
 SAMSUNG_OUTPUT_PATH = BASE_DIR / "outputs" / "dashboard_data_samsung.json"
 
@@ -818,6 +819,10 @@ def build_dashboard_data():
         },
     }
 
+    # ── EAR P&L-only (sama struktur dengan iBox/Samsung, tanpa data sales) ──
+    print(f"  EAR P&L-only: {ear_path.name}")
+    ear_pnl_data = build_brand_pnl_only("EAR", ear_path, month_num, year)
+
     # ── IBOX ────────────────────────────────────────────────────────────────
     ibox_path = find_brand_file(pnl_folder, "IBOX")
     ibox_data = None
@@ -832,15 +837,19 @@ def build_dashboard_data():
         print(f"  SAMSUNG: {samsung_path.name}")
         samsung_data = build_brand_pnl_only("SAMSUNG", samsung_path, month_num, year)
 
-    return ear_data, ibox_data, samsung_data
+    return ear_data, ear_pnl_data, ibox_data, samsung_data
 
 
 def main():
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    ear_data, ibox_data, samsung_data = build_dashboard_data()
+    ear_data, ear_pnl_data, ibox_data, samsung_data = build_dashboard_data()
 
     OUTPUT_PATH.write_text(json.dumps(ear_data, ensure_ascii=False, indent=2))
-    print(f"  → {OUTPUT_PATH.name} ({len(ear_data['stores'])} stores EAR)")
+    print(f"  → {OUTPUT_PATH.name} ({len(ear_data['stores'])} stores EAR full)")
+
+    EAR_PNL_OUTPUT_PATH.write_text(json.dumps(ear_pnl_data, ensure_ascii=False, indent=2))
+    ex = ear_pnl_data["executive"]
+    print(f"  → {EAR_PNL_OUTPUT_PATH.name} ({ex['totalStores']} stores EAR | {ex['profitStores']} Profit / {ex['lossStores']} Loss)")
 
     if ibox_data:
         IBOX_OUTPUT_PATH.write_text(json.dumps(ibox_data, ensure_ascii=False, indent=2))

@@ -1,8 +1,9 @@
 const BRAND_URLS = {
-  EAR:     "./outputs/dashboard_data_v2.json",
+  EAR:     "./outputs/dashboard_data_ear_pnl.json",
   IBOX:    "./outputs/dashboard_data_ibox.json",
   SAMSUNG: "./outputs/dashboard_data_samsung.json",
 };
+const EAR_FULL_URL = "./outputs/dashboard_data_v2.json";
 const BRAND_LABELS = {
   EAR:     "Erafone (EAR)",
   IBOX:    "iBox (DCM)",
@@ -105,13 +106,23 @@ function switchBrand(key) {
     .then((r) => r.json())
     .then((data) => {
       dashboardState = data;
-      if (key === "EAR") {
-        renderAll(data);
-      } else {
-        renderBrandView(data);
-      }
+      renderBrandView(data);
     })
     .catch((err) => console.error("Brand load error:", err));
+}
+
+function loadFullDashboard() {
+  fetch(`${EAR_FULL_URL}?t=${Date.now()}`)
+    .then((r) => r.json())
+    .then((data) => {
+      dashboardState = data;
+      currentBrand = "EAR";
+      document.querySelectorAll("#brandSwitcher .brand-pill").forEach((btn) => {
+        btn.classList.toggle("is-active", btn.dataset.brand === "EAR");
+      });
+      renderAll(data);
+    })
+    .catch((err) => console.error("Full dashboard load error:", err));
 }
 
 function renderBrandView(data) {
@@ -150,6 +161,10 @@ function renderBrandView(data) {
 
   // Section visibility
   _setEarSections(false);
+
+  // EAR: show "Full Dashboard" link to access Sales + TSH + BEP data
+  const fullDashBtn = document.getElementById("earFullDashBtn");
+  if (fullDashBtn) fullDashBtn.style.display = currentBrand === "EAR" ? "" : "none";
 
   // Populate category filter
   const catSet = [...new Set(data.stores.map((s) => s.pnlCategory))].sort();
@@ -874,7 +889,7 @@ function bindEvents() {
           throw new Error(payload.error || "Import gagal.");
         }
         qs("importStatusValue").textContent = `Sukses: ${payload.filename}`;
-        return fetch(`${BRAND_URLS.EAR}?t=${Date.now()}`).then((res) => res.json());
+        return fetch(`${EAR_FULL_URL}?t=${Date.now()}`).then((res) => res.json());
       })
       .then((data) => {
         renderAll(data);
@@ -945,7 +960,10 @@ fetch(BRAND_URLS.EAR)
     if (!response.ok) throw new Error("Dashboard data not found");
     return response.json();
   })
-  .then(renderAll)
+  .then((data) => {
+    dashboardState = data;
+    renderBrandView(data);
+  })
   .catch(() => {
     document.body.insertAdjacentHTML(
       "afterbegin",

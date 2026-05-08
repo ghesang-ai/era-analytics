@@ -140,7 +140,12 @@
               <h2 id="brandStoresTitle">Store P&amp;L</h2>
               <p class="muted" id="brandStoresSubtitle">Profitability per store</p>
             </div>
-            <span id="brandStoresBadge" class="badge">—</span>
+            <div style="display:flex;align-items:center;gap:10px">
+              <button id="earFullDashBtn" onclick="loadFullDashboard()" style="display:none;padding:7px 14px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.8);font-size:12px;font-weight:600;cursor:pointer;letter-spacing:.02em">
+                Full Dashboard →
+              </button>
+              <span id="brandStoresBadge" class="badge">—</span>
+            </div>
           </div>
           <div class="pill-row brand-pill-row">
             <span class="pill neutral">Total: <b id="brandTotalCount">0</b></span>
