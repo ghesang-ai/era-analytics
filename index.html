@@ -62,8 +62,19 @@
             <h1>Dashboard</h1>
             <p class="subtitle">ERA-ANALYTICS untuk melihat kesehatan toko, loss pattern, dan prioritas action Region 5.</p>
           </div>
+          <div class="brand-switcher" id="brandSwitcher" role="tablist" aria-label="Pilih brand">
+            <button class="brand-pill is-active" data-brand="EAR" type="button" role="tab">
+              <span class="b-dot ear"></span>Erafone
+            </button>
+            <button class="brand-pill" data-brand="IBOX" type="button" role="tab">
+              <span class="b-dot ibox"></span>iBox
+            </button>
+            <button class="brand-pill" data-brand="SAMSUNG" type="button" role="tab">
+              <span class="b-dot samsung"></span>Samsung
+            </button>
+          </div>
           <div class="header-actions">
-            <div class="tab-strip">
+            <div class="tab-strip" id="earTabStrip">
               <button id="tabOverview" class="tab is-active" type="button" data-target="dashboard">Overview</button>
               <button id="tabStores" class="tab" type="button" data-target="data-toko">Stores</button>
               <button id="tabTsh" class="tab" type="button" data-target="tsh-performance">TSH</button>
@@ -122,7 +133,42 @@
           </article>
         </section>
 
-        <section class="cluster-section">
+        <!-- Brand P&L view: shown for iBox / Samsung, hidden for EAR -->
+        <section id="brandPnlStores" class="panel" style="display:none">
+          <div class="panel-header">
+            <div>
+              <h2 id="brandStoresTitle">Store P&amp;L</h2>
+              <p class="muted" id="brandStoresSubtitle">Profitability per store</p>
+            </div>
+            <span id="brandStoresBadge" class="badge">—</span>
+          </div>
+          <div class="pill-row brand-pill-row">
+            <span class="pill neutral">Total: <b id="brandTotalCount">0</b></span>
+            <span class="pill positive">Profit: <b id="brandProfitCount">0</b></span>
+            <span class="pill danger">Loss: <b id="brandLossCount">0</b></span>
+            <input id="brandSearchStore" class="search-input" type="search" placeholder="Cari nama / kode toko…" />
+            <select id="brandFilterCat"><option value="">Semua Tipe</option></select>
+            <select id="brandFilterPnl">
+              <option value="">Semua P&amp;L</option>
+              <option value="Profit">Profit</option>
+              <option value="Loss">Loss</option>
+            </select>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th><th>Kode</th><th>Nama Toko</th><th>Tipe</th>
+                  <th>P&amp;L</th><th>Net Sales</th><th>Gross Profit</th>
+                  <th>GP%</th><th>OPEX</th><th>Oper. Income</th><th>Net Final</th>
+                </tr>
+              </thead>
+              <tbody id="brandStoreTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="cluster-section" id="clusterSection">
           <div class="section-heading">
             <h2>Store Health Clusters</h2>
           </div>
@@ -150,7 +196,7 @@
           </div>
         </section>
 
-        <section class="dashboard-grid">
+        <section class="dashboard-grid" id="earSummaryGrid">
           <article class="panel summary-panel">
             <div class="panel-header">
               <div>
@@ -187,7 +233,7 @@
           </article>
         </section>
 
-        <section class="dashboard-grid">
+        <section class="dashboard-grid" id="overviewGrid">
           <article class="panel">
             <div class="panel-header">
               <div>

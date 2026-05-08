@@ -1477,3 +1477,80 @@ td {
 .sdp-bar-track { flex: 1; height: 8px; background: #f3f4f6; border-radius: 4px; overflow: hidden; }
 .sdp-bar-fill { height: 100%; border-radius: 4px; background: var(--blue, #3b82f6); transition: width .4s; }
 .sdp-bar-val { font-size: 10px; font-family: 'JetBrains Mono', monospace; color: var(--muted, #6b7280); width: 55px; text-align: right; }
+
+/* ── Brand Switcher ─────────────────────────────────────────────────────── */
+.brand-switcher {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.brand-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  letter-spacing: 0.01em;
+}
+
+.brand-pill:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.brand-pill.is-active {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.45);
+  color: #fff;
+  font-weight: 600;
+}
+
+.b-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.b-dot.ear     { background: #ef4444; }
+.b-dot.ibox    { background: #a3a3a3; }
+.b-dot.samsung { background: #3b82f6; }
+
+/* ── Brand P&L Store Table ──────────────────────────────────────────────── */
+.brand-pill-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.brand-pill-row .search-input {
+  margin-left: auto;
+  min-width: 180px;
+}
+
+.pnl-cat-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--surface-2, #f1f5f9);
+  color: var(--text-secondary, #64748b);
+}
+
+.fw-semibold { font-weight: 600; }
+
+.positive { color: #16a34a; }
+.negative { color: #dc2626; }

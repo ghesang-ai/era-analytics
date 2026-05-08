@@ -1,4 +1,13 @@
-const dashboardDataUrl = "./outputs/dashboard_data_v2.json";
+const BRAND_URLS = {
+  EAR:     "./outputs/dashboard_data_v2.json",
+  IBOX:    "./outputs/dashboard_data_ibox.json",
+  SAMSUNG: "./outputs/dashboard_data_samsung.json",
+};
+const BRAND_LABELS = {
+  EAR:     "Erafone (EAR)",
+  IBOX:    "iBox (DCM)",
+  SAMSUNG: "Samsung (NASA)",
+};
 const importUrl = "./cgi-bin/import_sales.py";
 
 let dashboardState = null;
@@ -64,6 +73,134 @@ function closeStoreDetail() {
 }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeStoreDetail(); });
 let listenersBound = false;
+let currentBrand = "EAR";
+
+// ── Brand section IDs that are EAR-only ─────────────────────────────────────
+const EAR_ONLY_IDS = [
+  "clusterSection", "overviewGrid", "earSummaryGrid",
+  "data-toko", "tsh-performance", "bep-tracker", "ai-insights",
+];
+
+function _setEarSections(visible) {
+  EAR_ONLY_IDS.forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = visible ? "" : "none";
+  });
+  const brandStores = document.getElementById("brandPnlStores");
+  if (brandStores) brandStores.style.display = visible ? "none" : "";
+  const earTabs = document.getElementById("earTabStrip");
+  if (earTabs) earTabs.style.display = visible ? "" : "none";
+}
+
+function switchBrand(key) {
+  if (!BRAND_URLS[key]) return;
+  currentBrand = key;
+
+  // Update pill active state
+  document.querySelectorAll("#brandSwitcher .brand-pill").forEach((btn) => {
+    btn.classList.toggle("is-active", btn.dataset.brand === key);
+  });
+
+  fetch(`${BRAND_URLS[key]}?t=${Date.now()}`)
+    .then((r) => r.json())
+    .then((data) => {
+      dashboardState = data;
+      if (key === "EAR") {
+        renderAll(data);
+      } else {
+        renderBrandView(data);
+      }
+    })
+    .catch((err) => console.error("Brand load error:", err));
+}
+
+function renderBrandView(data) {
+  const ex = data.executive;
+  const label = BRAND_LABELS[currentBrand] || currentBrand;
+
+  // Hero
+  document.getElementById("heroDataPeriod").textContent = ex.periodLabel || "—";
+  document.getElementById("heroDataNote").textContent = `${label} · ${ex.totalStores} Stores`;
+
+  // KPI strip — repurpose existing cards
+  document.getElementById("metricTotalStores").textContent = ex.totalStores;
+  document.getElementById("metricTotalStoresNote").textContent = label;
+  document.getElementById("metricBepReached").textContent = ex.profitStores;
+  document.getElementById("metricBepReachedNote").textContent = "Profit stores";
+  document.getElementById("metricBelowBep").textContent = ex.lossStores;
+  document.getElementById("metricBelowBepNote").textContent = "Loss stores";
+  document.getElementById("metricRevenue2025").textContent = ex.summaryNetSales;
+  document.getElementById("metricRevenue2025Note").textContent = "Net Sales YTD";
+  document.getElementById("metricYoy").textContent = `${(ex.gpPct * 100).toFixed(1)}%`;
+  document.getElementById("metricYoyNote").textContent = "GP Margin";
+  document.getElementById("metricAvgHealth").textContent = ex.summaryNetFinal;
+  document.getElementById("metricDataPeriod").textContent = ex.periodLabel || "—";
+  document.getElementById("metricDataRange").textContent = currentBrand;
+
+  // KPI card label override: "Avg Health" → "Net Final"
+  const avgHealthCard = document.getElementById("metricAvgHealth").closest(".metric-card");
+  if (avgHealthCard) avgHealthCard.querySelector("span").textContent = "Net Final";
+
+  // Show brand P&L section header
+  document.getElementById("brandStoresTitle").textContent = `${label} — Store P&L`;
+  document.getElementById("brandStoresSubtitle").textContent =
+    `${ex.totalStores} toko · ${ex.profitStores} Profit · ${ex.lossStores} Loss · ${ex.periodLabel}`;
+  document.getElementById("brandStoresBadge").textContent =
+    `${ex.profitStores} Profit / ${ex.lossStores} Loss`;
+
+  // Section visibility
+  _setEarSections(false);
+
+  // Populate category filter
+  const catSet = [...new Set(data.stores.map((s) => s.pnlCategory))].sort();
+  const catSel = document.getElementById("brandFilterCat");
+  catSel.innerHTML = `<option value="">Semua Tipe</option>` +
+    catSet.map((c) => `<option value="${c}">${c}</option>`).join("");
+
+  // Render P&L panel (reuse existing)
+  renderPnl(data.pnl);
+
+  // Render store table
+  renderBrandStoreTable(data.stores);
+}
+
+function renderBrandStoreTable(stores) {
+  const search = (document.getElementById("brandSearchStore").value || "").toLowerCase();
+  const catFilter = document.getElementById("brandFilterCat").value;
+  const pnlFilter = document.getElementById("brandFilterPnl").value;
+
+  const filtered = stores.filter((s) => {
+    if (search && !s.name.toLowerCase().includes(search) && !s.code.toLowerCase().includes(search)) return false;
+    if (catFilter && s.pnlCategory !== catFilter) return false;
+    if (pnlFilter && s.pnl !== pnlFilter) return false;
+    return true;
+  });
+
+  document.getElementById("brandTotalCount").textContent = filtered.length;
+  document.getElementById("brandProfitCount").textContent = filtered.filter((s) => s.pnl === "Profit").length;
+  document.getElementById("brandLossCount").textContent = filtered.filter((s) => s.pnl === "Loss").length;
+
+  document.getElementById("brandStoreTableBody").innerHTML = filtered
+    .map((s, i) => {
+      const gpPct = s.netSalesPnl > 0 ? ((s.grossProfitPnl / s.netSalesPnl) * 100).toFixed(1) : "0.0";
+      const pnlCls = s.pnl === "Profit" ? "positive" : s.pnl === "Loss" ? "negative" : "";
+      const finalCls = s.netFinal >= 0 ? "positive" : "negative";
+      return `<tr>
+        <td>${i + 1}</td>
+        <td><code>${s.code}</code></td>
+        <td>${s.name}</td>
+        <td><span class="pnl-cat-badge cat-${s.pnlCategory.toLowerCase()}">${s.pnlCategory}</span></td>
+        <td><span class="${pnlCls} fw-semibold">${s.pnl}</span></td>
+        <td>${formatIdrCompact(s.netSalesPnl)}</td>
+        <td>${formatIdrCompact(s.grossProfitPnl)}</td>
+        <td>${gpPct}%</td>
+        <td>${formatIdrCompact(s.totalOpexPnl)}</td>
+        <td>${formatIdrCompact(s.operatingIncomePnl)}</td>
+        <td class="${finalCls} fw-semibold">${formatIdrCompact(s.netFinal)}</td>
+      </tr>`;
+    })
+    .join("");
+}
 
 function qs(id) {
   return document.getElementById(id);
@@ -640,6 +777,20 @@ function bindEvents() {
   if (listenersBound) return;
   listenersBound = true;
 
+  // Brand switcher
+  document.querySelectorAll("#brandSwitcher .brand-pill").forEach((btn) => {
+    btn.addEventListener("click", () => switchBrand(btn.dataset.brand));
+  });
+
+  // Brand P&L store filters
+  ["brandSearchStore", "brandFilterCat", "brandFilterPnl"].forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener("input", () => dashboardState && renderBrandStoreTable(dashboardState.stores));
+      el.addEventListener("change", () => dashboardState && renderBrandStoreTable(dashboardState.stores));
+    }
+  });
+
   ["searchStore", "filterTsh", "filterChannel", "filterCluster", "filterStatus", "sortStore"].forEach((id) => {
     qs(id).addEventListener("input", renderStoreTable);
     qs(id).addEventListener("change", renderStoreTable);
@@ -723,7 +874,7 @@ function bindEvents() {
           throw new Error(payload.error || "Import gagal.");
         }
         qs("importStatusValue").textContent = `Sukses: ${payload.filename}`;
-        return fetch(`${dashboardDataUrl}?t=${Date.now()}`).then((res) => res.json());
+        return fetch(`${BRAND_URLS.EAR}?t=${Date.now()}`).then((res) => res.json());
       })
       .then((data) => {
         renderAll(data);
@@ -768,6 +919,11 @@ function bindEvents() {
 
 function renderAll(data) {
   dashboardState = data;
+  // Restore EAR-specific sections + KPI card labels
+  _setEarSections(true);
+  const avgHealthCard = document.getElementById("metricAvgHealth").closest(".metric-card");
+  if (avgHealthCard) avgHealthCard.querySelector("span").textContent = "Avg Health";
+
   renderExecutive(data);
   renderImportStatus(data);
   renderTshSection(data);
@@ -784,7 +940,7 @@ function renderAll(data) {
   bindEvents();
 }
 
-fetch(dashboardDataUrl)
+fetch(BRAND_URLS.EAR)
   .then((response) => {
     if (!response.ok) throw new Error("Dashboard data not found");
     return response.json();
