@@ -1,0 +1,498 @@
+{
+  "brand": "IBOX",
+  "executive": {
+    "brand": "iBox (DCM)",
+    "totalStores": 30,
+    "profitStores": 30,
+    "lossStores": 0,
+    "totalNetSales": 507589143921,
+    "totalGrossProfit": 52235620616,
+    "gpPct": 0.102909254938931,
+    "totalOpex": -6296494338,
+    "operatingIncome": 45939126278,
+    "netFinal": 17895216302.2682,
+    "periodLabel": "Profitability Check YTD Februari 2026",
+    "summaryNetSales": "Rp507.6 M",
+    "summaryNetFinal": "Rp17.9 M"
+  },
+  "stores": [
+    {
+      "code": "X022",
+      "name": "IBOX FLAGSHIP SENAYAN CITY",
+      "pnlCategory": "APP",
+      "pnl": "Profit",
+      "netFinal": 2920333458.35721,
+      "netSalesPnl": 67470964115.0,
+      "grossProfitPnl": 7463301478.0,
+      "totalOpexPnl": -809982446.0,
+      "operatingIncomePnl": 6653319032.0,
+      "hoFinanceCost": -3673660579.64279
+    },
+    {
+      "code": "X012",
+      "name": "IBOX FLAGSHIP CENTRAL PARK",
+      "pnlCategory": "APP",
+      "pnl": "Profit",
+      "netFinal": 1995229950.38444,
+      "netSalesPnl": 57164431258.0,
+      "grossProfitPnl": 5946366400.0,
+      "totalOpexPnl": -830253835.0,
+      "operatingIncomePnl": 5116112565.0,
+      "hoFinanceCost": -3112490245.61556
+    },
+    {
+      "code": "X035",
+      "name": "IBOX FLAGSHIP SUMMARECON MALL",
+      "pnlCategory": "APP",
+      "pnl": "Profit",
+      "netFinal": 1945691409.39063,
+      "netSalesPnl": 58525612793.0,
+      "grossProfitPnl": 6109830058.0,
+      "totalOpexPnl": -961347600.0,
+      "operatingIncomePnl": 5148482458.0,
+      "hoFinanceCost": -3186603888.60937
+    },
+    {
+      "code": "X015",
+      "name": "IBOX PLAZA INDONESIA",
+      "pnlCategory": "APP",
+      "pnl": "Profit",
+      "netFinal": 1882997461.26258,
+      "netSalesPnl": 44633935380.0,
+      "grossProfitPnl": 4990467372.0,
+      "totalOpexPnl": -620211198.0,
+      "operatingIncomePnl": 4370256174.0,
+      "hoFinanceCost": -2430229522.73742
+    },
+    {
+      "code": "X168",
+      "name": "IBOX BINTARO XCHANGE MALL II",
+      "pnlCategory": "APP",
+      "pnl": "Profit",
+      "netFinal": 1331418691.08382,
+      "netSalesPnl": 36526144855.0,
+      "grossProfitPnl": 3804372334.0,
+      "totalOpexPnl": -460834444.0,
+      "operatingIncomePnl": 3343537890.0,
+      "hoFinanceCost": -1988776360.91618
+    },
+    {
+      "code": "X011",
+      "name": "IBOX LIPPO MALL PURI",
+      "pnlCategory": "APP",
+      "pnl": "Profit",
+      "netFinal": 1298632379.76845,
+      "netSalesPnl": 45007405389.0,
+      "grossProfitPnl": 4542279364.0,
+      "totalOpexPnl": -759733381.0,
+      "operatingIncomePnl": 3782545983.0,
+      "hoFinanceCost": -2450564226.23155
+    },
+    {
+      "code": "X058",
+      "name": "IBOX TANGERANG CITY MALL",
+      "pnlCategory": "AAR",
+      "pnl": "Profit",
+      "netFinal": 776059892.692308,
+      "netSalesPnl": 20736570314.0,
+      "grossProfitPnl": 2027658705.0,
+      "totalOpexPnl": -99944890.0,
+      "operatingIncomePnl": 1927713815.0,
+      "hoFinanceCost": -1129065249.30769
+    },
+    {
+      "code": "X016",
+      "name": "IBOX MALL ATRIUM SENEN",
+      "pnlCategory": "AAR",
+      "pnl": "Profit",
+      "netFinal": 543307656.888216,
+      "netSalesPnl": 13340542049.0,
+      "grossProfitPnl": 1335374987.0,
+      "totalOpexPnl": -65701195.0,
+      "operatingIncomePnl": 1269673792.0,
+      "hoFinanceCost": -726366135.111784
+    },
+    {
+      "code": "X043",
+      "name": "IBOX ITC ROXY",
+      "pnlCategory": "AAR",
+      "pnl": "Profit",
+      "netFinal": 501296292.490243,
+      "netSalesPnl": 16051572906.0,
+      "grossProfitPnl": 1471829565.0,
+      "totalOpexPnl": -72457307.0,
+      "operatingIncomePnl": 1399372258.0,
+      "hoFinanceCost": -873976404.509757
+    },
+    {
+      "code": "X072",
+      "name": "IBOX LIVING WORLD ALAM SUTRA",
+      "pnlCategory": "AAR",
+      "pnl": "Profit",
+      "netFinal": 491349272.201171,
+      "netSalesPnl": 15476833986.0,
+      "grossProfitPnl": 1581998940.0,
+      "totalOpexPnl": -221612633.0,
+      "operatingIncomePnl": 1360386307.0,
+      "hoFinanceCost": -842683006.798829
+    },
+    {
+      "code": "X064",
+      "name": "IBOX MALL CITRARAYA",
+      "pnlCategory": "AAR",
+      "pnl": "Profit",
+      "netFinal": 456975048.132514,
+      "netSalesPnl": 13984637832.0,
+      "grossProfitPnl": 1280103070.0,
+      "totalOpexPnl": -37819196.0,
+      "operatingIncomePnl": 1242283874.0,
+      "hoFinanceCost": -761435876.867486
+    },
+    {
+      "code": "X142",
+      "name": "IBOX A YANI SERANG",
+      "pnlCategory": "AAR",
+      "pnl": "Profit",
+      "netFinal": 413444459.106133,
+      "netSalesPnl": 12293924973.0,
+      "grossProfitPnl": 1138311218.0,
+      "totalOpexPnl": -55486854.0,
+      "operatingIncomePnl": 1082824364.0,
+      "hoFinanceCost": -669379904.893867
+    },
+    {
+      "code": "X222",
+      "name": "IBOX PAMULANG",
+      "pnlCategory": "AAR",
+      "pnl": "Profit",
+      "netFinal": 407402895.703151,
+      "netSalesPnl": 10728662168.0,
+      "grossProfitPnl": 1094297513.0,
+      "totalOpexPnl": -102740177.0,
+      "operatingIncomePnl": 991557336.0,
+      "hoFinanceCost": -584154440.296849
+    },
+    {
+      "code": "X049",
+      "name": "IBOX CILEGON CENTRE",
+      "pnlCategory": "AAR",
+      "pnl": "Profit",
+      "netFinal": 399037580.038767,
+      "netSalesPnl": 11809382015.0,
+      "grossProfitPnl": 1109390512.0,
+      "totalOpexPnl": -58911524.0,
+      "operatingIncomePnl": 1050478988.0,
+      "hoFinanceCost": -642997498.961233
+    },
+    {
+      "code": "X191",
+      "name": "IBOX PARAMOUNT BSD",
+      "pnlCategory": "AAR",
+      "pnl": "Profit",
+      "netFinal": 387471345.93859,
+      "netSalesPnl": 11771946369.0,
+      "grossProfitPnl": 1221962932.0,
+      "totalOpexPnl": -193532384.0,
+      "operatingIncomePnl": 1028430548.0,
+      "hoFinanceCost": -640959202.06141
+    },
+    {
+      "code": "X033",
+      "name": "IBOX BINTARO PLAZA",
+      "pnlCategory": "AAR",
+      "pnl": "Profit",
+      "netFinal": 309333052.344494,
+      "netSalesPnl": 8490238791.0,
+      "grossProfitPnl": 859655564.0,
+      "totalOpexPnl": -78393147.0,
+      "operatingIncomePnl": 781262417.0,
+      "hoFinanceCost": -462276713.655506
+    },
+    {
+      "code": "X110",
+      "name": "IBOX GAJAH MADA MALL",
+      "pnlCategory": "AAR",
+      "pnl": "Profit",
+      "netFinal": 251530022.286401,
+      "netSalesPnl": 7093811606.0,
+      "grossProfitPnl": 726562344.0,
+      "totalOpexPnl": -79811207.0,
+      "operatingIncomePnl": 646751137.0,
+      "hoFinanceCost": -386244014.713599
+    },
+    {
+      "code": "X172",
+      "name": "IBOX SENAYAN PARK",
+      "pnlCategory": "AAR",
+      "pnl": "Profit",
+      "netFinal": 248089930.416759,
+      "netSalesPnl": 5747782189.0,
+      "grossProfitPnl": 613110004.0,
+      "totalOpexPnl": -21897968.0,
+      "operatingIncomePnl": 591212036.0,
+      "hoFinanceCost": -312955374.583241
+    },
+    {
+      "code": "X192",
+      "name": "IBOX K MALL AT MENARA JAKARTA",
+      "pnlCategory": "AAR",
+      "pnl": "Profit",
+      "netFinal": 239957374.372613,
+      "netSalesPnl": 7119712343.0,
+      "grossProfitPnl": 721502663.0,
+      "totalOpexPnl": -87140186.0,
+      "operatingIncomePnl": 634362477.0,
+      "hoFinanceCost": -387654258.627387
+    },
+    {
+      "code": "X190",
+      "name": "IBOX GREENLAKE",
+      "pnlCategory": "AAR",
+      "pnl": "Profit",
+      "netFinal": 229220946.79194,
+      "netSalesPnl": 5753072714.0,
+      "grossProfitPnl": 621146575.0,
+      "totalOpexPnl": -78682195.0,
+      "operatingIncomePnl": 542464380.0,
+      "hoFinanceCost": -313243433.20806
+    },
+    {
+      "code": "X055",
+      "name": "IBOX MAL CIPUTRA JAKARTA",
+      "pnlCategory": "AAR",
+      "pnl": "Profit",
+      "netFinal": 225298122.098235,
+      "netSalesPnl": 8728699797.0,
+      "grossProfitPnl": 787312672.0,
+      "totalOpexPnl": -69252511.0,
+      "operatingIncomePnl": 718060161.0,
+      "hoFinanceCost": -475260443.901765
+    },
+    {
+      "code": "X173",
+      "name": "IBOX MALL ALAM SUTERA",
+      "pnlCategory": "AAR",
+      "pnl": "Profit",
+      "netFinal": 165313889.348084,
+      "netSalesPnl": 4617080724.0,
+      "grossProfitPnl": 475024483.0,
+      "totalOpexPnl": -57135540.0,
+      "operatingIncomePnl": 417888943.0,
+      "hoFinanceCost": -251390915.651916
+    },
+    {
+      "code": "X014",
+      "name": "IBOX MENTENG CENTRAL",
+      "pnlCategory": "AAR",
+      "pnl": "Profit",
+      "netFinal": 149844708.750016,
+      "netSalesPnl": 5139553079.0,
+      "grossProfitPnl": 505540155.0,
+      "totalOpexPnl": -68378572.0,
+      "operatingIncomePnl": 437161583.0,
+      "hoFinanceCost": -279838502.249984
+    },
+    {
+      "code": "X135",
+      "name": "IBOX EDC",
+      "pnlCategory": "AAR",
+      "pnl": "Profit",
+      "netFinal": 135260654.075492,
+      "netSalesPnl": 4766507184.0,
+      "grossProfitPnl": 486052205.0,
+      "totalOpexPnl": -91264660.0,
+      "operatingIncomePnl": 394787545.0,
+      "hoFinanceCost": -259526890.924508
+    },
+    {
+      "code": "X037",
+      "name": "IBOX MANGGA DUA",
+      "pnlCategory": "AAR",
+      "pnl": "Profit",
+      "netFinal": 100914449.349101,
+      "netSalesPnl": 2481468659.0,
+      "grossProfitPnl": 258603167.0,
+      "totalOpexPnl": -22577656.0,
+      "operatingIncomePnl": 236025511.0,
+      "hoFinanceCost": -135111061.650899
+    },
+    {
+      "code": "X034",
+      "name": "IBOX - SDC SERPONG",
+      "pnlCategory": "AAR",
+      "pnl": "Profit",
+      "netFinal": 59967766.1997234,
+      "netSalesPnl": 2152512822.0,
+      "grossProfitPnl": 220165359.0,
+      "totalOpexPnl": -39105663.0,
+      "operatingIncomePnl": 181059696.0,
+      "hoFinanceCost": -117200066.800277
+    },
+    {
+      "code": "X108",
+      "name": "IBOX PIK 2",
+      "pnlCategory": "AAR",
+      "pnl": "Profit",
+      "netFinal": 18829917.0,
+      "netSalesPnl": 0.0,
+      "grossProfitPnl": 0.0,
+      "totalOpexPnl": 36926366.0,
+      "operatingIncomePnl": 36926366.0,
+      "hoFinanceCost": 0.0
+    },
+    {
+      "code": "X056",
+      "name": "IBOX BINTARO JAYA XCHANGE",
+      "pnlCategory": "AAR",
+      "pnl": "Profit",
+      "netFinal": 3269584.0,
+      "netSalesPnl": 0.0,
+      "grossProfitPnl": 0.0,
+      "totalOpexPnl": 3269584.0,
+      "operatingIncomePnl": 3269584.0,
+      "hoFinanceCost": 0.0
+    },
+    {
+      "code": "X019",
+      "name": "IBOX RATU PLAZA 2",
+      "pnlCategory": "AAR",
+      "pnl": "Profit",
+      "netFinal": 48737.0,
+      "netSalesPnl": 0.0,
+      "grossProfitPnl": 0.0,
+      "totalOpexPnl": 48737.0,
+      "operatingIncomePnl": 48737.0,
+      "hoFinanceCost": 0.0
+    },
+    {
+      "code": "X013",
+      "name": "IBOX GRAND INDONESIA",
+      "pnlCategory": "AAR",
+      "pnl": "Profit",
+      "netFinal": 31718.0,
+      "netSalesPnl": 0.0,
+      "grossProfitPnl": 0.0,
+      "totalOpexPnl": 31718.0,
+      "operatingIncomePnl": 31718.0,
+      "hoFinanceCost": 0.0
+    }
+  ],
+  "pnl": {
+    "periodLabel": "Profitability Check YTD Februari 2026",
+    "grand": {
+      "netSales": 507589143921,
+      "grossProfit": 52235620616,
+      "gpPct": 0.102909254938931,
+      "totalOpex": -6296494338,
+      "operatingIncome": 45939126278,
+      "netBeforeHo": 45532441487,
+      "hoCost": 197770166,
+      "netAfterHo": 197770165.998251,
+      "financeCost": -22032391985.6429,
+      "netAfterFinance": 23500049501.3571,
+      "hoFinanceCost": -27637225184.7318,
+      "netFinal": 17895216302.2682
+    },
+    "erafoneNetFinal": 11374303350.2471,
+    "eraMoreNetFinal": 0,
+    "costDrivers": [
+      [
+        "Selling salary",
+        -2622437956
+      ],
+      [
+        "ROU depreciation",
+        -3362014043
+      ],
+      [
+        "Credit card",
+        -7094268143
+      ],
+      [
+        "Fixed asset dep.",
+        -3334885191
+      ]
+    ],
+    "analysis": {
+      "regionLabel": "REGION 5",
+      "grand": {
+        "regionTotal": 25,
+        "mallTotal": 0,
+        "streetTotal": 0,
+        "erafoneTotal": 25,
+        "eraMoreTotal": 0
+      },
+      "topProfit": {
+        "rank": "Rank 7",
+        "remark": "This store is PROFIT because their Sales is BELOW , their GP% is BELOW and their OPEX is BELOW",
+        "regionTotal": 10,
+        "mallTotal": 0,
+        "streetTotal": 0
+      },
+      "topLoss": null,
+      "rows": [
+        {
+          "rank": "Rank 1",
+          "remark": "This store is PROFIT because their Sales is ABOVE , their GP% is ABOVE and their OPEX is BELOW",
+          "regionTotal": 7,
+          "mallTotal": 0,
+          "streetTotal": 0
+        },
+        {
+          "rank": "Rank 2",
+          "remark": "This store is PROFIT because their Sales is ABOVE , their GP% is ABOVE and their OPEX is ABOVE",
+          "regionTotal": 5,
+          "mallTotal": 0,
+          "streetTotal": 0
+        },
+        {
+          "rank": "Rank 3",
+          "remark": "This store is PROFIT because their Sales is ABOVE , their GP% is BELOW and their OPEX is BELOW",
+          "regionTotal": 0,
+          "mallTotal": 0,
+          "streetTotal": 0
+        },
+        {
+          "rank": "Rank 4",
+          "remark": "This store is PROFIT because their Sales is ABOVE , their GP% is BELOW and their OPEX is ABOVE",
+          "regionTotal": 1,
+          "mallTotal": 0,
+          "streetTotal": 0
+        },
+        {
+          "rank": "Rank 5",
+          "remark": "This store is PROFIT because their Sales is BELOW , their GP% is ABOVE and their OPEX is BELOW",
+          "regionTotal": 1,
+          "mallTotal": 0,
+          "streetTotal": 0
+        },
+        {
+          "rank": "Rank 6",
+          "remark": "This store is PROFIT because their Sales is BELOW , their GP% is ABOVE and their OPEX is ABOVE",
+          "regionTotal": 0,
+          "mallTotal": 0,
+          "streetTotal": 0
+        },
+        {
+          "rank": "Rank 7",
+          "remark": "This store is PROFIT because their Sales is BELOW , their GP% is BELOW and their OPEX is BELOW",
+          "regionTotal": 10,
+          "mallTotal": 0,
+          "streetTotal": 0
+        },
+        {
+          "rank": "Rank 8",
+          "remark": "This store is PROFIT because their Sales is BELOW , their GP% is BELOW and their OPEX is ABOVE",
+          "regionTotal": 1,
+          "mallTotal": 0,
+          "streetTotal": 0
+        }
+      ]
+    }
+  },
+  "source": {
+    "pnlWorkbook": "PNL EAR YTD FEBRUARY 2026/IBOX/PNL DCM YTD FEB 26 REGION 5.xlsx",
+    "pnlPeriod": "Februari 2026",
+    "generatedAt": "2026-05-08T23:14:49"
+  }
+}

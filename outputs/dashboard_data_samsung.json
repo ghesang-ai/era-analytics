@@ -1,0 +1,500 @@
+{
+  "brand": "SAMSUNG",
+  "executive": {
+    "brand": "Samsung (NASA)",
+    "totalStores": 25,
+    "profitStores": 11,
+    "lossStores": 14,
+    "totalNetSales": 58778502532,
+    "totalGrossProfit": 9457269098,
+    "gpPct": 0.160896734190384,
+    "totalOpex": -6979408183,
+    "operatingIncome": 2477860915,
+    "netFinal": -4445548.57237847,
+    "periodLabel": "Profitability Check YTD Februari 2026",
+    "summaryNetSales": "Rp58.8 M",
+    "summaryNetFinal": "Rp-4.4 jt"
+  },
+  "stores": [
+    {
+      "code": "S041",
+      "name": "SES BINTARO X CHANGE",
+      "pnlCategory": "SES",
+      "pnl": "Profit",
+      "netFinal": 342463476.912199,
+      "netSalesPnl": 4892418900.0,
+      "grossProfitPnl": 901226616.0,
+      "totalOpexPnl": -332910798.0,
+      "operatingIncomePnl": 568315818.0,
+      "hoFinanceCost": -207598517.087801
+    },
+    {
+      "code": "S142",
+      "name": "SAMSUNG SES CENTRAL PARK",
+      "pnlCategory": "SES",
+      "pnl": "Profit",
+      "netFinal": 269117141.173004,
+      "netSalesPnl": 6910766439.0,
+      "grossProfitPnl": 1242143302.0,
+      "totalOpexPnl": -679783719.0,
+      "operatingIncomePnl": 562359583.0,
+      "hoFinanceCost": -293242441.826996
+    },
+    {
+      "code": "S097",
+      "name": "SES MALL CIPUTRA CITRA RAYA TA",
+      "pnlCategory": "SES",
+      "pnl": "Profit",
+      "netFinal": 224332822.30817,
+      "netSalesPnl": 2775265742.0,
+      "grossProfitPnl": 545314364.0,
+      "totalOpexPnl": -186776804.0,
+      "operatingIncomePnl": 358537560.0,
+      "hoFinanceCost": -117762003.69183
+    },
+    {
+      "code": "S015",
+      "name": "SAMSUNG LIPPO MALL PURI",
+      "pnlCategory": "SES",
+      "pnl": "Profit",
+      "netFinal": 165397403.949993,
+      "netSalesPnl": 4545604370.0,
+      "grossProfitPnl": 849393411.0,
+      "totalOpexPnl": -471290203.0,
+      "operatingIncomePnl": 378103208.0,
+      "hoFinanceCost": -192882242.050007
+    },
+    {
+      "code": "S042",
+      "name": "SES AEON MAL BSD CITY",
+      "pnlCategory": "SES",
+      "pnl": "Profit",
+      "netFinal": 122757848.48253,
+      "netSalesPnl": 3312350578.0,
+      "grossProfitPnl": 591104063.0,
+      "totalOpexPnl": -305574781.0,
+      "operatingIncomePnl": 285529282.0,
+      "hoFinanceCost": -140551960.51747
+    },
+    {
+      "code": "S058",
+      "name": "SES GREEN PRAMUKA SQUARE",
+      "pnlCategory": "SES",
+      "pnl": "Profit",
+      "netFinal": 90213205.7204993,
+      "netSalesPnl": 1719421921.0,
+      "grossProfitPnl": 330974068.0,
+      "totalOpexPnl": -164250316.0,
+      "operatingIncomePnl": 166723752.0,
+      "hoFinanceCost": -72959705.2795007
+    },
+    {
+      "code": "S056",
+      "name": "SES SUMMARECON MAL SERPONG",
+      "pnlCategory": "SES",
+      "pnl": "Profit",
+      "netFinal": 80714893.7237931,
+      "netSalesPnl": 7421177801.0,
+      "grossProfitPnl": 1147381908.0,
+      "totalOpexPnl": -736923874.0,
+      "operatingIncomePnl": 410458034.0,
+      "hoFinanceCost": -314900571.276207
+    },
+    {
+      "code": "S066",
+      "name": "SES CILEGON CENTER MALL",
+      "pnlCategory": "SES",
+      "pnl": "Profit",
+      "netFinal": 53912178.5026085,
+      "netSalesPnl": 2926170884.0,
+      "grossProfitPnl": 435632772.0,
+      "totalOpexPnl": -247308324.0,
+      "operatingIncomePnl": 188324448.0,
+      "hoFinanceCost": -124165315.497392
+    },
+    {
+      "code": "S190",
+      "name": "SAMSUNG BINTARO XCHANGE MALL I",
+      "pnlCategory": "SPS",
+      "pnl": "Profit",
+      "netFinal": 42355065.292724,
+      "netSalesPnl": 3479182316.0,
+      "grossProfitPnl": 555002230.0,
+      "totalOpexPnl": -344270589.0,
+      "operatingIncomePnl": 210731641.0,
+      "hoFinanceCost": -147631080.707276
+    },
+    {
+      "code": "S136",
+      "name": "SPS LABUAN PANDEGLANG",
+      "pnlCategory": "SPS",
+      "pnl": "Profit",
+      "netFinal": 14083965.6523019,
+      "netSalesPnl": 535493811.0,
+      "grossProfitPnl": 99700174.0,
+      "totalOpexPnl": -62893763.0,
+      "operatingIncomePnl": 36806411.0,
+      "hoFinanceCost": -22722445.3476981
+    },
+    {
+      "code": "S040",
+      "name": "SES TANGERANG CITY MALL",
+      "pnlCategory": "SES",
+      "pnl": "Profit",
+      "netFinal": 1237413.14270988,
+      "netSalesPnl": 1587960380.0,
+      "grossProfitPnl": 264954442.0,
+      "totalOpexPnl": -191561080.0,
+      "operatingIncomePnl": 73393362.0,
+      "hoFinanceCost": -67381437.8572901
+    },
+    {
+      "code": "S076",
+      "name": "SPS E-CENTER SUPERMALL KARAWAC",
+      "pnlCategory": "SPS",
+      "pnl": "Loss",
+      "netFinal": -80524.0,
+      "netSalesPnl": 0.0,
+      "grossProfitPnl": 0.0,
+      "totalOpexPnl": -80524.0,
+      "operatingIncomePnl": -80524.0,
+      "hoFinanceCost": 0.0
+    },
+    {
+      "code": "S085",
+      "name": "SPS 2 ITC CEMPAKA MAS",
+      "pnlCategory": "SPS",
+      "pnl": "Loss",
+      "netFinal": -171849.0,
+      "netSalesPnl": 0.0,
+      "grossProfitPnl": 0.0,
+      "totalOpexPnl": -171849.0,
+      "operatingIncomePnl": -171849.0,
+      "hoFinanceCost": 0.0
+    },
+    {
+      "code": "S018",
+      "name": "SES SENAYAN CITY",
+      "pnlCategory": "SES",
+      "pnl": "Loss",
+      "netFinal": -30756132.9338568,
+      "netSalesPnl": 4234243514.0,
+      "grossProfitPnl": 769921544.0,
+      "totalOpexPnl": -621007315.0,
+      "operatingIncomePnl": 148914229.0,
+      "hoFinanceCost": -179670361.933857
+    },
+    {
+      "code": "S137",
+      "name": "SPS A YANI CILEGON",
+      "pnlCategory": "SPS",
+      "pnl": "Loss",
+      "netFinal": -43027219.7717193,
+      "netSalesPnl": 170677984.0,
+      "grossProfitPnl": 31677753.0,
+      "totalOpexPnl": -67462646.0,
+      "operatingIncomePnl": -35784893.0,
+      "hoFinanceCost": -7242326.7717193
+    },
+    {
+      "code": "S049",
+      "name": "SPS ITC CEMPAKA MAS",
+      "pnlCategory": "SPS",
+      "pnl": "Loss",
+      "netFinal": -47761060.3053043,
+      "netSalesPnl": 1390779842.0,
+      "grossProfitPnl": 220781244.0,
+      "totalOpexPnl": -209527768.0,
+      "operatingIncomePnl": 11253476.0,
+      "hoFinanceCost": -59014536.3053043
+    },
+    {
+      "code": "S195",
+      "name": "SES K MALL AT MENARA JAKARTA",
+      "pnlCategory": "SES",
+      "pnl": "Loss",
+      "netFinal": -52213686.9079064,
+      "netSalesPnl": 1049621131.0,
+      "grossProfitPnl": 154107543.0,
+      "totalOpexPnl": -155373611.0,
+      "operatingIncomePnl": -1266068.0,
+      "hoFinanceCost": -44538252.9079064
+    },
+    {
+      "code": "S055",
+      "name": "SES PLAZA SENAYAN",
+      "pnlCategory": "SES",
+      "pnl": "Loss",
+      "netFinal": -62642565.4405068,
+      "netSalesPnl": 1801274563.0,
+      "grossProfitPnl": 317237708.0,
+      "totalOpexPnl": -268541383.0,
+      "operatingIncomePnl": 48696325.0,
+      "hoFinanceCost": -76432933.4405068
+    },
+    {
+      "code": "S158",
+      "name": "SAMSUNG (SEP) SERPONG PARADISE",
+      "pnlCategory": "SPS",
+      "pnl": "Loss",
+      "netFinal": -76921602.8294346,
+      "netSalesPnl": 655777911.0,
+      "grossProfitPnl": 106603611.0,
+      "totalOpexPnl": -152242924.0,
+      "operatingIncomePnl": -45639313.0,
+      "hoFinanceCost": -27826423.8294346
+    },
+    {
+      "code": "S183",
+      "name": "SAMSUNG EDC",
+      "pnlCategory": "SES",
+      "pnl": "Loss",
+      "netFinal": -107347240.356824,
+      "netSalesPnl": 934307277.0,
+      "grossProfitPnl": 129477703.0,
+      "totalOpexPnl": -197179768.0,
+      "operatingIncomePnl": -67702065.0,
+      "hoFinanceCost": -39645175.3568244
+    },
+    {
+      "code": "S044",
+      "name": "SES 2 ITC ROXY MAS",
+      "pnlCategory": "SES",
+      "pnl": "Loss",
+      "netFinal": -116913113.213356,
+      "netSalesPnl": 2564341676.0,
+      "grossProfitPnl": 423094440.0,
+      "totalOpexPnl": -431195626.0,
+      "operatingIncomePnl": -8101186.0,
+      "hoFinanceCost": -108811927.213356
+    },
+    {
+      "code": "S201",
+      "name": "SAMSUNG HAMPTON SQUARE SERPONG",
+      "pnlCategory": "SES",
+      "pnl": "Loss",
+      "netFinal": -136474489.170235,
+      "netSalesPnl": 328917673.0,
+      "grossProfitPnl": 46034746.0,
+      "totalOpexPnl": -155483637.0,
+      "operatingIncomePnl": -109448891.0,
+      "hoFinanceCost": -13956863.1702347
+    },
+    {
+      "code": "S159",
+      "name": "SAMSUNG SES PIK 2",
+      "pnlCategory": "SES",
+      "pnl": "Loss",
+      "netFinal": -204856528.0,
+      "netSalesPnl": 0.0,
+      "grossProfitPnl": 0.0,
+      "totalOpexPnl": -164915087.0,
+      "operatingIncomePnl": -164915087.0,
+      "hoFinanceCost": 0.0
+    },
+    {
+      "code": "S194",
+      "name": "SAMSUNG AGORA MALL",
+      "pnlCategory": "SPS",
+      "pnl": "Loss",
+      "netFinal": -217037786.140363,
+      "netSalesPnl": 256666734.0,
+      "grossProfitPnl": 38006868.0,
+      "totalOpexPnl": -233466168.0,
+      "operatingIncomePnl": -195459300.0,
+      "hoFinanceCost": -10891061.1403633
+    },
+    {
+      "code": "S098",
+      "name": "SES SENAYAN PARK MALL",
+      "pnlCategory": "SES",
+      "pnl": "Loss",
+      "netFinal": -338920389.926678,
+      "netSalesPnl": 757087223.0,
+      "grossProfitPnl": 131873719.0,
+      "totalOpexPnl": -436723542.0,
+      "operatingIncomePnl": -304849823.0,
+      "hoFinanceCost": -32125250.9266779
+    }
+  ],
+  "pnl": {
+    "periodLabel": "Profitability Check YTD Februari 2026",
+    "grand": {
+      "netSales": 58778502532,
+      "grossProfit": 9457269098,
+      "gpPct": 0.160896734190384,
+      "totalOpex": -6979408183,
+      "operatingIncome": 2477860915,
+      "netBeforeHo": 2236546846,
+      "hoCost": -253137853,
+      "netAfterHo": -253137853.009699,
+      "financeCost": -2012620173.15515,
+      "netAfterFinance": 223926672.844852,
+      "hoFinanceCost": -2240992394.57238,
+      "netFinal": -4445548.57237847
+    },
+    "erafoneNetFinal": 505711372.171752,
+    "eraMoreNetFinal": -300617038.653276,
+    "costDrivers": [
+      [
+        "Selling salary",
+        -2073094535
+      ],
+      [
+        "ROU depreciation",
+        -2605677308
+      ],
+      [
+        "Credit card",
+        -1166930163
+      ],
+      [
+        "Fixed asset dep.",
+        -75482802
+      ]
+    ],
+    "analysis": {
+      "regionLabel": "REGION 5",
+      "grand": {
+        "regionTotal": 21,
+        "mallTotal": 0,
+        "streetTotal": 0,
+        "erafoneTotal": 21,
+        "eraMoreTotal": 0
+      },
+      "topProfit": {
+        "rank": "Rank 5",
+        "remark": "This store is PROFIT because their Sales is BELOW , their GP% is ABOVE and their OPEX is BELOW",
+        "regionTotal": 5,
+        "mallTotal": 0,
+        "streetTotal": 0
+      },
+      "topLoss": {
+        "rank": "Rank 10",
+        "remark": "This store is LOSS because their Sales is ABOVE , their GP% is ABOVE and their OPEX is BELOW",
+        "regionTotal": 4,
+        "mallTotal": 0,
+        "streetTotal": 0
+      },
+      "rows": [
+        {
+          "rank": "Rank 1",
+          "remark": "This store is PROFIT because their Sales is ABOVE , their GP% is ABOVE and their OPEX is BELOW",
+          "regionTotal": 3,
+          "mallTotal": 0,
+          "streetTotal": 0
+        },
+        {
+          "rank": "Rank 2",
+          "remark": "This store is PROFIT because their Sales is ABOVE , their GP% is ABOVE and their OPEX is ABOVE",
+          "regionTotal": 2,
+          "mallTotal": 0,
+          "streetTotal": 0
+        },
+        {
+          "rank": "Rank 3",
+          "remark": "This store is PROFIT because their Sales is ABOVE , their GP% is BELOW and their OPEX is BELOW",
+          "regionTotal": 0,
+          "mallTotal": 0,
+          "streetTotal": 0
+        },
+        {
+          "rank": "Rank 4",
+          "remark": "This store is PROFIT because their Sales is ABOVE , their GP% is BELOW and their OPEX is ABOVE",
+          "regionTotal": 3,
+          "mallTotal": 0,
+          "streetTotal": 0
+        },
+        {
+          "rank": "Rank 5",
+          "remark": "This store is PROFIT because their Sales is BELOW , their GP% is ABOVE and their OPEX is BELOW",
+          "regionTotal": 5,
+          "mallTotal": 0,
+          "streetTotal": 0
+        },
+        {
+          "rank": "Rank 6",
+          "remark": "This store is PROFIT because their Sales is BELOW , their GP% is ABOVE and their OPEX is ABOVE",
+          "regionTotal": 0,
+          "mallTotal": 0,
+          "streetTotal": 0
+        },
+        {
+          "rank": "Rank 7",
+          "remark": "This store is PROFIT because their Sales is BELOW , their GP% is BELOW and their OPEX is BELOW",
+          "regionTotal": 1,
+          "mallTotal": 0,
+          "streetTotal": 0
+        },
+        {
+          "rank": "Rank 8",
+          "remark": "This store is PROFIT because their Sales is BELOW , their GP% is BELOW and their OPEX is ABOVE",
+          "regionTotal": 0,
+          "mallTotal": 0,
+          "streetTotal": 0
+        },
+        {
+          "rank": "Rank 9",
+          "remark": "This store is LOSS because their Sales is ABOVE , their GP% is ABOVE and their OPEX is ABOVE",
+          "regionTotal": 0,
+          "mallTotal": 0,
+          "streetTotal": 0
+        },
+        {
+          "rank": "Rank 10",
+          "remark": "This store is LOSS because their Sales is ABOVE , their GP% is ABOVE and their OPEX is BELOW",
+          "regionTotal": 4,
+          "mallTotal": 0,
+          "streetTotal": 0
+        },
+        {
+          "rank": "",
+          "remark": "This store is LOSS because their Sales is ABOVE , their GP% is BELOW and their OPEX is BELOW",
+          "regionTotal": 0,
+          "mallTotal": 0,
+          "streetTotal": 0
+        },
+        {
+          "rank": "",
+          "remark": "This store is LOSS because their Sales is ABOVE , their GP% is BELOW and their OPEX is ABOVE",
+          "regionTotal": 1,
+          "mallTotal": 0,
+          "streetTotal": 0
+        },
+        {
+          "rank": "Rank 11",
+          "remark": "This store is LOSS because their Sales is BELOW , their GP% is ABOVE and their OPEX is BELOW",
+          "regionTotal": 0,
+          "mallTotal": 0,
+          "streetTotal": 0
+        },
+        {
+          "rank": "Rank 12",
+          "remark": "This store is LOSS because their Sales is BELOW , their GP% is BELOW and their OPEX is BELOW",
+          "regionTotal": 1,
+          "mallTotal": 0,
+          "streetTotal": 0
+        },
+        {
+          "rank": "",
+          "remark": "This store is LOSS because their Sales is BELOW , their GP% is ABOVE and their OPEX is ABOVE",
+          "regionTotal": 0,
+          "mallTotal": 0,
+          "streetTotal": 0
+        },
+        {
+          "rank": "Rank 13",
+          "remark": "This store is LOSS because their Sales is BELOW , their GP% is BELOW and their OPEX is ABOVE",
+          "regionTotal": 1,
+          "mallTotal": 0,
+          "streetTotal": 0
+        }
+      ]
+    }
+  },
+  "source": {
+    "pnlWorkbook": "PNL EAR YTD FEBRUARY 2026/SAMSUNG/PNL NASA YTD FEB 26 REGION 5.xlsx",
+    "pnlPeriod": "Februari 2026",
+    "generatedAt": "2026-05-08T23:14:49"
+  }
+}

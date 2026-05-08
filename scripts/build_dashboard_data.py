@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
@@ -9,22 +10,169 @@ from openpyxl import load_workbook
 
 
 BASE_DIR = Path(__file__).resolve().parents[1]
-DEFAULT_SALES_PATH = BASE_DIR / "ERA-ANALYTICS-V2" / "Sales vs Stock 01 - 15 April 2026 R5_Master.xlsx"
 CURRENT_SALES_PATH = BASE_DIR / "data" / "current" / "Sales_vs_Stock_R5_Latest.xlsx"
-PNL_PATH = (
-    BASE_DIR
-    / "ERA-ANALYTICS-V2"
-    / "PNL EAR YTD JANUARI 2026"
-    / "1. EAR by Store Jan 26-2 - pake yang ini.xlsx"
-)
-REGION_SUMMARY_PATH = BASE_DIR / "ERA-ANALYTICS-V2" / "ERA_ANALYTICS_Region5_Summary.xlsx"
+SALES_DIR = BASE_DIR / "SALES"
+REGION_SUMMARY_PATH = BASE_DIR / "ERA_ANALYTICS_Region5_Summary.xlsx"
 OUTPUT_PATH = BASE_DIR / "outputs" / "dashboard_data_v2.json"
+IBOX_OUTPUT_PATH = BASE_DIR / "outputs" / "dashboard_data_ibox.json"
+SAMSUNG_OUTPUT_PATH = BASE_DIR / "outputs" / "dashboard_data_samsung.json"
 
 VALID_CHANNELS = {"ERAFONE", "ERA & MORE"}
 
+# Per-brand configuration
+# summary_offset: column shift vs EAR base for all financial cols from col84 onwards
+# analysis_remark_col: openpyxl col containing "This store is PROFIT/LOSS..." text
+# analysis_total_col: None = sum cols 5-8; int = single "Count of Store" column
+BRAND_CONFIG: dict[str, dict] = {
+    "EAR": {
+        "label": "Erafone (EAR)",
+        "subfolder": "ERAFONE",
+        "valid_categories": {"ERAFONE", "ERAFONE AND MORE"},
+        "category_label": {"ERAFONE": "Erafone", "ERAFONE AND MORE": "ERA & More"},
+        "summary_offset": 0,
+        "analysis_remark_col": 3,
+        "analysis_total_col": None,
+    },
+    "IBOX": {
+        "label": "iBox (DCM)",
+        "subfolder": "IBOX",
+        "valid_categories": {"APP", "AAR", "APR"},
+        "category_label": {"APP": "APP", "AAR": "AAR", "APR": "APR"},
+        "summary_offset": 2,
+        "analysis_remark_col": 2,
+        "analysis_total_col": 19,
+    },
+    "SAMSUNG": {
+        "label": "Samsung (NASA)",
+        "subfolder": "SAMSUNG",
+        "valid_categories": {"SES", "SEP", "SPS"},
+        "category_label": {"SES": "SES", "SEP": "SEP", "SPS": "SPS"},
+        "summary_offset": 0,
+        "analysis_remark_col": 2,
+        "analysis_total_col": 19,
+    },
+}
+
+MONTH_ALIAS: dict[str, int] = {
+    "JANUARY": 1, "FEBRUARY": 2, "MARCH": 3, "APRIL": 4,
+    "MAY": 5, "JUNE": 6, "JULY": 7, "AUGUST": 8,
+    "SEPTEMBER": 9, "OCTOBER": 10, "NOVEMBER": 11, "DECEMBER": 12,
+    "JANUARI": 1, "FEBRUARI": 2, "MARET": 3,
+    "MEI": 5, "JUNI": 6, "JULI": 7, "AGUSTUS": 8,
+    "OKTOBER": 10, "DESEMBER": 12,
+    "JAN": 1, "FEB": 2, "MAR": 3, "APR": 4,
+    "JUN": 6, "JUL": 7, "AUG": 8,
+    "SEP": 9, "OCT": 10, "NOV": 11, "DEC": 12,
+}
+
+MONTH_ABBR: dict[int, str] = {
+    1: "Jan", 2: "Feb", 3: "Mar", 4: "Apr",
+    5: "May", 6: "Jun", 7: "Jul", 8: "Aug",
+    9: "Sep", 10: "Oct", 11: "Nov", 12: "Dec",
+}
+
+MONTH_NAME_ID: dict[int, str] = {
+    1: "Januari", 2: "Februari", 3: "Maret", 4: "April",
+    5: "Mei", 6: "Juni", 7: "Juli", 8: "Agustus",
+    9: "September", 10: "Oktober", 11: "November", 12: "Desember",
+}
+
+_PNL_FOLDER_RE = re.compile(r"^PNL EAR YTD (.+?)\s+(\d{4})$", re.IGNORECASE)
+
+
+def resolve_pnl() -> tuple[Path, int, int]:
+    """Return (pnl_folder, month_num, year) for the latest P&L period found."""
+    candidates: list[tuple[int, Path, int, int]] = []
+    for folder in BASE_DIR.iterdir():
+        if not folder.is_dir():
+            continue
+        m = _PNL_FOLDER_RE.match(folder.name)
+        if not m:
+            continue
+        month_str = m.group(1).strip().upper()
+        year = int(m.group(2))
+        month_num = MONTH_ALIAS.get(month_str)
+        if not month_num:
+            continue
+        # Accept folder if it has at least one brand's xlsx (subfolder or root)
+        has_data = (
+            any((folder / cfg["subfolder"]).glob("*.xlsx") for cfg in BRAND_CONFIG.values())
+            or any(
+                f for f in folder.glob("*.xlsx")
+                if "EAR" in f.name.upper()
+                and "NASA" not in f.name.upper()
+                and "DCM" not in f.name.upper()
+            )
+        )
+        if not has_data:
+            continue
+        candidates.append((year * 12 + month_num, folder, month_num, year))
+
+    if not candidates:
+        raise FileNotFoundError(
+            "Tidak ada folder P&L ditemukan. "
+            "Buat folder dengan nama 'PNL EAR YTD <BULAN> <TAHUN>' di direktori proyek."
+        )
+
+    candidates.sort(key=lambda x: x[0], reverse=True)
+    _, pnl_folder, month_num, year = candidates[0]
+    return pnl_folder, month_num, year
+
+
+def find_brand_file(pnl_folder: Path, brand_key: str) -> Path | None:
+    """Find xlsx for a brand inside pnl_folder.
+
+    New layout: pnl_folder/SUBFOLDER/*.xlsx
+    Old layout: pnl_folder/*.xlsx filtered by filename keywords.
+    """
+    cfg = BRAND_CONFIG[brand_key]
+    subfolder = pnl_folder / cfg["subfolder"]
+    if subfolder.is_dir():
+        files = list(subfolder.glob("*.xlsx"))
+        return files[0] if files else None
+    # Old/flat layout — filter by brand keyword
+    keyword_map = {"EAR": ("EAR",), "IBOX": ("DCM",), "SAMSUNG": ("NASA",)}
+    keywords = keyword_map.get(brand_key, ())
+    files = [f for f in pnl_folder.glob("*.xlsx") if any(k in f.name.upper() for k in keywords)]
+    return files[0] if files else None
+
+
+def _pnl_sheets(sheet_names: list[str], month_num: int) -> dict[str, str]:
+    """Detect old (Jan 2026) vs new (Feb 2026+) sheet layout."""
+    if "R5" in sheet_names:
+        return {
+            "summary": "R5",
+            "detail": "Report YTD",
+            "analysis": "Analysis of Store EAR",
+            "format": "old",
+        }
+    abbr = MONTH_ABBR[month_num]
+    detail = f"YTD {abbr}"
+    if detail not in sheet_names:
+        ytd = [s for s in sheet_names if s.upper().startswith("YTD")]
+        detail = ytd[0] if ytd else detail
+    return {
+        "summary": "Summary",
+        "detail": detail,
+        "analysis": "Analysis",
+        "format": "new",
+    }
+
+
+def _latest_sales_in_folder() -> Path | None:
+    if not SALES_DIR.exists():
+        return None
+    files = sorted(SALES_DIR.glob("*.xlsx"), key=lambda p: p.stat().st_mtime, reverse=True)
+    return files[0] if files else None
+
 
 def resolve_sales_path() -> Path:
-    return CURRENT_SALES_PATH if CURRENT_SALES_PATH.exists() else DEFAULT_SALES_PATH
+    if CURRENT_SALES_PATH.exists():
+        return CURRENT_SALES_PATH
+    latest = _latest_sales_in_folder()
+    if latest:
+        return latest
+    raise FileNotFoundError("Tidak ada file Sales ditemukan. Letakkan file di folder SALES/ atau data/current/")
 
 
 def compact_idr(value: float) -> str:
@@ -142,27 +290,45 @@ def build_sales_data():
     }
 
 
-def parse_r5_summary():
-    wb = load_workbook(PNL_PATH, read_only=True, data_only=True)
-    ws = wb["R5"]
+def parse_r5_summary(wb, sheets: dict, month_num: int, year: int, cfg: dict | None = None) -> dict:
+    cfg = cfg or BRAND_CONFIG["EAR"]
+    ws = wb[sheets["summary"]]
+    is_old = sheets["format"] == "old"
+    offset = cfg["summary_offset"]
+
+    # Old format (Jan 2026) EAR-only column positions; new format uses base + offset
+    if is_old:
+        ho_finance_col, net_final_col = 116, 118
+        erafone_row, eam_row = 11, 21
+        opex_col, oi_col = 84, 86
+        net_before_ho, ho_cost, net_after_ho = 97, 104, 106
+        finance_cost, net_after_finance = 110, 112
+    else:
+        opex_col = 84 + offset
+        oi_col = 86 + offset
+        net_before_ho = 97 + offset
+        ho_cost = 104 + offset
+        net_after_ho = 106 + offset
+        finance_cost = 110 + offset
+        net_after_finance = 112 + offset
+        ho_finance_col = 122 + offset
+        net_final_col = 124 + offset
+        erafone_row, eam_row = 10, 20
 
     grand = {
         "netSales": ws.cell(5, 11).value or 0,
         "grossProfit": ws.cell(5, 15).value or 0,
         "gpPct": ws.cell(5, 16).value or 0,
-        "totalOpex": ws.cell(5, 84).value or 0,
-        "operatingIncome": ws.cell(5, 86).value or 0,
-        "netBeforeHo": ws.cell(5, 97).value or 0,
-        "hoCost": ws.cell(5, 104).value or 0,
-        "netAfterHo": ws.cell(5, 106).value or 0,
-        "financeCost": ws.cell(5, 110).value or 0,
-        "netAfterFinance": ws.cell(5, 112).value or 0,
-        "hoFinanceCost": ws.cell(5, 116).value or 0,
-        "netFinal": ws.cell(5, 118).value or 0,
+        "totalOpex": ws.cell(5, opex_col).value or 0,
+        "operatingIncome": ws.cell(5, oi_col).value or 0,
+        "netBeforeHo": ws.cell(5, net_before_ho).value or 0,
+        "hoCost": ws.cell(5, ho_cost).value or 0,
+        "netAfterHo": ws.cell(5, net_after_ho).value or 0,
+        "financeCost": ws.cell(5, finance_cost).value or 0,
+        "netAfterFinance": ws.cell(5, net_after_finance).value or 0,
+        "hoFinanceCost": ws.cell(5, ho_finance_col).value or 0,
+        "netFinal": ws.cell(5, net_final_col).value or 0,
     }
-
-    erafone_total = {"netFinal": ws.cell(11, 118).value or 0}
-    eam_total = {"netFinal": ws.cell(21, 118).value or 0}
 
     cost_drivers = [
         ("Selling salary", ws.cell(5, 21).value or 0),
@@ -172,44 +338,78 @@ def parse_r5_summary():
     ]
 
     return {
-        "periodLabel": "Profitability Check YTD Januari 2026",
+        "periodLabel": f"Profitability Check YTD {MONTH_NAME_ID[month_num]} {year}",
         "grand": grand,
-        "erafoneNetFinal": erafone_total["netFinal"],
-        "eraMoreNetFinal": eam_total["netFinal"],
+        "erafoneNetFinal": ws.cell(erafone_row, net_final_col).value or 0,
+        "eraMoreNetFinal": ws.cell(eam_row, net_final_col).value or 0,
         "costDrivers": cost_drivers,
     }
 
 
-def parse_analysis_of_store_ear():
-    wb = load_workbook(PNL_PATH, read_only=True, data_only=True)
-    ws = wb["Analysis of Store EAR"]
+def parse_analysis_of_store_ear(wb, sheets: dict, cfg: dict | None = None) -> dict:
+    ws = wb[sheets["analysis"]]
 
-    rows = []
-    for row_idx in range(121, 137):
-        remark = str(ws.cell(row_idx, 3).value or "").strip()
-        rows.append(
-            {
+    if sheets["format"] == "old":
+        # Old "Analysis of Store EAR": larger sheet, different column layout
+        # Col 1=rank, col 2=remark, col 3=mall, col 4=street, col 5=total
+        rows = []
+        for row_idx in range(4, 140):
+            remark = str(ws.cell(row_idx, 2).value or "").strip()
+            if not remark or remark.upper() in {"REMARK", "GRAND TOTAL"}:
+                continue
+            mall = int(ws.cell(row_idx, 3).value or 0)
+            street = int(ws.cell(row_idx, 4).value or 0)
+            total = int(ws.cell(row_idx, 5).value or 0)
+            rows.append({
                 "rank": str(ws.cell(row_idx, 1).value or "").strip(),
                 "remark": remark,
-                "regionTotal": int(ws.cell(row_idx, 40).value or 0),  # AN
-                "mallTotal": int(ws.cell(row_idx, 79).value or 0),  # CA
-                "streetTotal": int(ws.cell(row_idx, 118).value or 0),  # DN
-            }
-        )
+                "regionTotal": total,
+                "mallTotal": mall,
+                "streetTotal": street,
+            })
+            if not rows[-1]["rank"] and not remark:
+                rows.pop()
+        # Find grand total row
+        grand_total = sum(r["regionTotal"] for r in rows)
+        grand = {
+            "regionTotal": grand_total, "mallTotal": 0, "streetTotal": 0,
+            "erafoneTotal": grand_total, "eraMoreTotal": 0,
+        }
+    else:
+        # New format: remark col and total col differ per brand
+        cfg = cfg or BRAND_CONFIG["EAR"]
+        remark_col = cfg["analysis_remark_col"]
+        total_col = cfg["analysis_total_col"]  # None = sum cols 5-8; int = single col
 
-    grand = {
-        "regionTotal": int(ws.cell(138, 40).value or 0),
-        "mallTotal": int(ws.cell(138, 79).value or 0),
-        "streetTotal": int(ws.cell(138, 118).value or 0),
-        "erafoneTotal": sum(int(ws.cell(138, col).value or 0) for col in range(5, 9)),
-        "eraMoreTotal": sum(int(ws.cell(138, col).value or 0) for col in range(10, 14)),
-    }
+        def _row_total(row_idx: int) -> int:
+            if total_col is not None:
+                return int(ws.cell(row_idx, total_col).value or 0)
+            return sum(int(ws.cell(row_idx, c).value or 0) for c in range(5, 9))
 
-    top_profit = max((row for row in rows if "PROFIT" in row["remark"]), key=lambda x: x["regionTotal"], default=None)
-    top_loss = max((row for row in rows if "LOSS" in row["remark"]), key=lambda x: x["regionTotal"], default=None)
+        rows = []
+        for row_idx in range(4, ws.max_row):
+            remark = str(ws.cell(row_idx, remark_col).value or "").strip()
+            if not remark or remark == "Grand Total":
+                continue
+            rows.append({
+                "rank": str(ws.cell(row_idx, 1).value or "").strip(),
+                "remark": remark,
+                "regionTotal": _row_total(row_idx),
+                "mallTotal": 0,
+                "streetTotal": 0,
+            })
+        grand_row = ws.max_row
+        grand_total = _row_total(grand_row)
+        grand = {
+            "regionTotal": grand_total, "mallTotal": 0, "streetTotal": 0,
+            "erafoneTotal": grand_total, "eraMoreTotal": 0,
+        }
+
+    top_profit = max((r for r in rows if "PROFIT" in r["remark"]), key=lambda x: x["regionTotal"], default=None)
+    top_loss = max((r for r in rows if "LOSS" in r["remark"]), key=lambda x: x["regionTotal"], default=None)
 
     return {
-        "regionLabel": str(ws.cell(118, 3).value or "REGION 5"),
+        "regionLabel": "REGION 5",
         "grand": grand,
         "topProfit": top_profit,
         "topLoss": top_loss,
@@ -217,30 +417,43 @@ def parse_analysis_of_store_ear():
     }
 
 
-def parse_pnl_store_details():
-    wb = load_workbook(PNL_PATH, read_only=True, data_only=True)
-    ws = wb["Report YTD"]
-    mapping = {}
+def parse_pnl_store_details(wb, sheets: dict, cfg: dict | None = None) -> dict:
+    cfg = cfg or BRAND_CONFIG["EAR"]
+    ws = wb[sheets["detail"]]
+    is_old = sheets["format"] == "old"
 
-    for row in ws.iter_rows(min_row=6, values_only=True):
+    min_row = 6 if is_old else 5
+    opex_col = 84 if is_old else 90
+    oi_col = 86 if is_old else 92
+    ho_fin_col = 119 if is_old else 125
+    net_final_col = 121 if is_old else 127
+
+    valid_categories = cfg["valid_categories"]
+    category_label = cfg["category_label"]
+
+    mapping = {}
+    for row in ws.iter_rows(min_row=min_row, values_only=True):
         region = row[6]
         category = row[4]
-        if region != "REGION 5" or category not in {"ERAFONE", "ERAFONE AND MORE"}:
+        if region != "REGION 5" or category not in valid_categories:
             continue
         code = row[0]
+        if not code:
+            continue
         mapping[code] = {
-            "pnlCategory": "Erafone" if category == "ERAFONE" else "ERA & More",
+            "name": str(row[1] or "").strip(),
+            "pnlCategory": category_label.get(category, category),
             "netSalesPnl": row[17] or 0,
             "grossProfitPnl": row[21] or 0,
-            "totalOpexPnl": row[84] or 0,
-            "operatingIncomePnl": row[86] or 0,
+            "totalOpexPnl": row[opex_col] or 0,
+            "operatingIncomePnl": row[oi_col] or 0,
             "netBeforeHo": row[103] or 0,
             "hoCost": row[107] or 0,
             "netAfterHo": row[109] or 0,
             "financeCost": row[113] or 0,
             "netAfterFinance": row[115] or 0,
-            "hoFinanceCost": row[119] or 0,
-            "netFinal": row[121] or 0,
+            "hoFinanceCost": row[ho_fin_col] or 0,
+            "netFinal": row[net_final_col] or 0,
         }
 
     return mapping
@@ -495,22 +708,100 @@ def build_executive(stores, sales_year_totals, tsh_stats, region_meta, analysis_
     }
 
 
+def build_brand_pnl_only(brand_key: str, path: Path, month_num: int, year: int) -> dict:
+    """Build a P&L-only dashboard payload for IBOX or SAMSUNG (no sales workbook needed)."""
+    cfg = BRAND_CONFIG[brand_key]
+    wb = load_workbook(path, read_only=True, data_only=True)
+    sheets = _pnl_sheets(wb.sheetnames, month_num)
+
+    pnl_summary = parse_r5_summary(wb, sheets, month_num, year, cfg)
+    analysis_summary = parse_analysis_of_store_ear(wb, sheets, cfg)
+    store_map = parse_pnl_store_details(wb, sheets, cfg)
+    wb.close()
+
+    stores = []
+    for code, pnl in store_map.items():
+        net_final = float(pnl["netFinal"])
+        pnl_status = "Profit" if net_final > 0 else "Loss" if net_final < 0 else "Flat"
+        stores.append({
+            "code": code,
+            "name": pnl.get("name", code),
+            "pnlCategory": pnl["pnlCategory"],
+            "pnl": pnl_status,
+            "netFinal": net_final,
+            "netSalesPnl": float(pnl["netSalesPnl"]),
+            "grossProfitPnl": float(pnl["grossProfitPnl"]),
+            "totalOpexPnl": float(pnl["totalOpexPnl"]),
+            "operatingIncomePnl": float(pnl["operatingIncomePnl"]),
+            "hoFinanceCost": float(pnl["hoFinanceCost"]),
+        })
+
+    profit_stores = [s for s in stores if s["pnl"] == "Profit"]
+    loss_stores = [s for s in stores if s["pnl"] == "Loss"]
+    grand = pnl_summary["grand"]
+
+    executive = {
+        "brand": cfg["label"],
+        "totalStores": len(stores),
+        "profitStores": len(profit_stores),
+        "lossStores": len(loss_stores),
+        "totalNetSales": grand["netSales"],
+        "totalGrossProfit": grand["grossProfit"],
+        "gpPct": grand["gpPct"],
+        "totalOpex": grand["totalOpex"],
+        "operatingIncome": grand["operatingIncome"],
+        "netFinal": grand["netFinal"],
+        "periodLabel": pnl_summary["periodLabel"],
+        "summaryNetSales": compact_idr(grand["netSales"]),
+        "summaryNetFinal": compact_idr(grand["netFinal"]),
+    }
+
+    pnl_summary["analysis"] = analysis_summary
+
+    return {
+        "brand": brand_key,
+        "executive": executive,
+        "stores": sorted(stores, key=lambda s: s["netFinal"], reverse=True),
+        "pnl": pnl_summary,
+        "source": {
+            "pnlWorkbook": str(path.relative_to(BASE_DIR)),
+            "pnlPeriod": f"{MONTH_NAME_ID[month_num]} {year}",
+            "generatedAt": datetime.now().isoformat(timespec="seconds"),
+        },
+    }
+
+
 def build_dashboard_data():
+    pnl_folder, month_num, year = resolve_pnl()
+    period_label = f"{MONTH_NAME_ID[month_num]} {year}"
+    print(f"P&L folder: {pnl_folder.name} | period: {period_label}")
+
+    # ── EAR (full pipeline with sales) ──────────────────────────────────────
+    ear_path = find_brand_file(pnl_folder, "EAR")
+    if not ear_path:
+        raise FileNotFoundError("File P&L EAR tidak ditemukan di subfolder ERAFONE/")
+
+    wb_pnl = load_workbook(ear_path, read_only=True, data_only=True)
+    sheets = _pnl_sheets(wb_pnl.sheetnames, month_num)
+    print(f"  EAR: {ear_path.name} | format={sheets['format']} | sheets: {sheets['summary']}, {sheets['detail']}, {sheets['analysis']}")
+
     sales = build_sales_data()
-    pnl_summary = parse_r5_summary()
-    analysis_summary = parse_analysis_of_store_ear()
-    pnl_store_map = parse_pnl_store_details()
+    ear_cfg = BRAND_CONFIG["EAR"]
+    pnl_summary = parse_r5_summary(wb_pnl, sheets, month_num, year, ear_cfg)
+    analysis_summary = parse_analysis_of_store_ear(wb_pnl, sheets, ear_cfg)
+    pnl_store_map = parse_pnl_store_details(wb_pnl, sheets, ear_cfg)
+    wb_pnl.close()
+
     region_summary = parse_region_summary()
     stores = enrich_stores(sales["stores"], pnl_store_map, region_summary)
     tsh_stats = build_tsh_stats(stores, region_summary["tshSummary"])
     actions = build_actions(stores, tsh_stats, analysis_summary)
     executive = build_executive(stores, sales["yearTotals"], tsh_stats, region_summary["meta"], analysis_summary, sales)
-
     pnl_summary["analysis"] = analysis_summary
-
     top_critical = sorted([s for s in stores if s["cluster"] == "Critical"], key=lambda x: x["bepGap"])[:6]
+    sales_path = resolve_sales_path()
 
-    return {
+    ear_data = {
         "executive": executive,
         "actions": actions,
         "stores": stores,
@@ -518,20 +809,46 @@ def build_dashboard_data():
         "topCritical": top_critical,
         "pnl": pnl_summary,
         "source": {
-            "salesWorkbook": str(DEFAULT_SALES_PATH.relative_to(BASE_DIR)),
-            "salesWorkbookActive": str(resolve_sales_path().relative_to(BASE_DIR)),
-            "pnlWorkbook": str(PNL_PATH.relative_to(BASE_DIR)),
+            "salesWorkbook": str(sales_path.relative_to(BASE_DIR)),
+            "salesWorkbookActive": str(sales_path.relative_to(BASE_DIR)),
+            "pnlWorkbook": str(ear_path.relative_to(BASE_DIR)),
+            "pnlPeriod": period_label,
             "summaryWorkbook": str(REGION_SUMMARY_PATH.relative_to(BASE_DIR)),
             "generatedAt": datetime.now().isoformat(timespec="seconds"),
         },
     }
 
+    # ── IBOX ────────────────────────────────────────────────────────────────
+    ibox_path = find_brand_file(pnl_folder, "IBOX")
+    ibox_data = None
+    if ibox_path:
+        print(f"  IBOX: {ibox_path.name}")
+        ibox_data = build_brand_pnl_only("IBOX", ibox_path, month_num, year)
+
+    # ── SAMSUNG ─────────────────────────────────────────────────────────────
+    samsung_path = find_brand_file(pnl_folder, "SAMSUNG")
+    samsung_data = None
+    if samsung_path:
+        print(f"  SAMSUNG: {samsung_path.name}")
+        samsung_data = build_brand_pnl_only("SAMSUNG", samsung_path, month_num, year)
+
+    return ear_data, ibox_data, samsung_data
+
 
 def main():
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    data = build_dashboard_data()
-    OUTPUT_PATH.write_text(json.dumps(data, ensure_ascii=False, indent=2))
-    print(f"Wrote {OUTPUT_PATH}")
+    ear_data, ibox_data, samsung_data = build_dashboard_data()
+
+    OUTPUT_PATH.write_text(json.dumps(ear_data, ensure_ascii=False, indent=2))
+    print(f"  → {OUTPUT_PATH.name} ({len(ear_data['stores'])} stores EAR)")
+
+    if ibox_data:
+        IBOX_OUTPUT_PATH.write_text(json.dumps(ibox_data, ensure_ascii=False, indent=2))
+        print(f"  → {IBOX_OUTPUT_PATH.name} ({len(ibox_data['stores'])} stores iBox)")
+
+    if samsung_data:
+        SAMSUNG_OUTPUT_PATH.write_text(json.dumps(samsung_data, ensure_ascii=False, indent=2))
+        print(f"  → {SAMSUNG_OUTPUT_PATH.name} ({len(samsung_data['stores'])} stores Samsung)")
 
 
 if __name__ == "__main__":
