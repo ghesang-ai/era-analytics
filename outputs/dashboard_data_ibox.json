@@ -2,8 +2,8 @@
   "brand": "IBOX",
   "executive": {
     "brand": "iBox (DCM)",
-    "totalStores": 30,
-    "profitStores": 30,
+    "totalStores": 26,
+    "profitStores": 26,
     "lossStores": 0,
     "totalNetSales": 507589143921,
     "totalGrossProfit": 52235620616,
@@ -327,54 +327,6 @@
       "totalOpexPnl": -39105663.0,
       "operatingIncomePnl": 181059696.0,
       "hoFinanceCost": -117200066.800277
-    },
-    {
-      "code": "X108",
-      "name": "IBOX PIK 2",
-      "pnlCategory": "AAR",
-      "pnl": "Profit",
-      "netFinal": 18829917.0,
-      "netSalesPnl": 0.0,
-      "grossProfitPnl": 0.0,
-      "totalOpexPnl": 36926366.0,
-      "operatingIncomePnl": 36926366.0,
-      "hoFinanceCost": 0.0
-    },
-    {
-      "code": "X056",
-      "name": "IBOX BINTARO JAYA XCHANGE",
-      "pnlCategory": "AAR",
-      "pnl": "Profit",
-      "netFinal": 3269584.0,
-      "netSalesPnl": 0.0,
-      "grossProfitPnl": 0.0,
-      "totalOpexPnl": 3269584.0,
-      "operatingIncomePnl": 3269584.0,
-      "hoFinanceCost": 0.0
-    },
-    {
-      "code": "X019",
-      "name": "IBOX RATU PLAZA 2",
-      "pnlCategory": "AAR",
-      "pnl": "Profit",
-      "netFinal": 48737.0,
-      "netSalesPnl": 0.0,
-      "grossProfitPnl": 0.0,
-      "totalOpexPnl": 48737.0,
-      "operatingIncomePnl": 48737.0,
-      "hoFinanceCost": 0.0
-    },
-    {
-      "code": "X013",
-      "name": "IBOX GRAND INDONESIA",
-      "pnlCategory": "AAR",
-      "pnl": "Profit",
-      "netFinal": 31718.0,
-      "netSalesPnl": 0.0,
-      "grossProfitPnl": 0.0,
-      "totalOpexPnl": 31718.0,
-      "operatingIncomePnl": 31718.0,
-      "hoFinanceCost": 0.0
     }
   ],
   "pnl": {
@@ -493,6 +445,6 @@
   "source": {
     "pnlWorkbook": "PNL EAR YTD FEBRUARY 2026/IBOX/PNL DCM YTD FEB 26 REGION 5.xlsx",
     "pnlPeriod": "Februari 2026",
-    "generatedAt": "2026-05-08T23:14:49"
+    "generatedAt": "2026-05-08T23:58:09"
   }
 }

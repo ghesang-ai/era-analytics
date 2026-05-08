@@ -20,6 +20,13 @@ SAMSUNG_OUTPUT_PATH = BASE_DIR / "outputs" / "dashboard_data_samsung.json"
 
 VALID_CHANNELS = {"ERAFONE", "ERA & MORE"}
 
+# Toko yang sudah tutup — tidak akan pernah ditampilkan di dashboard
+CLOSED_STORES: dict[str, set[str]] = {
+    "IBOX": {"X108", "X056", "X019", "X013"},  # tutup per Mei 2026
+    "SAMSUNG": set(),
+    "EAR": set(),
+}
+
 # Per-brand configuration
 # summary_offset: column shift vs EAR base for all financial cols from col84 onwards
 # analysis_remark_col: openpyxl col containing "This store is PROFIT/LOSS..." text
@@ -720,8 +727,11 @@ def build_brand_pnl_only(brand_key: str, path: Path, month_num: int, year: int) 
     store_map = parse_pnl_store_details(wb, sheets, cfg)
     wb.close()
 
+    closed = CLOSED_STORES.get(brand_key, set())
     stores = []
     for code, pnl in store_map.items():
+        if code in closed:
+            continue
         net_final = float(pnl["netFinal"])
         pnl_status = "Profit" if net_final > 0 else "Loss" if net_final < 0 else "Flat"
         stores.append({
