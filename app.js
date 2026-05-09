@@ -79,12 +79,12 @@ document.querySelectorAll('.nav-list a[href^="#"]').forEach(link => {
   link.addEventListener('click', function(e) {
     const id = this.getAttribute('href').slice(1);
     const target = document.getElementById(id);
-    if (target) {
-      e.preventDefault();
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      document.querySelectorAll('.nav-list a').forEach(a => a.classList.remove('active'));
-      this.classList.add('active');
-    }
+    // Skip hidden sections — don't swallow the click
+    if (!target || target.style.display === 'none') return;
+    e.preventDefault();
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.querySelectorAll('.nav-list a').forEach(a => a.classList.remove('active'));
+    this.classList.add('active');
   });
 });
 
@@ -101,6 +101,9 @@ function _setEarSections(visible) {
   EAR_ONLY_IDS.forEach((id) => {
     const el = document.getElementById(id);
     if (el) el.style.display = visible ? "" : "none";
+    // Also hide/show the corresponding sidebar nav link
+    const navLink = document.querySelector(`.nav-list a[href="#${id}"]`);
+    if (navLink) navLink.style.display = visible ? "" : "none";
   });
   const brandStores = document.getElementById("brandPnlStores");
   if (brandStores) brandStores.style.display = visible ? "none" : "";
