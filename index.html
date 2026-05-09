@@ -62,17 +62,6 @@
             <h1>Dashboard</h1>
             <p class="subtitle">ERA-ANALYTICS untuk melihat kesehatan toko, loss pattern, dan prioritas action Region 5.</p>
           </div>
-          <div class="brand-switcher" id="brandSwitcher" role="tablist" aria-label="Pilih brand">
-            <button class="brand-pill is-active" data-brand="EAR" type="button" role="tab">
-              <span class="b-dot ear"></span>Erafone
-            </button>
-            <button class="brand-pill" data-brand="IBOX" type="button" role="tab">
-              <span class="b-dot ibox"></span>iBox
-            </button>
-            <button class="brand-pill" data-brand="SAMSUNG" type="button" role="tab">
-              <span class="b-dot samsung"></span>Samsung
-            </button>
-          </div>
           <div class="header-actions">
             <div class="tab-strip" id="earTabStrip">
               <button id="tabOverview" class="tab is-active" type="button" data-target="dashboard">Overview</button>
@@ -93,6 +82,21 @@
           <div class="light-streak streak-blue"></div>
           <div class="light-streak streak-red"></div>
         </section>
+
+        <div class="brand-bar">
+          <div class="brand-switcher" id="brandSwitcher" role="tablist" aria-label="Pilih brand">
+            <button class="brand-pill is-active" data-brand="EAR" type="button" role="tab" onclick="switchBrand('EAR')">
+              <span class="b-dot ear"></span>Erafone
+            </button>
+            <button class="brand-pill" data-brand="IBOX" type="button" role="tab" onclick="switchBrand('IBOX')">
+              <span class="b-dot ibox"></span>iBox
+            </button>
+            <button class="brand-pill" data-brand="SAMSUNG" type="button" role="tab" onclick="switchBrand('SAMSUNG')">
+              <span class="b-dot samsung"></span>Samsung
+            </button>
+          </div>
+        </div>
+
         <input id="uploadExcelInput" type="file" accept=".xlsx,.xls" hidden />
 
         <section class="kpi-strip" aria-label="Executive KPI">
