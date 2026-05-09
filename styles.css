@@ -182,18 +182,19 @@ select {
   position: relative;
   overflow: hidden;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(420px, 520px) 190px;
+  grid-template-columns: 1fr 260px;
+  grid-template-rows: auto auto;
   align-items: start;
-  gap: 24px;
-  min-height: 300px;
-  padding: 30px 28px;
-  margin-bottom: 16px;
+  gap: 20px 28px;
+  padding: 28px 28px 24px;
+  margin-bottom: 0;
   background:
-    radial-gradient(ellipse at 65% 0%, rgba(220, 0, 0, 0.65) 0%, transparent 55%),
-    radial-gradient(ellipse at 100% 80%, rgba(160, 0, 0, 0.45) 0%, transparent 45%),
+    radial-gradient(ellipse at 70% 0%, rgba(220, 0, 0, 0.6) 0%, transparent 50%),
+    radial-gradient(ellipse at 100% 100%, rgba(160, 0, 0, 0.4) 0%, transparent 40%),
     linear-gradient(135deg, #0d0d0d 0%, #1a0a0a 50%, #0f0505 100%);
   color: #fff;
   border-color: transparent;
+  border-radius: 8px 8px 0 0;
 }
 
 h1,
@@ -241,44 +242,73 @@ h3 {
 }
 
 .hero-copy {
-  max-width: 760px;
-  padding-top: 4px;
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.hero-copy h1 {
+  font-size: 38px;
+  line-height: 1.05;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+
+.hero-copy .subtitle {
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.5;
+  max-width: 480px;
 }
 
 .hero-stat {
-  width: 100%;
-  min-height: 196px;
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: stretch;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 18px;
-  border: 1px solid rgba(220,0,0,0.3);
+  padding: 20px 18px;
+  border: 1px solid rgba(220,0,0,0.35);
   border-radius: 8px;
-  background: rgba(220,0,0,0.08);
+  background: rgba(220,0,0,0.1);
   backdrop-filter: blur(10px);
   text-align: right;
+  position: relative;
+  z-index: 2;
 }
 
-.hero-stat small,
-.hero-stat span {
+.hero-stat small {
   display: block;
-  color: rgba(255,255,255,0.6);
+  color: rgba(255,255,255,0.45);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
 }
 
 .hero-stat strong {
   display: block;
-  margin: 10px 0 6px;
-  font-size: 38px;
-  line-height: 1;
+  font-size: 26px;
+  line-height: 1.15;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
+.hero-stat span {
+  display: block;
+  color: rgba(255,255,255,0.55);
+  font-size: 12px;
 }
 
 .header-actions {
+  grid-column: 1;
+  grid-row: 2;
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 12px;
-  width: 100%;
-  justify-self: end;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
   position: relative;
   z-index: 2;
 }
@@ -1072,7 +1102,7 @@ td {
 
 @media (max-width: 1220px) {
   .page-header {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 220px;
     min-height: auto;
   }
 
@@ -1180,27 +1210,39 @@ td {
 
   .page-header {
     grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
     gap: 12px;
     min-height: auto;
-    padding: 16px 14px;
+    padding: 18px 16px;
   }
 
-  .page-header h1 {
-    font-size: 28px;
+  .hero-copy {
+    grid-column: 1; grid-row: 1;
   }
 
-  .page-header .subtitle {
-    font-size: 13px;
+  .hero-copy h1 {
+    font-size: 26px;
+  }
+
+  .header-actions {
+    grid-column: 1; grid-row: 2;
   }
 
   .hero-stat {
-    min-height: 0;
-    padding: 14px;
+    grid-column: 1; grid-row: 3;
     text-align: left;
+    padding: 14px;
+    min-height: 0;
+    border-radius: 6px;
   }
 
   .hero-stat strong {
-    font-size: 30px;
+    font-size: 20px;
+  }
+
+  .brand-bar {
+    padding: 10px 16px;
+    border-radius: 0 0 8px 8px;
   }
 
   .hero-orbit,
@@ -1329,12 +1371,12 @@ td {
   }
 
   .page-header {
-    padding: 14px 12px;
-    border-radius: 8px;
+    padding: 16px 14px;
+    border-radius: 8px 8px 0 0;
   }
 
   .page-header h1 {
-    font-size: 26px;
+    font-size: 24px;
   }
 
   .tab-strip {
@@ -1482,11 +1524,12 @@ td {
 .brand-bar {
   display: flex;
   align-items: center;
-  padding: 10px 14px;
+  padding: 10px 28px;
   margin-bottom: 16px;
-  background: linear-gradient(135deg, #1a0a0a 0%, #0f0505 100%);
-  border: 1px solid rgba(220,0,0,0.2);
-  border-radius: 8px;
+  background: linear-gradient(180deg, #130808 0%, #0d0505 100%);
+  border: 1px solid rgba(220,0,0,0.18);
+  border-top: none;
+  border-radius: 0 0 8px 8px;
 }
 
 .brand-switcher {
