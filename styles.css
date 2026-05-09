@@ -183,9 +183,8 @@ select {
   overflow: hidden;
   display: grid;
   grid-template-columns: 1fr 260px;
-  grid-template-rows: auto auto;
-  align-items: start;
-  gap: 20px 28px;
+  align-items: stretch;
+  gap: 24px;
   padding: 28px 28px 24px;
   margin-bottom: 0;
   background:
@@ -235,6 +234,16 @@ h3 {
   font-size: 16px;
 }
 
+.hero-left {
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  position: relative;
+  z-index: 2;
+}
+
 .hero-copy,
 .hero-stat {
   position: relative;
@@ -242,8 +251,6 @@ h3 {
 }
 
 .hero-copy {
-  grid-column: 1;
-  grid-row: 1;
 }
 
 .hero-copy h1 {
@@ -263,7 +270,6 @@ h3 {
 
 .hero-stat {
   grid-column: 2;
-  grid-row: 1 / span 2;
   align-self: stretch;
   display: flex;
   flex-direction: column;
@@ -303,8 +309,6 @@ h3 {
 }
 
 .header-actions {
-  grid-column: 1;
-  grid-row: 2;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -1210,26 +1214,21 @@ td {
 
   .page-header {
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto;
     gap: 12px;
     min-height: auto;
     padding: 18px 16px;
   }
 
-  .hero-copy {
-    grid-column: 1; grid-row: 1;
+  .hero-left {
+    grid-column: 1;
   }
 
   .hero-copy h1 {
     font-size: 26px;
   }
 
-  .header-actions {
-    grid-column: 1; grid-row: 2;
-  }
-
   .hero-stat {
-    grid-column: 1; grid-row: 3;
+    grid-column: 1;
     text-align: left;
     padding: 14px;
     min-height: 0;
