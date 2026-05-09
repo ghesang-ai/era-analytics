@@ -85,6 +85,11 @@ document.querySelectorAll('.nav-list a[href^="#"]').forEach(link => {
     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     document.querySelectorAll('.nav-list a').forEach(a => a.classList.remove('active'));
     this.classList.add('active');
+    // Flash the target section so user sees where they navigated
+    target.classList.remove('nav-target-flash');
+    void target.offsetWidth; // force reflow to restart animation
+    target.classList.add('nav-target-flash');
+    setTimeout(() => target.classList.remove('nav-target-flash'), 800);
   });
 });
 

@@ -172,6 +172,18 @@ select {
 
 .content {
   padding: 18px 22px 40px;
+  /* Extra bottom padding so bottom sections (Upload Data/Reports/Settings) can scroll into view */
+  padding-bottom: 60vh;
+}
+
+@keyframes nav-flash {
+  0%   { box-shadow: 0 0 0 0 rgba(15, 47, 135, 0.3); }
+  40%  { box-shadow: 0 0 0 8px rgba(15, 47, 135, 0.15); }
+  100% { box-shadow: 0 0 0 0 rgba(15, 47, 135, 0); }
+}
+
+.nav-target-flash {
+  animation: nav-flash 0.7s ease-out;
 }
 
 .page-header,
