@@ -73,6 +73,21 @@ function closeStoreDetail() {
   document.body.style.overflow = '';
 }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeStoreDetail(); });
+
+// Nav link smooth scroll — ensures iOS tap always works (href="#anchor" alone unreliable on Safari)
+document.querySelectorAll('.nav-list a[href^="#"]').forEach(link => {
+  link.addEventListener('click', function(e) {
+    const id = this.getAttribute('href').slice(1);
+    const target = document.getElementById(id);
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.querySelectorAll('.nav-list a').forEach(a => a.classList.remove('active'));
+      this.classList.add('active');
+    }
+  });
+});
+
 let listenersBound = false;
 let currentBrand = "EAR";
 

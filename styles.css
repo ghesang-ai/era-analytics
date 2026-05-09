@@ -126,6 +126,7 @@ select {
 }
 
 .nav-list a {
+  display: block;
   padding: 12px 14px;
   border: 1px solid transparent;
   border-radius: 8px;
@@ -133,6 +134,10 @@ select {
   text-decoration: none;
   font-size: 15px;
   font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.05);
+  user-select: none;
 }
 
 .nav-list a:hover,
@@ -1184,8 +1189,9 @@ td {
     display: flex;
     gap: 8px;
     overflow-x: auto;
+    overflow-y: visible;
     padding-bottom: 2px;
-    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
     scrollbar-width: none;
   }
 
@@ -1195,12 +1201,13 @@ td {
 
   .nav-list a {
     flex: 0 0 auto;
-    min-height: 32px;
-    padding: 0 10px;
+    min-height: 44px;
+    padding: 0 12px;
     display: inline-flex;
     align-items: center;
     white-space: nowrap;
-    font-size: 12px;
+    font-size: 13px;
+    touch-action: manipulation;
   }
 
   .sidebar-note {
