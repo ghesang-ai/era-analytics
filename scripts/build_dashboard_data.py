@@ -43,8 +43,8 @@ BRAND_CONFIG: dict[str, dict] = {
     "EAR": {
         "label": "Erafone (EAR)",
         "subfolder": "ERAFONE",
-        "valid_categories": {"ERAFONE", "ERAFONE AND MORE"},
-        "category_label": {"ERAFONE": "Erafone", "ERAFONE AND MORE": "ERA & More"},
+        "valid_categories": {"ERAFONE", "ERAFONE AND MORE", "KEMITRAAN", "Doss"},
+        "category_label": {"ERAFONE": "Erafone", "ERAFONE AND MORE": "ERA & More", "KEMITRAAN": "Kemitraan", "Doss": "Doss"},
         "summary_offset": 0,
         "analysis_remark_col": 3,
         "analysis_total_col": None,

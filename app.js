@@ -714,7 +714,8 @@ function renderPnl(pnl) {
   qs("pnlPeriodLabel").textContent = pnl.periodLabel;
   qs("pnlLossBadge").textContent = `${lossCount} Loss Stores`;
   qs("pnlNetSales").textContent = formatIdrCompact(grand.netSales);
-  qs("pnlNetSalesNote").textContent = `Erafone final ${formatIdrCompact(pnl.erafoneNetFinal)} · ERA & More ${formatIdrCompact(pnl.eraMoreNetFinal)}`;
+  const kemitraanNote = pnl.kemitraanNetFinal != null ? ` · Kemitraan ${formatIdrCompact(pnl.kemitraanNetFinal)}` : "";
+  qs("pnlNetSalesNote").textContent = `Erafone final ${formatIdrCompact(pnl.erafoneNetFinal)} · ERA & More ${formatIdrCompact(pnl.eraMoreNetFinal)}${kemitraanNote}`;
   qs("pnlGrossProfit").textContent = formatIdrCompact(grand.grossProfit);
   qs("pnlGrossProfitNote").textContent = `GP ${(grand.gpPct * 100).toFixed(1)}%`;
   qs("pnlOperatingIncome").textContent = formatIdrCompact(grand.operatingIncome);

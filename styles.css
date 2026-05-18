@@ -1624,6 +1624,8 @@ td {
   background: var(--surface-2, #f1f5f9);
   color: var(--text-secondary, #64748b);
 }
+.cat-kemitraan { background: #fef3c7; color: #92400e; }
+.cat-doss { background: #d1fae5; color: #065f46; }
 
 .fw-semibold { font-weight: 600; }
 
