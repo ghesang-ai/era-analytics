@@ -24,7 +24,15 @@ VALID_CHANNELS = {"ERAFONE", "ERA & MORE"}
 CLOSED_STORES: dict[str, set[str]] = {
     "IBOX": {"X108", "X056", "X019", "X013"},  # tutup per Mei 2026
     "SAMSUNG": set(),
-    "EAR": set(),
+    # EAR: toko yang tidak ada di LIST STORE TOKO 2026.xlsx (119 toko aktif)
+    "EAR": {
+        "E083", "E086", "E089", "E095", "E108", "E131", "E165", "E193",
+        "E206", "E245", "E251", "E259", "E299", "E336", "E347", "E417",
+        "E418", "E419", "E585", "E648", "E664", "E683", "E695", "E697",
+        "E699", "E705", "E706", "E714", "E715", "E727", "E730", "E731",
+        "E761", "E768", "E897", "E901", "E986", "E993", "F035", "F077",
+        "F080", "F134", "M015", "M032", "M132", "M136", "M193", "M220",
+    },
 }
 
 # Per-brand configuration
