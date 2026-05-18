@@ -130,6 +130,7 @@ function switchBrand(key) {
     .then((data) => {
       dashboardState = data;
       renderBrandView(data);
+      bindEvents();
     })
     .catch((err) => console.error("Brand load error:", err));
 }
@@ -984,6 +985,7 @@ fetch(BRAND_URLS.EAR)
   .then((data) => {
     dashboardState = data;
     renderBrandView(data);
+    bindEvents();
   })
   .catch(() => {
     document.body.insertAdjacentHTML(
