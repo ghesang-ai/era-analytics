@@ -519,7 +519,7 @@ function _buildAndDownloadBotExport(data, dataPnl) {
 
   // Kemitraan stores dari ear_pnl yang tidak ada di v2
   const kemitraanStores = dataPnl
-    ? (dataPnl.stores || []).filter(s => !v2Codes.has(s.code) && s.pnlCategory === "Kemitraan")
+    ? (dataPnl.stores || []).filter(s => !v2Codes.has(s.code) && ["Kemitraan", "Doss"].includes(s.pnlCategory))
     : [];
 
   const mapV2 = s => ({

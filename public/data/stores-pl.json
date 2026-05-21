@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T08:43:43.513811+00:00",
+  "generated_at": "2026-05-21T09:01:55.145911+00:00",
   "data_period": "May 2026",
   "region": "Region 5",
   "stores": [
@@ -1379,11 +1379,33 @@
       "health": null
     },
     {
+      "store_id": "F074",
+      "store_name": "ERAFONE DOSS CIDENG JAKARTA",
+      "brand": "Doss",
+      "revenue": 0,
+      "net_profit": -561463.0,
+      "profit_status": "LOSS",
+      "ach_percent": null,
+      "cluster": null,
+      "health": null
+    },
+    {
       "store_id": "F058",
       "store_name": "ERAFONE 2.5 TELAGA BESTARI",
       "brand": "Kemitraan",
       "revenue": 1143788310.0,
       "net_profit": -2038799.45626952,
+      "profit_status": "LOSS",
+      "ach_percent": null,
+      "cluster": null,
+      "health": null
+    },
+    {
+      "store_id": "F133",
+      "store_name": "ERAFONE JB DOSS RATU PLAZA",
+      "brand": "Doss",
+      "revenue": 39758925.0,
+      "net_profit": -10585786.1011476,
       "profit_status": "LOSS",
       "ach_percent": null,
       "cluster": null,
