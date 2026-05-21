@@ -1,17 +1,21 @@
 {
-  "_note": "File ini placeholder. Klik tombol '🤖 Export Data → Bot ERA' di dashboard, lalu upload file yang diunduh ke folder ini.",
-  "generated_at": null,
-  "data_period": null,
+  "generated_at": "2026-05-21T07:43:33.809082+00:00",
+  "data_period": "May 2026",
   "region": "Region 5",
-  "total_stores": 0,
-  "active_stores": 0,
-  "profit_stores": 0,
-  "loss_stores": 0,
-  "bep_reached": 0,
-  "below_bep": 0,
-  "avg_health": 0,
-  "total_net_sales": 0,
-  "total_gross_profit": 0,
-  "total_net_profit": 0,
-  "clusters": {}
+  "total_stores": 163,
+  "active_stores": 115,
+  "profit_stores": 64,
+  "loss_stores": 51,
+  "bep_reached": 119,
+  "below_bep": 44,
+  "avg_health": 50.4,
+  "total_net_sales": 405294517736,
+  "total_gross_profit": 36738564355,
+  "total_net_profit": -1478456675.64961,
+  "clusters": {
+    "Growth": 0,
+    "Stable": 0,
+    "Recovery": 1,
+    "Critical": 114
+  }
 }
