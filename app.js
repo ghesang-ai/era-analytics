@@ -503,41 +503,61 @@ function exportBotData() {
     return;
   }
 
-  // Selalu gunakan data penuh (EAR_FULL_URL) agar cluster & dataPeriod tersedia,
-  // tidak peduli brand view yang sedang aktif
-  fetch(EAR_FULL_URL + "?t=" + Date.now())
-    .then(r => { if (!r.ok) throw new Error("Data tidak ditemukan"); return r.json(); })
-    .then(data => _buildAndDownloadBotExport(data))
-    .catch(() => {
-      // Fallback ke dashboardState jika fetch gagal
-      _buildAndDownloadBotExport(dashboardState);
-    });
+  // Fetch kedua sumber: v2 (Erafone/ERA&More) + ear_pnl (Kemitraan)
+  Promise.all([
+    fetch(EAR_FULL_URL + "?t=" + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
+    fetch(BRAND_URLS.EAR + "?t=" + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
+  ]).then(([dataV2, dataPnl]) => {
+    _buildAndDownloadBotExport(dataV2 || dashboardState, dataPnl);
+  });
 }
 
-function _buildAndDownloadBotExport(data) {
+function _buildAndDownloadBotExport(data, dataPnl) {
   const generatedAt = new Date().toISOString();
   const stores = (data.stores || []).filter(s => s.status === "Aktif");
+  const v2Codes = new Set(stores.map(s => s.code));
+
+  // Kemitraan stores dari ear_pnl yang tidak ada di v2
+  const kemitraanStores = dataPnl
+    ? (dataPnl.stores || []).filter(s => !v2Codes.has(s.code) && s.pnlCategory === "Kemitraan")
+    : [];
+
+  const mapV2 = s => ({
+    store_id: s.code,
+    store_name: s.name,
+    brand: s.channel,
+    revenue: s.latestPeriodSales || 0,
+    net_profit: s.netFinal || 0,
+    profit_status: (s.pnl || "").toLowerCase() === "profit" ? "PROFIT" : "LOSS",
+    ach_percent: s.bep_ach != null ? Math.round(s.bep_ach * 1000) / 10 : null,
+    cluster: s.cluster,
+    health: s.health,
+  });
+
+  const mapKemitraan = s => ({
+    store_id: s.code,
+    store_name: s.name,
+    brand: s.pnlCategory || "Kemitraan",
+    revenue: s.netSalesPnl || 0,
+    net_profit: s.netFinal || 0,
+    profit_status: (s.pnl || "").toLowerCase() === "profit" ? "PROFIT" : "LOSS",
+    ach_percent: null,
+    cluster: null,
+    health: null,
+  });
+
+  const allStores = [...stores.map(mapV2), ...kemitraanStores.map(mapKemitraan)];
 
   // 1. stores-pl.json
   const storesPL = {
     generated_at: generatedAt,
     data_period: data.executive?.dataPeriod || "-",
     region: "Region 5",
-    stores: stores.map(s => ({
-      store_id: s.code,
-      store_name: s.name,
-      brand: s.channel,
-      revenue: s.latestPeriodSales || 0,
-      net_profit: s.netFinal || 0,
-      profit_status: (s.pnl || "").toLowerCase() === "profit" ? "PROFIT" : "LOSS",
-      ach_percent: s.bep_ach != null ? Math.round(s.bep_ach * 1000) / 10 : null,
-      cluster: s.cluster,
-      health: s.health,
-    })),
+    stores: allStores,
   };
 
   // 2. summary.json
-  const profitCount = stores.filter(s => (s.pnl || "").toLowerCase() === "profit").length;
+  const profitCount = allStores.filter(s => s.profit_status === "PROFIT").length;
   const pnlGrand = data.pnl?.grand || {};
   const exec = data.executive || {};
   const summary = {
@@ -545,9 +565,9 @@ function _buildAndDownloadBotExport(data) {
     data_period: exec.dataPeriod || "-",
     region: "Region 5",
     total_stores: exec.totalStores || 0,
-    active_stores: exec.activeStores || 0,
+    active_stores: (exec.activeStores || 0) + kemitraanStores.length,
     profit_stores: profitCount,
-    loss_stores: stores.length - profitCount,
+    loss_stores: allStores.length - profitCount,
     bep_reached: exec.annualBepReached ?? exec.bepReached ?? 0,
     below_bep: exec.annualBelowBep ?? exec.belowBep ?? 0,
     avg_health: exec.avgHealth || 0,
@@ -562,6 +582,10 @@ function _buildAndDownloadBotExport(data) {
   stores.forEach(s => {
     if (!clusterMap[s.cluster]) clusterMap[s.cluster] = [];
     clusterMap[s.cluster].push(s.code);
+  });
+  kemitraanStores.forEach(s => {
+    if (!clusterMap["Kemitraan"]) clusterMap["Kemitraan"] = [];
+    clusterMap["Kemitraan"].push(s.code);
   });
   const clusters = {
     generated_at: generatedAt,
@@ -586,7 +610,7 @@ function _buildAndDownloadBotExport(data) {
     URL.revokeObjectURL(url);
   });
 
-  alert("✅ 3 file JSON berhasil diunduh (stores-pl.json, summary.json, clusters.json).\nUpload ke folder /public/data/ di repo ERA-ANALYTICS lalu push ke main.");
+  alert(`✅ 3 file JSON berhasil diunduh!\n• stores-pl.json: ${allStores.length} toko (termasuk ${kemitraanStores.length} Kemitraan)\n• summary.json & clusters.json\n\nUpload ke folder /public/data/ di repo lalu push ke main.`);
 }
 
 function renderTshSection(data) {

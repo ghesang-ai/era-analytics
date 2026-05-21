@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T08:27:39.101163+00:00",
+  "generated_at": "2026-05-21T08:43:43.513811+00:00",
   "data_period": "May 2026",
   "region": "Region 5",
   "stores": [
@@ -1267,6 +1267,149 @@
       "ach_percent": 5.4,
       "cluster": "Critical",
       "health": 48
+    },
+    {
+      "store_id": "E408",
+      "store_name": "ERAFONE RUKO SUMUR BATU",
+      "brand": "Kemitraan",
+      "revenue": 2735311972.0,
+      "net_profit": 144697156.163974,
+      "profit_status": "PROFIT",
+      "ach_percent": null,
+      "cluster": null,
+      "health": null
+    },
+    {
+      "store_id": "E833",
+      "store_name": "ERAFONE RUKO RANGKASBITUNG 2",
+      "brand": "Kemitraan",
+      "revenue": 1926387694.0,
+      "net_profit": 71093922.0335877,
+      "profit_status": "PROFIT",
+      "ach_percent": null,
+      "cluster": null,
+      "health": null
+    },
+    {
+      "store_id": "E312",
+      "store_name": "ERAFONE KRESEK KOSAMBI",
+      "brand": "Kemitraan",
+      "revenue": 1822624339.0,
+      "net_profit": 59380382.9296957,
+      "profit_status": "PROFIT",
+      "ach_percent": null,
+      "cluster": null,
+      "health": null
+    },
+    {
+      "store_id": "E233",
+      "store_name": "ERAFONE RUKO TAMAN SURYA JAKBA",
+      "brand": "Kemitraan",
+      "revenue": 2391707498.0,
+      "net_profit": 54071615.5101977,
+      "profit_status": "PROFIT",
+      "ach_percent": null,
+      "cluster": null,
+      "health": null
+    },
+    {
+      "store_id": "E290",
+      "store_name": "ERAFONE RUKO PORIS TANGERANG",
+      "brand": "Kemitraan",
+      "revenue": 1672313116.0,
+      "net_profit": 42989355.5859522,
+      "profit_status": "PROFIT",
+      "ach_percent": null,
+      "cluster": null,
+      "health": null
+    },
+    {
+      "store_id": "F079",
+      "store_name": "ERAFONE 2.5 GRAND BATAVIA",
+      "brand": "Kemitraan",
+      "revenue": 1366519928.0,
+      "net_profit": 30567543.2000975,
+      "profit_status": "PROFIT",
+      "ach_percent": null,
+      "cluster": null,
+      "health": null
+    },
+    {
+      "store_id": "E514",
+      "store_name": "ERAFONE MERUYA SELATAN",
+      "brand": "Kemitraan",
+      "revenue": 1285931361.0,
+      "net_profit": 29698768.8531985,
+      "profit_status": "PROFIT",
+      "ach_percent": null,
+      "cluster": null,
+      "health": null
+    },
+    {
+      "store_id": "E369",
+      "store_name": "ERAFONE RUKO BOROBUDUR",
+      "brand": "Kemitraan",
+      "revenue": 1480891835.0,
+      "net_profit": 24381856.2158412,
+      "profit_status": "PROFIT",
+      "ach_percent": null,
+      "cluster": null,
+      "health": null
+    },
+    {
+      "store_id": "E370",
+      "store_name": "ERAFONE RUKO BERINGIN",
+      "brand": "Kemitraan",
+      "revenue": 1675087813.0,
+      "net_profit": 10134342.912973,
+      "profit_status": "PROFIT",
+      "ach_percent": null,
+      "cluster": null,
+      "health": null
+    },
+    {
+      "store_id": "F066",
+      "store_name": "ERAFONE 2.5 SEPATAN",
+      "brand": "Kemitraan",
+      "revenue": 944458388.0,
+      "net_profit": 9003573.07060025,
+      "profit_status": "PROFIT",
+      "ach_percent": null,
+      "cluster": null,
+      "health": null
+    },
+    {
+      "store_id": "F058",
+      "store_name": "ERAFONE 2.5 TELAGA BESTARI",
+      "brand": "Kemitraan",
+      "revenue": 1143788310.0,
+      "net_profit": -2038799.45626952,
+      "profit_status": "LOSS",
+      "ach_percent": null,
+      "cluster": null,
+      "health": null
+    },
+    {
+      "store_id": "E834",
+      "store_name": "ERAFONE KEDAUNG TANGSEL",
+      "brand": "Kemitraan",
+      "revenue": 1740305899.0,
+      "net_profit": -26513897.6308661,
+      "profit_status": "LOSS",
+      "ach_percent": null,
+      "cluster": null,
+      "health": null
+    },
+    {
+      "store_id": "E292",
+      "store_name": "ERAFONE RUKO RAWA BOKOR",
+      "brand": "Kemitraan",
+      "revenue": 225627886.0,
+      "net_profit": -37224948.7233263,
+      "profit_status": "LOSS",
+      "ach_percent": null,
+      "cluster": null,
+      "health": null
     }
   ]
 }
