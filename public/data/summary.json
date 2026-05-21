@@ -1,0 +1,17 @@
+{
+  "_note": "File ini placeholder. Klik tombol '🤖 Export Data → Bot ERA' di dashboard, lalu upload file yang diunduh ke folder ini.",
+  "generated_at": null,
+  "data_period": null,
+  "region": "Region 5",
+  "total_stores": 0,
+  "active_stores": 0,
+  "profit_stores": 0,
+  "loss_stores": 0,
+  "bep_reached": 0,
+  "below_bep": 0,
+  "avg_health": 0,
+  "total_net_sales": 0,
+  "total_gross_profit": 0,
+  "total_net_profit": 0,
+  "clusters": {}
+}

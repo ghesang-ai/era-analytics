@@ -386,6 +386,28 @@ h3 {
   color: #fff;
 }
 
+.btn-export-bot {
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 800;
+  white-space: nowrap;
+  font-size: 14px;
+  background: linear-gradient(135deg, #00D4AA, #00A885);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 212, 170, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.btn-export-bot:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0, 212, 170, 0.45);
+}
+.btn-export-bot:active {
+  transform: translateY(0);
+}
+
 .hero-orbit,
 .light-streak {
   position: absolute;

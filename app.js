@@ -497,6 +497,87 @@ function exportCurrentReport() {
   URL.revokeObjectURL(url);
 }
 
+function exportBotData() {
+  const data = dashboardState;
+  if (!data) {
+    alert("Belum ada data. Jalankan import data terlebih dahulu.");
+    return;
+  }
+
+  const generatedAt = new Date().toISOString();
+  const stores = (data.stores || []).filter(s => s.status === "Aktif");
+
+  // 1. stores-pl.json
+  const storesPL = {
+    generated_at: generatedAt,
+    data_period: data.executive?.dataPeriod || "-",
+    region: "Region 5",
+    stores: stores.map(s => ({
+      store_id: s.code,
+      store_name: s.name,
+      brand: s.channel,
+      revenue: s.latestPeriodSales || 0,
+      net_profit: s.netFinal || 0,
+      profit_status: (s.pnl || "").toLowerCase() === "profit" ? "PROFIT" : "LOSS",
+      ach_percent: s.bep_ach != null ? Math.round(s.bep_ach * 1000) / 10 : null,
+      cluster: s.cluster,
+      health: s.health,
+    })),
+  };
+
+  // 2. summary.json
+  const profitCount = stores.filter(s => (s.pnl || "").toLowerCase() === "profit").length;
+  const pnlGrand = data.pnl?.grand || {};
+  const exec = data.executive || {};
+  const summary = {
+    generated_at: generatedAt,
+    data_period: exec.dataPeriod || "-",
+    region: "Region 5",
+    total_stores: exec.totalStores || 0,
+    active_stores: exec.activeStores || 0,
+    profit_stores: profitCount,
+    loss_stores: stores.length - profitCount,
+    bep_reached: exec.annualBepReached ?? exec.bepReached ?? 0,
+    below_bep: exec.annualBelowBep ?? exec.belowBep ?? 0,
+    avg_health: exec.avgHealth || 0,
+    total_net_sales: pnlGrand.netSales || 0,
+    total_gross_profit: pnlGrand.grossProfit || 0,
+    total_net_profit: pnlGrand.netFinal || 0,
+    clusters: exec.clusters || {},
+  };
+
+  // 3. clusters.json
+  const clusterMap = {};
+  stores.forEach(s => {
+    if (!clusterMap[s.cluster]) clusterMap[s.cluster] = [];
+    clusterMap[s.cluster].push(s.code);
+  });
+  const clusters = {
+    generated_at: generatedAt,
+    data_period: exec.dataPeriod || "-",
+    region: "Region 5",
+    clusters: clusterMap,
+  };
+
+  [
+    ["stores-pl.json", storesPL],
+    ["summary.json", summary],
+    ["clusters.json", clusters],
+  ].forEach(([filename, payload]) => {
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  });
+
+  alert("✅ 3 file JSON berhasil diunduh (stores-pl.json, summary.json, clusters.json).\nUpload ke folder /public/data/ di repo ERA-ANALYTICS lalu push ke main.");
+}
+
 function renderTshSection(data) {
   const stats = data.tshStats;
   const totalLossTsh = stats.filter((item) => item.lossOperational > 0 || item.loss > 0).length;
@@ -952,6 +1033,13 @@ function bindEvents() {
   qs("exportReportButton").addEventListener("click", () => {
     exportCurrentReport();
   });
+
+  const exportBotBtn = document.getElementById("exportBotButton");
+  if (exportBotBtn) {
+    exportBotBtn.addEventListener("click", () => {
+      exportBotData();
+    });
+  }
 }
 
 function renderAll(data) {
