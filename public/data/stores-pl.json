@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T09:01:55.145911+00:00",
+  "generated_at": "2026-05-21T10:13:34.766110+00:00",
   "data_period": "May 2026",
   "region": "Region 5",
   "stores": [
@@ -1276,8 +1276,8 @@
       "net_profit": 144697156.163974,
       "profit_status": "PROFIT",
       "ach_percent": null,
-      "cluster": null,
-      "health": null
+      "cluster": "Recovery",
+      "health": 55
     },
     {
       "store_id": "E833",
@@ -1287,8 +1287,8 @@
       "net_profit": 71093922.0335877,
       "profit_status": "PROFIT",
       "ach_percent": null,
-      "cluster": null,
-      "health": null
+      "cluster": "Recovery",
+      "health": 55
     },
     {
       "store_id": "E312",
@@ -1298,8 +1298,8 @@
       "net_profit": 59380382.9296957,
       "profit_status": "PROFIT",
       "ach_percent": null,
-      "cluster": null,
-      "health": null
+      "cluster": "Recovery",
+      "health": 55
     },
     {
       "store_id": "E233",
@@ -1309,8 +1309,8 @@
       "net_profit": 54071615.5101977,
       "profit_status": "PROFIT",
       "ach_percent": null,
-      "cluster": null,
-      "health": null
+      "cluster": "Recovery",
+      "health": 55
     },
     {
       "store_id": "E290",
@@ -1320,8 +1320,8 @@
       "net_profit": 42989355.5859522,
       "profit_status": "PROFIT",
       "ach_percent": null,
-      "cluster": null,
-      "health": null
+      "cluster": "Recovery",
+      "health": 55
     },
     {
       "store_id": "F079",
@@ -1331,8 +1331,8 @@
       "net_profit": 30567543.2000975,
       "profit_status": "PROFIT",
       "ach_percent": null,
-      "cluster": null,
-      "health": null
+      "cluster": "Recovery",
+      "health": 55
     },
     {
       "store_id": "E514",
@@ -1342,8 +1342,8 @@
       "net_profit": 29698768.8531985,
       "profit_status": "PROFIT",
       "ach_percent": null,
-      "cluster": null,
-      "health": null
+      "cluster": "Recovery",
+      "health": 55
     },
     {
       "store_id": "E369",
@@ -1353,8 +1353,8 @@
       "net_profit": 24381856.2158412,
       "profit_status": "PROFIT",
       "ach_percent": null,
-      "cluster": null,
-      "health": null
+      "cluster": "Recovery",
+      "health": 55
     },
     {
       "store_id": "E370",
@@ -1364,8 +1364,8 @@
       "net_profit": 10134342.912973,
       "profit_status": "PROFIT",
       "ach_percent": null,
-      "cluster": null,
-      "health": null
+      "cluster": "Recovery",
+      "health": 55
     },
     {
       "store_id": "F066",
@@ -1375,8 +1375,8 @@
       "net_profit": 9003573.07060025,
       "profit_status": "PROFIT",
       "ach_percent": null,
-      "cluster": null,
-      "health": null
+      "cluster": "Recovery",
+      "health": 55
     },
     {
       "store_id": "F074",
@@ -1386,8 +1386,8 @@
       "net_profit": -561463.0,
       "profit_status": "LOSS",
       "ach_percent": null,
-      "cluster": null,
-      "health": null
+      "cluster": "Critical",
+      "health": 40
     },
     {
       "store_id": "F058",
@@ -1397,8 +1397,8 @@
       "net_profit": -2038799.45626952,
       "profit_status": "LOSS",
       "ach_percent": null,
-      "cluster": null,
-      "health": null
+      "cluster": "Critical",
+      "health": 40
     },
     {
       "store_id": "F133",
@@ -1408,8 +1408,8 @@
       "net_profit": -10585786.1011476,
       "profit_status": "LOSS",
       "ach_percent": null,
-      "cluster": null,
-      "health": null
+      "cluster": "Critical",
+      "health": 40
     },
     {
       "store_id": "E834",
@@ -1419,8 +1419,8 @@
       "net_profit": -26513897.6308661,
       "profit_status": "LOSS",
       "ach_percent": null,
-      "cluster": null,
-      "health": null
+      "cluster": "Critical",
+      "health": 40
     },
     {
       "store_id": "E292",
@@ -1430,8 +1430,8 @@
       "net_profit": -37224948.7233263,
       "profit_status": "LOSS",
       "ach_percent": null,
-      "cluster": null,
-      "health": null
+      "cluster": "Critical",
+      "health": 40
     }
   ]
 }
