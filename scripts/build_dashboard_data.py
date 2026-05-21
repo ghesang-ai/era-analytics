@@ -18,7 +18,7 @@ EAR_PNL_OUTPUT_PATH = BASE_DIR / "outputs" / "dashboard_data_ear_pnl.json"
 IBOX_OUTPUT_PATH = BASE_DIR / "outputs" / "dashboard_data_ibox.json"
 SAMSUNG_OUTPUT_PATH = BASE_DIR / "outputs" / "dashboard_data_samsung.json"
 
-VALID_CHANNELS = {"ERAFONE", "ERA & MORE"}
+VALID_CHANNELS = {"ERAFONE", "ERA & MORE", "KEMITRAAN", "Doss"}
 
 # Toko yang sudah tutup — tidak akan pernah ditampilkan di dashboard
 CLOSED_STORES: dict[str, set[str]] = {
@@ -279,7 +279,7 @@ def build_sales_data():
             {
                 "code": row[6],
                 "name": row[7],
-                "channel": "Erafone" if channel == "ERAFONE" else "ERA & More",
+                "channel": {"ERAFONE": "Erafone", "ERA & MORE": "ERA & More", "KEMITRAAN": "Kemitraan", "Doss": "Doss"}.get(channel, channel),
                 "tsh": tsh,
                 "status": status,
                 "cluster": cluster,
@@ -529,7 +529,7 @@ def parse_region_summary():
         store_summary_map[code] = {
             "code": code,
             "name": row[2],
-            "channel": "Erafone" if row[3] == "ERAFONE" else "ERA & More",
+            "channel": {"ERAFONE": "Erafone", "ERA & MORE": "ERA & More", "KEMITRAAN": "Kemitraan", "Doss": "Doss"}.get(str(row[3] or "").strip(), str(row[3] or "").strip()),
             "tsh": row[4] or "Unknown",
             "sales": {
                 "y2022": float(row[5] or 0),
