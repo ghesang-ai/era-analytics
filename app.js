@@ -498,12 +498,23 @@ function exportCurrentReport() {
 }
 
 function exportBotData() {
-  const data = dashboardState;
-  if (!data) {
+  if (!dashboardState) {
     alert("Belum ada data. Jalankan import data terlebih dahulu.");
     return;
   }
 
+  // Selalu gunakan data penuh (EAR_FULL_URL) agar cluster & dataPeriod tersedia,
+  // tidak peduli brand view yang sedang aktif
+  fetch(EAR_FULL_URL + "?t=" + Date.now())
+    .then(r => { if (!r.ok) throw new Error("Data tidak ditemukan"); return r.json(); })
+    .then(data => _buildAndDownloadBotExport(data))
+    .catch(() => {
+      // Fallback ke dashboardState jika fetch gagal
+      _buildAndDownloadBotExport(dashboardState);
+    });
+}
+
+function _buildAndDownloadBotExport(data) {
   const generatedAt = new Date().toISOString();
   const stores = (data.stores || []).filter(s => s.status === "Aktif");
 
