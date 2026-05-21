@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T07:43:33.809082+00:00",
+  "generated_at": "2026-05-21T08:27:39.101163+00:00",
   "data_period": "May 2026",
   "region": "Region 5",
   "stores": [
@@ -767,8 +767,8 @@
       "store_name": "ERAFONE MB RASUNA SAID",
       "brand": "Erafone",
       "revenue": 104464153.0,
-      "net_profit": 0,
-      "profit_status": "LOSS",
+      "net_profit": 14349366.3135415,
+      "profit_status": "PROFIT",
       "ach_percent": 12.3,
       "cluster": "Critical",
       "health": 46
