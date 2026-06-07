@@ -497,6 +497,54 @@ function exportCurrentReport() {
   URL.revokeObjectURL(url);
 }
 
+function exportStoresExcel() {
+  if (!dashboardState || !dashboardState.stores) {
+    alert("Data belum tersedia. Tunggu dashboard selesai load.");
+    return;
+  }
+
+  const period = dashboardState.executive?.dataPeriod || "Unknown";
+  const brand = dashboardState.activeBrand || "EAR";
+
+  const COLS = ["No", "Kode", "Nama Toko", "Tipe", "P&L", "Net Sales (Rp)", "Gross Profit (Rp)", "GP%", "OPEX (Rp)", "Oper. Income (Rp)", "Net Final (Rp)"];
+
+  function storeToRow(s, i) {
+    const gpPct = s.netSalesPnl > 0 ? +((s.grossProfitPnl / s.netSalesPnl) * 100).toFixed(2) : 0;
+    return [
+      i + 1,
+      s.code,
+      s.name,
+      s.pnlCategory,
+      s.pnl,
+      s.netSalesPnl || 0,
+      s.grossProfitPnl || 0,
+      gpPct,
+      s.totalOpexPnl || 0,
+      s.operatingIncomePnl || 0,
+      s.netFinal || 0,
+    ];
+  }
+
+  const allStores = dashboardState.stores;
+  const profitStores = allStores.filter(s => s.pnl === "Profit");
+  const lossStores = allStores.filter(s => s.pnl === "Loss");
+
+  function makeSheet(rows) {
+    const ws = XLSX.utils.aoa_to_sheet([COLS, ...rows]);
+    // Column widths
+    ws["!cols"] = [5, 8, 40, 12, 8, 18, 18, 8, 18, 18, 18].map(w => ({ wch: w }));
+    return ws;
+  }
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, makeSheet(allStores.map(storeToRow)), "Semua Toko");
+  XLSX.utils.book_append_sheet(wb, makeSheet(profitStores.map(storeToRow)), "Profit");
+  XLSX.utils.book_append_sheet(wb, makeSheet(lossStores.map(storeToRow)), "Loss");
+
+  const filename = `ERA_StoresPnL_${brand}_${period.replace(/\s/g, "_")}_${slugDate()}.xlsx`;
+  XLSX.writeFile(wb, filename);
+}
+
 function exportBotData() {
   if (!dashboardState) {
     alert("Belum ada data. Jalankan import data terlebih dahulu.");
@@ -1073,6 +1121,13 @@ function bindEvents() {
   if (exportBotBtn) {
     exportBotBtn.addEventListener("click", () => {
       exportBotData();
+    });
+  }
+
+  const exportExcelBtn = document.getElementById("exportExcelButton");
+  if (exportExcelBtn) {
+    exportExcelBtn.addEventListener("click", () => {
+      exportStoresExcel();
     });
   }
 }
