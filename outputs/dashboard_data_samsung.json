@@ -2,9 +2,9 @@
   "brand": "SAMSUNG",
   "executive": {
     "brand": "Samsung (NASA)",
-    "totalStores": 29,
+    "totalStores": 28,
     "profitStores": 15,
-    "lossStores": 14,
+    "lossStores": 13,
     "totalNetSales": 204847827396,
     "totalGrossProfit": 25619019259,
     "gpPct": 0.125063661082794,
@@ -231,18 +231,6 @@
       "totalOpexPnl": -44466812.0,
       "operatingIncomePnl": 59256169.0,
       "hoFinanceCost": -43931608.5688255
-    },
-    {
-      "code": "S137",
-      "name": "SPS A YANI CILEGON",
-      "pnlCategory": "SPS",
-      "pnl": "Loss",
-      "netFinal": -75592424.2051521,
-      "netSalesPnl": 439865439.0,
-      "grossProfitPnl": 73044761.0,
-      "totalOpexPnl": -129949569.0,
-      "operatingIncomePnl": -56904808.0,
-      "hoFinanceCost": -18687616.2051521
     },
     {
       "code": "S049",
@@ -543,6 +531,6 @@
   "source": {
     "pnlWorkbook": "PNL EAR YTD APRIL 2026/PNL NASA YTD APR 26 REGION 5.xlsx",
     "pnlPeriod": "April 2026",
-    "generatedAt": "2026-06-29T16:33:12"
+    "generatedAt": "2026-06-29T16:51:07"
   }
 }

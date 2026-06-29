@@ -23,15 +23,18 @@ VALID_CHANNELS = {"ERAFONE", "ERA & MORE", "KEMITRAAN", "Doss"}
 # Toko yang sudah tutup — tidak akan pernah ditampilkan di dashboard
 CLOSED_STORES: dict[str, set[str]] = {
     "IBOX": {"X108", "X056", "X019", "X013"},  # tutup per Mei 2026
-    "SAMSUNG": set(),
-    # EAR: toko yang tidak ada di LIST STORE TOKO 2026.xlsx (119 toko aktif)
+    "SAMSUNG": {"S137"},  # tutup April 2026 (SPS A Yani Cilegon)
+    # EAR: kombinasi dari LIST STORE TOKO 2026.xlsx + Plan Close 2026
     "EAR": {
         "E083", "E086", "E089", "E095", "E108", "E131", "E165", "E193",
-        "E206", "E245", "E251", "E259", "E299", "E336", "E347", "E417",
-        "E418", "E419", "E585", "E648", "E664", "E683", "E695", "E697",
-        "E699", "E705", "E706", "E714", "E715", "E727", "E730", "E731",
-        "E761", "E768", "E897", "E901", "E986", "E993", "F035", "F077",
-        "F080", "F134", "M015", "M032", "M132", "M136", "M193", "M220",
+        "E206", "E245", "E251", "E259", "E292", "E299", "E336", "E347",
+        "E417", "E418", "E419", "E420", "E585", "E620", "E648", "E664",
+        "E682", "E683", "E695", "E697", "E699", "E705", "E706", "E714",
+        "E715", "E727", "E730", "E731", "E761", "E768", "E897", "E901",
+        "E986", "E993", "F035", "F077", "F080", "F133", "F134", "M015",
+        "M032", "M132", "M136", "M193", "M220",
+        # EDC/Mall tutup 2025-2026 (Plan Close 2026)
+        "N282", "N285", "N286", "N287", "N288", "N343",
     },
 }
 
@@ -812,7 +815,12 @@ def build_dashboard_data():
     wb_pnl.close()
 
     region_summary = parse_region_summary()
-    stores = enrich_stores(sales["stores"], pnl_store_map, region_summary)
+    ear_closed = CLOSED_STORES.get("EAR", set())
+    stores = enrich_stores(
+        [s for s in sales["stores"] if s["code"] not in ear_closed],
+        pnl_store_map,
+        region_summary,
+    )
     tsh_stats = build_tsh_stats(stores, region_summary["tshSummary"])
     actions = build_actions(stores, tsh_stats, analysis_summary)
     executive = build_executive(stores, sales["yearTotals"], tsh_stats, region_summary["meta"], analysis_summary, sales)

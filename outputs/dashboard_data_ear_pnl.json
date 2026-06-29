@@ -2,9 +2,9 @@
   "brand": "EAR",
   "executive": {
     "brand": "Erafone (EAR)",
-    "totalStores": 122,
+    "totalStores": 117,
     "profitStores": 89,
-    "lossStores": 32,
+    "lossStores": 27,
     "totalNetSales": 943999460727,
     "totalGrossProfit": 72996554237,
     "gpPct": 0.0773269024759647,
@@ -1217,18 +1217,6 @@
       "hoFinanceCost": -91911313.985752
     },
     {
-      "code": "F133",
-      "name": "ERAFONE JB DOSS RATU PLAZA",
-      "pnlCategory": "Doss",
-      "pnl": "Loss",
-      "netFinal": -20149602.1012785,
-      "netSalesPnl": 39758925.0,
-      "grossProfitPnl": 1341868.0,
-      "totalOpexPnl": -20284141.0,
-      "operatingIncomePnl": -18942273.0,
-      "hoFinanceCost": -1207329.10127846
-    },
-    {
       "code": "E678",
       "name": "ERAFONE MB BENDUNGAN HILIR",
       "pnlCategory": "Erafone",
@@ -1337,30 +1325,6 @@
       "hoFinanceCost": -108601747.497223
     },
     {
-      "code": "E292",
-      "name": "ERAFONE RUKO RAWA BOKOR",
-      "pnlCategory": "Kemitraan",
-      "pnl": "Loss",
-      "netFinal": -85978990.7786425,
-      "netSalesPnl": 225627886.0,
-      "grossProfitPnl": 4313594.0,
-      "totalOpexPnl": -83441114.0,
-      "operatingIncomePnl": -79127520.0,
-      "hoFinanceCost": -6851470.77864251
-    },
-    {
-      "code": "E620",
-      "name": "ERAFONE 2.5 PADJAJARAN PAMULAN",
-      "pnlCategory": "Erafone",
-      "pnl": "Loss",
-      "netFinal": -87652265.5149891,
-      "netSalesPnl": 876902757.0,
-      "grossProfitPnl": 98583001.0,
-      "totalOpexPnl": -159607026.0,
-      "operatingIncomePnl": -61024025.0,
-      "hoFinanceCost": -26628240.5149891
-    },
-    {
       "code": "E616",
       "name": "ERAFONE 2.5 MERUYA ILIR",
       "pnlCategory": "Erafone",
@@ -1371,18 +1335,6 @@
       "totalOpexPnl": -245222454.0,
       "operatingIncomePnl": -42997779.0,
       "hoFinanceCost": -56829465.2070463
-    },
-    {
-      "code": "E682",
-      "name": "ERAFONE MB KH MANSYUR TANAH AB",
-      "pnlCategory": "Erafone",
-      "pnl": "Loss",
-      "netFinal": -105233984.997816,
-      "netSalesPnl": 1349958393.0,
-      "grossProfitPnl": 164637612.0,
-      "totalOpexPnl": -228878435.0,
-      "operatingIncomePnl": -64240823.0,
-      "hoFinanceCost": -40993161.9978157
     },
     {
       "code": "E923",
@@ -1419,18 +1371,6 @@
       "totalOpexPnl": -287515501.0,
       "operatingIncomePnl": -64712565.0,
       "hoFinanceCost": -62684842.2006925
-    },
-    {
-      "code": "E420",
-      "name": "ERAFONE RUKO CEMPAKA PUTIH",
-      "pnlCategory": "Erafone",
-      "pnl": "Loss",
-      "netFinal": -145721893.170705,
-      "netSalesPnl": 838374434.0,
-      "grossProfitPnl": 77872493.0,
-      "totalOpexPnl": -198136106.0,
-      "operatingIncomePnl": -120263613.0,
-      "hoFinanceCost": -25458280.1707053
     },
     {
       "code": "E047",
@@ -1659,6 +1599,6 @@
   "source": {
     "pnlWorkbook": "PNL EAR YTD APRIL 2026/PNL EAR YTD APR 26 REGION 5.xlsx",
     "pnlPeriod": "April 2026",
-    "generatedAt": "2026-06-29T16:33:12"
+    "generatedAt": "2026-06-29T16:51:07"
   }
 }
