@@ -25,8 +25,8 @@
       "Critical": 114
     },
     "summaryTitle": "Mixed - Turnaround Needed",
-    "condition": "108 toko Region 5 terbaca di Analysis EAR. Loss pattern terbesar ada di 7 toko, sedangkan profit pattern terbesar ada di 21 toko.",
-    "analysis": "Pattern dominan profit: PROFIT because their Sales is ABOVE , their GP% is ABOVE and their OPEX is ABOVE. Pattern dominan loss: LOSS because their Sales is BELOW , their GP% is BELOW and their OPEX is BELOW.",
+    "condition": "108 toko Region 5 terbaca di Analysis EAR. Loss pattern terbesar ada di 9 toko, sedangkan profit pattern terbesar ada di 23 toko.",
+    "analysis": "Pattern dominan profit: PROFIT because their Sales is BELOW , their GP% is ABOVE and their OPEX is BELOW. Pattern dominan loss: LOSS because their Sales is BELOW , their GP% is BELOW and their OPEX is BELOW.",
     "action": "Prioritaskan toko yang masuk loss pattern terbesar, terutama yang sales masih below dan OPEX masih above, lalu tindak lanjutkan per owner dan format toko."
   },
   "actions": [
@@ -41,7 +41,7 @@
       "tag": "Kritis"
     },
     {
-      "title": "7 toko masuk loss pattern utama",
+      "title": "9 toko masuk loss pattern utama",
       "note": "LOSS because their Sales is BELOW , their GP% is BELOW and their OPEX is BELOW",
       "tag": "Info"
     },
@@ -81,8 +81,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 2613412729.0,
       "pnl": "Profit",
-      "netFinal": 173348796.667949,
-      "operatingIncomePnl": 361148466.0,
+      "netFinal": 269600968.989223,
+      "operatingIncomePnl": 510187119.0,
       "action": "Conversion + bundle"
     },
     {
@@ -114,8 +114,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1851734032.0,
       "pnl": "Profit",
-      "netFinal": 46648592.4034054,
-      "operatingIncomePnl": 145957029.0,
+      "netFinal": 113227468.23289,
+      "operatingIncomePnl": 249559645.0,
       "action": "Traffic + cost review"
     },
     {
@@ -147,8 +147,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1364493774.0,
       "pnl": "Profit",
-      "netFinal": 129549360.385137,
-      "operatingIncomePnl": 228943990.0,
+      "netFinal": 177824573.606823,
+      "operatingIncomePnl": 307165402.0,
       "action": "Conversion + bundle"
     },
     {
@@ -180,8 +180,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 958868230.0,
       "pnl": "Loss",
-      "netFinal": -26081362.1283615,
-      "operatingIncomePnl": 20267554.0,
+      "netFinal": -14440768.5171399,
+      "operatingIncomePnl": 49817088.0,
       "action": "Conversion + bundle"
     },
     {
@@ -213,8 +213,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1058908819.0,
       "pnl": "Profit",
-      "netFinal": 75046878.4619638,
-      "operatingIncomePnl": 142792342.0,
+      "netFinal": 111322974.120835,
+      "operatingIncomePnl": 198358735.0,
       "action": "Conversion + bundle"
     },
     {
@@ -246,8 +246,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 918298480.0,
       "pnl": "Profit",
-      "netFinal": 6482974.85327819,
-      "operatingIncomePnl": 54508905.0,
+      "netFinal": 22759887.6472208,
+      "operatingIncomePnl": 84426231.0,
       "action": "Conversion + bundle"
     },
     {
@@ -278,9 +278,9 @@
       "annualStatus": "RUGI",
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 788211935.0,
-      "pnl": "Loss",
-      "netFinal": -7846207.12147208,
-      "operatingIncomePnl": 41027792.0,
+      "pnl": "Profit",
+      "netFinal": 2328824.09536969,
+      "operatingIncomePnl": 66946975.0,
       "action": "Conversion + bundle"
     },
     {
@@ -312,8 +312,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 9874037921.0,
       "pnl": "Profit",
-      "netFinal": 758853299.43406,
-      "operatingIncomePnl": 1387034316.0,
+      "netFinal": 1050173321.16189,
+      "operatingIncomePnl": 1858767319.0,
       "action": "Traffic + cost review"
     },
     {
@@ -345,8 +345,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 2225532169.0,
       "pnl": "Profit",
-      "netFinal": 7308178.40979765,
-      "operatingIncomePnl": 99175230.0,
+      "netFinal": 37347327.6606907,
+      "operatingIncomePnl": 159776256.0,
       "action": "Traffic + cost review"
     },
     {
@@ -378,8 +378,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1264969697.0,
       "pnl": "Profit",
-      "netFinal": 99292013.3423801,
-      "operatingIncomePnl": 181995291.0,
+      "netFinal": 140223475.243824,
+      "operatingIncomePnl": 247627136.0,
       "action": "Conversion + bundle"
     },
     {
@@ -411,8 +411,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 4037225656.0,
       "pnl": "Profit",
-      "netFinal": 527551690.74014,
-      "operatingIncomePnl": 803609410.0,
+      "netFinal": 763586318.196363,
+      "operatingIncomePnl": 1124357497.0,
       "action": "Traffic + cost review"
     },
     {
@@ -443,9 +443,9 @@
       "annualStatus": "RUGI",
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 673387270.0,
-      "pnl": "Loss",
-      "netFinal": -25357786.8144862,
-      "operatingIncomePnl": 18329028.0,
+      "pnl": "Profit",
+      "netFinal": 3558616.94284362,
+      "operatingIncomePnl": 67052975.0,
       "action": "Conversion + bundle"
     },
     {
@@ -477,8 +477,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1085159313.0,
       "pnl": "Profit",
-      "netFinal": 54901951.5172147,
-      "operatingIncomePnl": 128116731.0,
+      "netFinal": 95006829.2764031,
+      "operatingIncomePnl": 189100765.0,
       "action": "Conversion + bundle"
     },
     {
@@ -509,9 +509,9 @@
       "annualStatus": "RUGI",
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 657487838.0,
-      "pnl": "Profit",
-      "netFinal": 5275415.15204193,
-      "operatingIncomePnl": 52422711.0,
+      "pnl": "Loss",
+      "netFinal": -12894163.736843,
+      "operatingIncomePnl": 47223609.0,
       "action": "Conversion + bundle"
     },
     {
@@ -543,8 +543,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1442471412.0,
       "pnl": "Profit",
-      "netFinal": 93884415.4701954,
-      "operatingIncomePnl": 180456179.0,
+      "netFinal": 136242044.555442,
+      "operatingIncomePnl": 246431434.0,
       "action": "Conversion + bundle"
     },
     {
@@ -576,8 +576,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1753756170.0,
       "pnl": "Profit",
-      "netFinal": 125582683.393282,
-      "operatingIncomePnl": 255694687.0,
+      "netFinal": 200327264.16343,
+      "operatingIncomePnl": 371012624.0,
       "action": "Conversion + bundle"
     },
     {
@@ -609,8 +609,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 871392689.0,
       "pnl": "Profit",
-      "netFinal": 26099242.444556,
-      "operatingIncomePnl": 74443489.0,
+      "netFinal": 39866246.3732117,
+      "operatingIncomePnl": 100451727.0,
       "action": "Conversion + bundle"
     },
     {
@@ -642,8 +642,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1013225470.0,
       "pnl": "Profit",
-      "netFinal": 71766664.0048961,
-      "operatingIncomePnl": 145480536.0,
+      "netFinal": 82135163.7687873,
+      "operatingIncomePnl": 172370550.0,
       "action": "Conversion + bundle"
     },
     {
@@ -675,8 +675,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 914400497.0,
       "pnl": "Profit",
-      "netFinal": 53376434.0814147,
-      "operatingIncomePnl": 114937202.0,
+      "netFinal": 83281047.5606193,
+      "operatingIncomePnl": 161680725.0,
       "action": "Conversion + bundle"
     },
     {
@@ -708,8 +708,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1026365971.0,
       "pnl": "Profit",
-      "netFinal": 63029814.3790017,
-      "operatingIncomePnl": 137796239.0,
+      "netFinal": 93764947.8831884,
+      "operatingIncomePnl": 187829943.0,
       "action": "Conversion + bundle"
     },
     {
@@ -741,8 +741,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 667949292.0,
       "pnl": "Loss",
-      "netFinal": -34498575.4726887,
-      "operatingIncomePnl": 67407.0,
+      "netFinal": -9151242.24552999,
+      "operatingIncomePnl": 41732969.0,
       "action": "Conversion + bundle"
     },
     {
@@ -774,8 +774,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 2766530724.0,
       "pnl": "Profit",
-      "netFinal": 204778432.650156,
-      "operatingIncomePnl": 418677427.0,
+      "netFinal": 332385186.416681,
+      "operatingIncomePnl": 618913714.0,
       "action": "Conversion + bundle"
     },
     {
@@ -807,8 +807,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 3791714250.0,
       "pnl": "Profit",
-      "netFinal": 370108544.144573,
-      "operatingIncomePnl": 656151645.0,
+      "netFinal": 464791112.147985,
+      "operatingIncomePnl": 834950614.0,
       "action": "Traffic + cost review"
     },
     {
@@ -840,8 +840,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 2543050851.0,
       "pnl": "Profit",
-      "netFinal": 402628453.438016,
-      "operatingIncomePnl": 598083061.0,
+      "netFinal": 517352383.862402,
+      "operatingIncomePnl": 763746260.0,
       "action": "Conversion + bundle"
     },
     {
@@ -873,8 +873,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 2936696374.0,
       "pnl": "Profit",
-      "netFinal": 276577061.395537,
-      "operatingIncomePnl": 498200556.0,
+      "netFinal": 443140066.845418,
+      "operatingIncomePnl": 740536979.0,
       "action": "Conversion + bundle"
     },
     {
@@ -906,8 +906,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1500831205.0,
       "pnl": "Profit",
-      "netFinal": 176201462.922393,
-      "operatingIncomePnl": 294798930.0,
+      "netFinal": 245328229.385923,
+      "operatingIncomePnl": 397935778.0,
       "action": "Conversion + bundle"
     },
     {
@@ -939,8 +939,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1349998149.0,
       "pnl": "Profit",
-      "netFinal": 113336493.153213,
-      "operatingIncomePnl": 210651083.0,
+      "netFinal": 166329986.988637,
+      "operatingIncomePnl": 292209345.0,
       "action": "Conversion + bundle"
     },
     {
@@ -972,8 +972,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 936307113.0,
       "pnl": "Profit",
-      "netFinal": 93752453.9543667,
-      "operatingIncomePnl": 170588697.0,
+      "netFinal": 134603048.644048,
+      "operatingIncomePnl": 234410398.0,
       "action": "Conversion + bundle"
     },
     {
@@ -1005,8 +1005,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1506838687.0,
       "pnl": "Profit",
-      "netFinal": 115101025.676873,
-      "operatingIncomePnl": 232297417.0,
+      "netFinal": 136165333.746529,
+      "operatingIncomePnl": 286723963.0,
       "action": "Conversion + bundle"
     },
     {
@@ -1038,8 +1038,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1481622865.0,
       "pnl": "Profit",
-      "netFinal": 163124551.355888,
-      "operatingIncomePnl": 261076824.0,
+      "netFinal": 187140549.914976,
+      "operatingIncomePnl": 312660956.0,
       "action": "Conversion + bundle"
     },
     {
@@ -1071,8 +1071,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1480402727.0,
       "pnl": "Profit",
-      "netFinal": 97687087.189775,
-      "operatingIncomePnl": 205806810.0,
+      "netFinal": 127090045.581693,
+      "operatingIncomePnl": 269835976.0,
       "action": "Conversion + bundle"
     },
     {
@@ -1104,8 +1104,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1284363189.0,
       "pnl": "Profit",
-      "netFinal": 60150279.8465448,
-      "operatingIncomePnl": 158374388.0,
+      "netFinal": 113443697.364095,
+      "operatingIncomePnl": 244423319.0,
       "action": "Conversion + bundle"
     },
     {
@@ -1137,8 +1137,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1141690226.0,
       "pnl": "Profit",
-      "netFinal": 40598719.8214224,
-      "operatingIncomePnl": 126188954.0,
+      "netFinal": 54893901.4963814,
+      "operatingIncomePnl": 155912925.0,
       "action": "Conversion + bundle"
     },
     {
@@ -1170,8 +1170,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1230492006.0,
       "pnl": "Loss",
-      "netFinal": -233885477.730451,
-      "operatingIncomePnl": -142470574.0,
+      "netFinal": -217464972.85071,
+      "operatingIncomePnl": -96433986.0,
       "action": "Conversion + bundle"
     },
     {
@@ -1203,8 +1203,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 2016840149.0,
       "pnl": "Profit",
-      "netFinal": 68977440.8840416,
-      "operatingIncomePnl": 229884598.0,
+      "netFinal": 111575668.460638,
+      "operatingIncomePnl": 316442904.0,
       "action": "Traffic + cost review"
     },
     {
@@ -1236,8 +1236,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 578220613.0,
       "pnl": "Loss",
-      "netFinal": -54376715.9460524,
-      "operatingIncomePnl": -17813041.0,
+      "netFinal": -54830465.2170929,
+      "operatingIncomePnl": -7318754.0,
       "action": "Traffic + cost review"
     },
     {
@@ -1269,8 +1269,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 4713562712.0,
       "pnl": "Profit",
-      "netFinal": 338151892.847122,
-      "operatingIncomePnl": 617763212.0,
+      "netFinal": 438381628.55192,
+      "operatingIncomePnl": 805924133.0,
       "action": "Traffic + cost review"
     },
     {
@@ -1302,8 +1302,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 2094479210.0,
       "pnl": "Profit",
-      "netFinal": 226637541.217532,
-      "operatingIncomePnl": 381487485.0,
+      "netFinal": 351160159.967544,
+      "operatingIncomePnl": 560211313.0,
       "action": "Conversion + bundle"
     },
     {
@@ -1335,8 +1335,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1197864481.0,
       "pnl": "Profit",
-      "netFinal": 42432611.062159,
-      "operatingIncomePnl": 102108929.0,
+      "netFinal": 76453364.4583626,
+      "operatingIncomePnl": 155552665.0,
       "action": "Conversion + bundle"
     },
     {
@@ -1368,8 +1368,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1781055843.0,
       "pnl": "Profit",
-      "netFinal": 23889821.1618904,
-      "operatingIncomePnl": 135010565.0,
+      "netFinal": 91063434.2998583,
+      "operatingIncomePnl": 245015807.0,
       "action": "Traffic + cost review"
     },
     {
@@ -1400,9 +1400,9 @@
       "annualStatus": "RUGI",
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 3248414067.0,
-      "pnl": "Loss",
-      "netFinal": -6243660.59104905,
-      "operatingIncomePnl": 233683903.0,
+      "pnl": "Profit",
+      "netFinal": 27984588.6569802,
+      "operatingIncomePnl": 349061276.0,
       "action": "Traffic + cost review"
     },
     {
@@ -1434,8 +1434,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 2861618346.0,
       "pnl": "Profit",
-      "netFinal": 219428532.416275,
-      "operatingIncomePnl": 397679932.0,
+      "netFinal": 347491049.345255,
+      "operatingIncomePnl": 590110581.0,
       "action": "Conversion + bundle"
     },
     {
@@ -1467,8 +1467,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1549975312.0,
       "pnl": "Profit",
-      "netFinal": 73227553.4331388,
-      "operatingIncomePnl": 175424855.0,
+      "netFinal": 98183182.4667705,
+      "operatingIncomePnl": 230567289.0,
       "action": "Conversion + bundle"
     },
     {
@@ -1500,8 +1500,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 993938179.0,
       "pnl": "Profit",
-      "netFinal": 7107660.44773001,
-      "operatingIncomePnl": 66670230.0,
+      "netFinal": 29881348.9497003,
+      "operatingIncomePnl": 109094151.0,
       "action": "Conversion + bundle"
     },
     {
@@ -1533,8 +1533,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1277547673.0,
       "pnl": "Profit",
-      "netFinal": 52259142.5846579,
-      "operatingIncomePnl": 137511941.0,
+      "netFinal": 83500039.0132939,
+      "operatingIncomePnl": 195642938.0,
       "action": "Conversion + bundle"
     },
     {
@@ -1566,8 +1566,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 6698187661.0,
       "pnl": "Profit",
-      "netFinal": 369190257.368794,
-      "operatingIncomePnl": 878416745.0,
+      "netFinal": 669977743.568517,
+      "operatingIncomePnl": 1340357384.0,
       "action": "Traffic + cost review"
     },
     {
@@ -1599,8 +1599,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 1022295622.0,
       "pnl": "Profit",
-      "netFinal": 79419376.3876107,
-      "operatingIncomePnl": 152907809.0,
+      "netFinal": 99559829.5877944,
+      "operatingIncomePnl": 195577910.0,
       "action": "Traffic + cost review"
     },
     {
@@ -1632,8 +1632,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 3023444130.0,
       "pnl": "Profit",
-      "netFinal": 257062228.582704,
-      "operatingIncomePnl": 514051325.0,
+      "netFinal": 398741277.389224,
+      "operatingIncomePnl": 732705989.0,
       "action": "Conversion + bundle"
     },
     {
@@ -1665,8 +1665,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 3715138995.0,
       "pnl": "Profit",
-      "netFinal": 203075568.933981,
-      "operatingIncomePnl": 495390556.0,
+      "netFinal": 305788934.573772,
+      "operatingIncomePnl": 679424614.0,
       "action": "Traffic + cost review"
     },
     {
@@ -1698,8 +1698,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 4877773646.0,
       "pnl": "Profit",
-      "netFinal": 370384477.273298,
-      "operatingIncomePnl": 760433751.0,
+      "netFinal": 572689746.351467,
+      "operatingIncomePnl": 1090346310.0,
       "action": "Conversion + bundle"
     },
     {
@@ -1731,8 +1731,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 2329228930.0,
       "pnl": "Profit",
-      "netFinal": 136318651.867341,
-      "operatingIncomePnl": 313890282.0,
+      "netFinal": 257333121.257187,
+      "operatingIncomePnl": 494021622.0,
       "action": "Conversion + bundle"
     },
     {
@@ -1764,8 +1764,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1238694901.0,
       "pnl": "Profit",
-      "netFinal": 52067545.1769421,
-      "operatingIncomePnl": 126068657.0,
+      "netFinal": 115684166.15932,
+      "operatingIncomePnl": 214120609.0,
       "action": "Conversion + bundle"
     },
     {
@@ -1797,8 +1797,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1302048716.0,
       "pnl": "Profit",
-      "netFinal": 40890871.8103987,
-      "operatingIncomePnl": 113268193.0,
+      "netFinal": 85704063.949302,
+      "operatingIncomePnl": 188129836.0,
       "action": "Conversion + bundle"
     },
     {
@@ -1830,8 +1830,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1347713176.0,
       "pnl": "Profit",
-      "netFinal": 39660670.0419888,
-      "operatingIncomePnl": 103514666.0,
+      "netFinal": 9539012.13435058,
+      "operatingIncomePnl": 96845652.0,
       "action": "Conversion + bundle"
     },
     {
@@ -1863,8 +1863,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1359261557.0,
       "pnl": "Loss",
-      "netFinal": -51535839.0719605,
-      "operatingIncomePnl": 8074913.0,
+      "netFinal": -57920046.1518945,
+      "operatingIncomePnl": 19489221.0,
       "action": "Traffic + cost review"
     },
     {
@@ -1896,8 +1896,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1618545307.0,
       "pnl": "Profit",
-      "netFinal": 53154828.3923628,
-      "operatingIncomePnl": 174528460.0,
+      "netFinal": 107301941.703559,
+      "operatingIncomePnl": 268521554.0,
       "action": "Conversion + bundle"
     },
     {
@@ -1929,8 +1929,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 2539802665.0,
       "pnl": "Profit",
-      "netFinal": 56495139.650411,
-      "operatingIncomePnl": 247741715.0,
+      "netFinal": 83074201.035028,
+      "operatingIncomePnl": 325710155.0,
       "action": "Conversion + bundle"
     },
     {
@@ -1962,8 +1962,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1572230043.0,
       "pnl": "Loss",
-      "netFinal": -58949770.5884241,
-      "operatingIncomePnl": 24246601.0,
+      "netFinal": -24816678.5072063,
+      "operatingIncomePnl": 85753550.0,
       "action": "Conversion + bundle"
     },
     {
@@ -1995,8 +1995,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1994691513.0,
       "pnl": "Profit",
-      "netFinal": 142118968.548465,
-      "operatingIncomePnl": 271747918.0,
+      "netFinal": 205825028.989896,
+      "operatingIncomePnl": 379585331.0,
       "action": "Conversion + bundle"
     },
     {
@@ -2028,8 +2028,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 996049101.0,
       "pnl": "Profit",
-      "netFinal": 9566320.49793749,
-      "operatingIncomePnl": 57995296.0,
+      "netFinal": 4322645.16072536,
+      "operatingIncomePnl": 62065619.0,
       "action": "Conversion + bundle"
     },
     {
@@ -2060,9 +2060,9 @@
       "annualStatus": "RUGI",
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 1233631203.0,
-      "pnl": "Loss",
-      "netFinal": -17382733.3114211,
-      "operatingIncomePnl": 74273744.0,
+      "pnl": "Profit",
+      "netFinal": 14358594.9348255,
+      "operatingIncomePnl": 129722343.0,
       "action": "Traffic + cost review"
     },
     {
@@ -2093,9 +2093,9 @@
       "annualStatus": "BEP",
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 995835139.0,
-      "pnl": "Loss",
-      "netFinal": -5151646.77705908,
-      "operatingIncomePnl": 43741419.0,
+      "pnl": "Profit",
+      "netFinal": 15506089.9622131,
+      "operatingIncomePnl": 82309076.0,
       "action": "Conversion + bundle"
     },
     {
@@ -2127,8 +2127,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 611892368.0,
       "pnl": "Loss",
-      "netFinal": -47398340.0636122,
-      "operatingIncomePnl": -14436079.0,
+      "netFinal": -56834066.9443617,
+      "operatingIncomePnl": -14488978.0,
       "action": "Conversion + bundle"
     },
     {
@@ -2160,8 +2160,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 1189998185.0,
       "pnl": "Profit",
-      "netFinal": 12557216.132648,
-      "operatingIncomePnl": 98917462.0,
+      "netFinal": 31676548.7491785,
+      "operatingIncomePnl": 145285192.0,
       "action": "Traffic + cost review"
     },
     {
@@ -2193,8 +2193,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 7043816556.0,
       "pnl": "Profit",
-      "netFinal": 588215457.878869,
-      "operatingIncomePnl": 1133763316.0,
+      "netFinal": 706512154.992471,
+      "operatingIncomePnl": 1409149030.0,
       "action": "Traffic + cost review"
     },
     {
@@ -2226,8 +2226,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 2275048878.0,
       "pnl": "Profit",
-      "netFinal": 201813481.880357,
-      "operatingIncomePnl": 338060315.0,
+      "netFinal": 302276584.520293,
+      "operatingIncomePnl": 498854337.0,
       "action": "Conversion + bundle"
     },
     {
@@ -2259,8 +2259,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1058784818.0,
       "pnl": "Profit",
-      "netFinal": 51516552.3931853,
-      "operatingIncomePnl": 130324396.0,
+      "netFinal": 74798676.5789904,
+      "operatingIncomePnl": 177064669.0,
       "action": "Conversion + bundle"
     },
     {
@@ -2292,8 +2292,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 1136207656.0,
       "pnl": "Profit",
-      "netFinal": 56099553.2581686,
-      "operatingIncomePnl": 130622809.0,
+      "netFinal": 59663508.7811918,
+      "operatingIncomePnl": 156928737.0,
       "action": "Traffic + cost review"
     },
     {
@@ -2325,8 +2325,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1043614908.0,
       "pnl": "Loss",
-      "netFinal": -37593218.301142,
-      "operatingIncomePnl": 38066508.0,
+      "netFinal": -19689379.985752,
+      "operatingIncomePnl": 72221934.0,
       "action": "Conversion + bundle"
     },
     {
@@ -2358,8 +2358,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 685085988.0,
       "pnl": "Profit",
-      "netFinal": 16421035.2135563,
-      "operatingIncomePnl": 62508706.0,
+      "netFinal": 18413994.7913714,
+      "operatingIncomePnl": 79103821.0,
       "action": "Conversion + bundle"
     },
     {
@@ -2391,8 +2391,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 4123609612.0,
       "pnl": "Profit",
-      "netFinal": 220287933.786011,
-      "operatingIncomePnl": 521808630.0,
+      "netFinal": 258006135.179138,
+      "operatingIncomePnl": 644427006.0,
       "action": "Traffic + cost review"
     },
     {
@@ -2424,8 +2424,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 3667126004.0,
       "pnl": "Profit",
-      "netFinal": 209874717.896104,
-      "operatingIncomePnl": 498927524.0,
+      "netFinal": 352110172.588829,
+      "operatingIncomePnl": 722646853.0,
       "action": "Conversion + bundle"
     },
     {
@@ -2457,8 +2457,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 5921559049.0,
       "pnl": "Profit",
-      "netFinal": 176427922.130612,
-      "operatingIncomePnl": 579910604.0,
+      "netFinal": 183963181.06416,
+      "operatingIncomePnl": 697235306.0,
       "action": "Traffic + cost review"
     },
     {
@@ -2490,8 +2490,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 476400696.0,
       "pnl": "Loss",
-      "netFinal": -26273933.3729624,
-      "operatingIncomePnl": 6653247.0,
+      "netFinal": -6398529.75931214,
+      "operatingIncomePnl": 35338128.0,
       "action": "Conversion + bundle"
     },
     {
@@ -2523,8 +2523,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 783978020.0,
       "pnl": "Profit",
-      "netFinal": 23138988.1331817,
-      "operatingIncomePnl": 77351624.0,
+      "netFinal": 25518639.2712832,
+      "operatingIncomePnl": 92525922.0,
       "action": "Conversion + bundle"
     },
     {
@@ -2556,8 +2556,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 502223113.0,
       "pnl": "Loss",
-      "netFinal": -16376422.3613148,
-      "operatingIncomePnl": 24470181.0,
+      "netFinal": -3319993.05225139,
+      "operatingIncomePnl": 48439146.0,
       "action": "Conversion + bundle"
     },
     {
@@ -2589,8 +2589,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 791370976.0,
       "pnl": "Profit",
-      "netFinal": 16454724.3466203,
-      "operatingIncomePnl": 72192743.0,
+      "netFinal": 35533950.3948291,
+      "operatingIncomePnl": 108268943.0,
       "action": "Conversion + bundle"
     },
     {
@@ -2621,9 +2621,9 @@
       "annualStatus": "BEP",
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1317039059.0,
-      "pnl": "Loss",
-      "netFinal": -3807385.9403204,
-      "operatingIncomePnl": 100402829.0,
+      "pnl": "Profit",
+      "netFinal": 18609906.4223388,
+      "operatingIncomePnl": 159599171.0,
       "action": "Conversion + bundle"
     },
     {
@@ -2655,8 +2655,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 971116346.0,
       "pnl": "Loss",
-      "netFinal": -15337062.0249844,
-      "operatingIncomePnl": 38592777.0,
+      "netFinal": -35907193.9988248,
+      "operatingIncomePnl": 33521141.0,
       "action": "Conversion + bundle"
     },
     {
@@ -2688,8 +2688,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 4078414917.0,
       "pnl": "Profit",
-      "netFinal": 291848109.983469,
-      "operatingIncomePnl": 621304977.0,
+      "netFinal": 363244467.972977,
+      "operatingIncomePnl": 785802685.0,
       "action": "Traffic + cost review"
     },
     {
@@ -2721,8 +2721,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 2340288541.0,
       "pnl": "Loss",
-      "netFinal": -260052500.633046,
-      "operatingIncomePnl": -113810811.0,
+      "netFinal": -322136470.834258,
+      "operatingIncomePnl": -130918479.0,
       "action": "Traffic + cost review"
     },
     {
@@ -2754,8 +2754,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1306498544.0,
       "pnl": "Loss",
-      "netFinal": -35441599.5826026,
-      "operatingIncomePnl": 32002309.0,
+      "netFinal": -12727719.7559787,
+      "operatingIncomePnl": 75795552.0,
       "action": "Conversion + bundle"
     },
     {
@@ -2787,8 +2787,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1606341083.0,
       "pnl": "Profit",
-      "netFinal": 69545404.9617661,
-      "operatingIncomePnl": 198109518.0,
+      "netFinal": 146396556.154182,
+      "operatingIncomePnl": 317589525.0,
       "action": "Conversion + bundle"
     },
     {
@@ -2820,8 +2820,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 859371965.0,
       "pnl": "Loss",
-      "netFinal": -45828857.7365476,
-      "operatingIncomePnl": 16145498.0,
+      "netFinal": -24312028.9264227,
+      "operatingIncomePnl": 56867967.0,
       "action": "Traffic + cost review"
     },
     {
@@ -2853,8 +2853,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 2069476608.0,
       "pnl": "Loss",
-      "netFinal": -47553283.3296427,
-      "operatingIncomePnl": 37049635.0,
+      "netFinal": -42483727.9496589,
+      "operatingIncomePnl": 63956583.0,
       "action": "Traffic + cost review"
     },
     {
@@ -2886,8 +2886,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 4630100303.0,
       "pnl": "Profit",
-      "netFinal": 537326384.494697,
-      "operatingIncomePnl": 893885410.0,
+      "netFinal": 713864458.210877,
+      "operatingIncomePnl": 1173247634.0,
       "action": "Push recovery plan"
     },
     {
@@ -2919,8 +2919,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 4316551223.0,
       "pnl": "Profit",
-      "netFinal": 370599878.626067,
-      "operatingIncomePnl": 680026138.0,
+      "netFinal": 537051381.04243,
+      "operatingIncomePnl": 941857057.0,
       "action": "Traffic + cost review"
     },
     {
@@ -2951,9 +2951,9 @@
       "annualStatus": "BEP",
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1483813733.0,
-      "pnl": "Loss",
-      "netFinal": -15501132.6578891,
-      "operatingIncomePnl": 95812482.0,
+      "pnl": "Profit",
+      "netFinal": 23808813.7355517,
+      "operatingIncomePnl": 163414987.0,
       "action": "Conversion + bundle"
     },
     {
@@ -2985,8 +2985,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 1270752815.0,
       "pnl": "Loss",
-      "netFinal": -251729461.828792,
-      "operatingIncomePnl": -199574850.0,
+      "netFinal": -306846970.132288,
+      "operatingIncomePnl": -240701296.0,
       "action": "Traffic + cost review"
     },
     {
@@ -3018,8 +3018,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 1102358154.0,
       "pnl": "Loss",
-      "netFinal": -28537298.4790533,
-      "operatingIncomePnl": 49728995.0,
+      "netFinal": -30152302.656121,
+      "operatingIncomePnl": 72840177.0,
       "action": "Traffic + cost review"
     },
     {
@@ -3051,8 +3051,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1191063170.0,
       "pnl": "Profit",
-      "netFinal": 17479452.3499258,
-      "operatingIncomePnl": 112449114.0,
+      "netFinal": 30766144.1414711,
+      "operatingIncomePnl": 151876604.0,
       "action": "Conversion + bundle"
     },
     {
@@ -3084,8 +3084,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1316324362.0,
       "pnl": "Loss",
-      "netFinal": -46881354.6304345,
-      "operatingIncomePnl": 27527712.0,
+      "netFinal": -7970929.56773451,
+      "operatingIncomePnl": 91870455.0,
       "action": "Traffic + cost review"
     },
     {
@@ -3117,8 +3117,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 573237288.0,
       "pnl": "Loss",
-      "netFinal": -89230991.5815865,
-      "operatingIncomePnl": -46814176.0,
+      "netFinal": -117545456.218906,
+      "operatingIncomePnl": -62917352.0,
       "action": "Traffic + cost review"
     },
     {
@@ -3150,8 +3150,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 770769344.0,
       "pnl": "Profit",
-      "netFinal": 21964653.719224,
-      "operatingIncomePnl": 77054403.0,
+      "netFinal": 32144661.8051314,
+      "operatingIncomePnl": 102236708.0,
       "action": "Conversion + bundle"
     },
     {
@@ -3182,9 +3182,9 @@
       "annualStatus": "RUGI",
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 773932369.0,
-      "pnl": "Loss",
-      "netFinal": -5646633.74403216,
-      "operatingIncomePnl": 28750311.0,
+      "pnl": "Profit",
+      "netFinal": 7837720.4297759,
+      "operatingIncomePnl": 58250047.0,
       "action": "Conversion + bundle"
     },
     {
@@ -3215,9 +3215,9 @@
       "annualStatus": "RUGI",
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 882414671.0,
-      "pnl": "Profit",
-      "netFinal": 4793443.5292655,
-      "operatingIncomePnl": 51220191.0,
+      "pnl": "Loss",
+      "netFinal": -4824380.14477868,
+      "operatingIncomePnl": 58467642.0,
       "action": "Conversion + bundle"
     },
     {
@@ -3249,8 +3249,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 797220907.0,
       "pnl": "Loss",
-      "netFinal": -15538313.426312,
-      "operatingIncomePnl": 35995329.0,
+      "netFinal": -17523779.0258227,
+      "operatingIncomePnl": 52249814.0,
       "action": "Traffic + cost review"
     },
     {
@@ -3282,8 +3282,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 642839102.0,
       "pnl": "Loss",
-      "netFinal": -64416642.9697175,
-      "operatingIncomePnl": -23095261.0,
+      "netFinal": -58365798.2872928,
+      "operatingIncomePnl": -5336989.0,
       "action": "Conversion + bundle"
     },
     {
@@ -3315,8 +3315,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1743188408.0,
       "pnl": "Profit",
-      "netFinal": 110788999.153008,
-      "operatingIncomePnl": 244695670.0,
+      "netFinal": 167157748.720712,
+      "operatingIncomePnl": 349659492.0,
       "action": "Conversion + bundle"
     },
     {
@@ -3348,8 +3348,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 640815764.0,
       "pnl": "Loss",
-      "netFinal": -24562089.6621281,
-      "operatingIncomePnl": 20102651.0,
+      "netFinal": -99827244.2070463,
+      "operatingIncomePnl": -42997779.0,
       "action": "Conversion + bundle"
     },
     {
@@ -3381,8 +3381,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 1210040153.0,
       "pnl": "Loss",
-      "netFinal": -55823406.0245963,
-      "operatingIncomePnl": 29961812.0,
+      "netFinal": -71965330.497223,
+      "operatingIncomePnl": 36636417.0,
       "action": "Traffic + cost review"
     },
     {
@@ -3414,8 +3414,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 562041163.0,
       "pnl": "Loss",
-      "netFinal": -33439751.4056352,
-      "operatingIncomePnl": 3503455.0,
+      "netFinal": -39235820.787849,
+      "operatingIncomePnl": 11488577.0,
       "action": "Traffic + cost review"
     },
     {
@@ -3447,8 +3447,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 1095322791.0,
       "pnl": "Profit",
-      "netFinal": 11350113.8520984,
-      "operatingIncomePnl": 94137626.0,
+      "netFinal": 32048205.1170059,
+      "operatingIncomePnl": 135916848.0,
       "action": "Traffic + cost review"
     },
     {
@@ -3480,8 +3480,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 686623880.0,
       "pnl": "Loss",
-      "netFinal": -66569225.394313,
-      "operatingIncomePnl": -45460400.0,
+      "netFinal": -87652265.5149891,
+      "operatingIncomePnl": -61024025.0,
       "action": "Conversion + bundle"
     },
     {
@@ -3513,8 +3513,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 1114810496.0,
       "pnl": "Profit",
-      "netFinal": 20546046.0009741,
-      "operatingIncomePnl": 99612062.0,
+      "netFinal": 44651734.5538354,
+      "operatingIncomePnl": 148668319.0,
       "action": "Traffic + cost review"
     },
     {
@@ -3546,8 +3546,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 3555317739.0,
       "pnl": "Loss",
-      "netFinal": -1347593230.66995,
-      "operatingIncomePnl": -1208145118.0,
+      "netFinal": -1831992285.68204,
+      "operatingIncomePnl": -1620015120.0,
       "action": "Assign owner + review cost"
     },
     {
@@ -3612,8 +3612,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 3818584353.0,
       "pnl": "Profit",
-      "netFinal": 241029184.791308,
-      "operatingIncomePnl": 564966336.0,
+      "netFinal": 333621392.274673,
+      "operatingIncomePnl": 741616380.0,
       "action": "Traffic + cost review"
     },
     {
@@ -3678,8 +3678,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 847974273.0,
       "pnl": "Loss",
-      "netFinal": -97205138.8367505,
-      "operatingIncomePnl": -38841678.0,
+      "netFinal": -138240570.200692,
+      "operatingIncomePnl": -64712565.0,
       "action": "Traffic + cost review"
     },
     {
@@ -3711,8 +3711,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 2404151424.0,
       "pnl": "Loss",
-      "netFinal": -288114853.32061,
-      "operatingIncomePnl": -60175775.0,
+      "netFinal": -402356427.494066,
+      "operatingIncomePnl": -113956129.0,
       "action": "Traffic + cost review"
     },
     {
@@ -3744,8 +3744,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 2044639338.0,
       "pnl": "Profit",
-      "netFinal": 122071451.655852,
-      "operatingIncomePnl": 272275746.0,
+      "netFinal": 175318514.599259,
+      "operatingIncomePnl": 374752260.0,
       "action": "Traffic + cost review"
     },
     {
@@ -3777,8 +3777,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 1359054936.0,
       "pnl": "Loss",
-      "netFinal": -128461319.696545,
-      "operatingIncomePnl": -31566345.0,
+      "netFinal": -124331828.555564,
+      "operatingIncomePnl": 4235799.0,
       "action": "Traffic + cost review"
     },
     {
@@ -3810,8 +3810,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 1548752926.0,
       "pnl": "Loss",
-      "netFinal": -58708052.6858461,
-      "operatingIncomePnl": 89866682.0,
+      "netFinal": -65215675.1520306,
+      "operatingIncomePnl": 130365708.0,
       "action": "Traffic + cost review"
     },
     {
@@ -3876,8 +3876,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 1048475358.0,
       "pnl": "Loss",
-      "netFinal": -134025620.05744,
-      "operatingIncomePnl": -42290857.0,
+      "netFinal": -140076558.337689,
+      "operatingIncomePnl": -25230005.0,
       "action": "Traffic + cost review"
     },
     {
@@ -3942,8 +3942,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 705387386.0,
       "pnl": "Loss",
-      "netFinal": -72119814.4557277,
-      "operatingIncomePnl": -38038809.0,
+      "netFinal": -105233984.997816,
+      "operatingIncomePnl": -64240823.0,
       "action": "Push recovery plan"
     },
     {
@@ -3975,8 +3975,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 912928042.0,
       "pnl": "Loss",
-      "netFinal": -55954795.0149337,
-      "operatingIncomePnl": -30478090.0,
+      "netFinal": -68797519.6965239,
+      "operatingIncomePnl": -40632505.0,
       "action": "Push recovery plan"
     },
     {
@@ -4008,8 +4008,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 929123642.0,
       "pnl": "Loss",
-      "netFinal": -28838171.4565368,
-      "operatingIncomePnl": 13726478.0,
+      "netFinal": -31290801.9888691,
+      "operatingIncomePnl": 21998006.0,
       "action": "Push recovery plan"
     },
     {
@@ -4041,8 +4041,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1703397196.0,
       "pnl": "Loss",
-      "netFinal": -19935218.0421486,
-      "operatingIncomePnl": 28626286.0,
+      "netFinal": -60132955.1715482,
+      "operatingIncomePnl": -7945245.0,
       "action": "Push recovery plan"
     },
     {
@@ -4074,8 +4074,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 906738459.0,
       "pnl": "Profit",
-      "netFinal": 22506230.2291336,
-      "operatingIncomePnl": 81128204.0,
+      "netFinal": 38568659.1335828,
+      "operatingIncomePnl": 113211476.0,
       "action": "Push recovery plan"
     },
     {
@@ -4106,9 +4106,9 @@
       "annualStatus": "RUGI",
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 550088375.0,
-      "pnl": "Profit",
-      "netFinal": 3111297.03345221,
-      "operatingIncomePnl": 41949294.0,
+      "pnl": "Loss",
+      "netFinal": -14199625.8906727,
+      "operatingIncomePnl": 28533787.0,
       "action": "Push recovery plan"
     },
     {
@@ -4173,8 +4173,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 927439410.0,
       "pnl": "Loss",
-      "netFinal": -95899842.6899643,
-      "operatingIncomePnl": -70055731.0,
+      "netFinal": -145721893.170705,
+      "operatingIncomePnl": -120263613.0,
       "action": "Push recovery plan"
     },
     {
@@ -4206,8 +4206,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 589123229.0,
       "pnl": "Loss",
-      "netFinal": -54845232.465959,
-      "operatingIncomePnl": -13895864.0,
+      "netFinal": -97888511.7769287,
+      "operatingIncomePnl": -57550484.0,
       "action": "Push recovery plan"
     },
     {
@@ -4239,8 +4239,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1076400773.0,
       "pnl": "Loss",
-      "netFinal": -132221042.266995,
-      "operatingIncomePnl": -102513568.0,
+      "netFinal": -221911306.893897,
+      "operatingIncomePnl": -192647341.0,
       "action": "Push recovery plan"
     },
     {
@@ -4272,8 +4272,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 680799513.0,
       "pnl": "Loss",
-      "netFinal": -48549931.5665195,
-      "operatingIncomePnl": -14137021.0,
+      "netFinal": -90956818.8653688,
+      "operatingIncomePnl": -57057665.0,
       "action": "Push recovery plan"
     },
     {
@@ -4371,8 +4371,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 559473895.0,
       "pnl": "Profit",
-      "netFinal": 22149719.0,
-      "operatingIncomePnl": 22149719.0,
+      "netFinal": 7884976.0,
+      "operatingIncomePnl": 7884976.0,
       "action": "Push recovery plan"
     },
     {
@@ -4404,8 +4404,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 513980212.0,
       "pnl": "Loss",
-      "netFinal": -1084922.0,
-      "operatingIncomePnl": -1084922.0,
+      "netFinal": -1464617.0,
+      "operatingIncomePnl": -1464617.0,
       "action": "Push recovery plan"
     },
     {
@@ -4437,8 +4437,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 390494602.0,
       "pnl": "Loss",
-      "netFinal": -28550454.0,
-      "operatingIncomePnl": -28550454.0,
+      "netFinal": -38542480.0,
+      "operatingIncomePnl": -38542480.0,
       "action": "Push recovery plan"
     },
     {
@@ -4470,8 +4470,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 377801814.0,
       "pnl": "Loss",
-      "netFinal": -235674.0,
-      "operatingIncomePnl": -235674.0,
+      "netFinal": -318159.0,
+      "operatingIncomePnl": -318159.0,
       "action": "Push recovery plan"
     },
     {
@@ -4503,8 +4503,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 797219852.0,
       "pnl": "Loss",
-      "netFinal": -75905073.0,
-      "operatingIncomePnl": -75905073.0,
+      "netFinal": -102470179.0,
+      "operatingIncomePnl": -102470179.0,
       "action": "Push recovery plan"
     },
     {
@@ -4536,8 +4536,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 390930056.0,
       "pnl": "Profit",
-      "netFinal": 46500971.0,
-      "operatingIncomePnl": 46500971.0,
+      "netFinal": 32246754.0,
+      "operatingIncomePnl": 32246754.0,
       "action": "Push recovery plan"
     },
     {
@@ -4569,8 +4569,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 347672106.0,
       "pnl": "Loss",
-      "netFinal": -41031628.0,
-      "operatingIncomePnl": -41031628.0,
+      "netFinal": -55208383.0,
+      "operatingIncomePnl": -55208383.0,
       "action": "Push recovery plan"
     },
     {
@@ -4602,8 +4602,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 422042838.0,
       "pnl": "Loss",
-      "netFinal": -5336987.0,
-      "operatingIncomePnl": -5336987.0,
+      "netFinal": -7204819.0,
+      "operatingIncomePnl": -7204819.0,
       "action": "Push recovery plan"
     },
     {
@@ -4635,8 +4635,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 581582889.0,
       "pnl": "Loss",
-      "netFinal": -27218195.0,
-      "operatingIncomePnl": -27218195.0,
+      "netFinal": -36702473.0,
+      "operatingIncomePnl": -36702473.0,
       "action": "Push recovery plan"
     },
     {
@@ -4668,8 +4668,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 524981167.0,
       "pnl": "Loss",
-      "netFinal": -42212291.0,
-      "operatingIncomePnl": -42212291.0,
+      "netFinal": -56941317.0,
+      "operatingIncomePnl": -56941317.0,
       "action": "Push recovery plan"
     },
     {
@@ -4701,8 +4701,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 257427927.0,
       "pnl": "Loss",
-      "netFinal": -524069.0,
-      "operatingIncomePnl": -524069.0,
+      "netFinal": -707480.0,
+      "operatingIncomePnl": -707480.0,
       "action": "Push recovery plan"
     },
     {
@@ -4734,8 +4734,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 169038069.0,
       "pnl": "Loss",
-      "netFinal": -3286702.0,
-      "operatingIncomePnl": -3286702.0,
+      "netFinal": -4436973.0,
+      "operatingIncomePnl": -4436973.0,
       "action": "Push recovery plan"
     },
     {
@@ -4767,8 +4767,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 979328834.0,
       "pnl": "Loss",
-      "netFinal": -299728.0,
-      "operatingIncomePnl": -299728.0,
+      "netFinal": -404625.0,
+      "operatingIncomePnl": -404625.0,
       "action": "Push recovery plan"
     },
     {
@@ -4866,8 +4866,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 179790839.0,
       "pnl": "Loss",
-      "netFinal": -44770.0,
-      "operatingIncomePnl": -44770.0,
+      "netFinal": -60440.0,
+      "operatingIncomePnl": -60440.0,
       "action": "Push recovery plan"
     },
     {
@@ -4932,8 +4932,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 395213939.0,
       "pnl": "Loss",
-      "netFinal": -827481.0,
-      "operatingIncomePnl": -827481.0,
+      "netFinal": -1117080.0,
+      "operatingIncomePnl": -1117080.0,
       "action": "Push recovery plan"
     },
     {
@@ -4998,8 +4998,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 334626390.0,
       "pnl": "Loss",
-      "netFinal": -29176707.0,
-      "operatingIncomePnl": -29176707.0,
+      "netFinal": -38980966.0,
+      "operatingIncomePnl": -38980966.0,
       "action": "Push recovery plan"
     },
     {
@@ -5031,8 +5031,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1620009037.0,
       "pnl": "Loss",
-      "netFinal": -399632.0,
-      "operatingIncomePnl": -399632.0,
+      "netFinal": -560468.0,
+      "operatingIncomePnl": -560468.0,
       "action": "Push recovery plan"
     },
     {
@@ -5064,8 +5064,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 6599920740.0,
       "pnl": "Loss",
-      "netFinal": -10891144.0,
-      "operatingIncomePnl": -10891144.0,
+      "netFinal": -14702807.0,
+      "operatingIncomePnl": -14702807.0,
       "action": "Push recovery plan"
     },
     {
@@ -5097,8 +5097,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 770366789.0,
       "pnl": "Loss",
-      "netFinal": -29147163.0,
-      "operatingIncomePnl": -29147163.0,
+      "netFinal": -38965354.0,
+      "operatingIncomePnl": -38965354.0,
       "action": "Push recovery plan"
     },
     {
@@ -5130,8 +5130,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 987427107.0,
       "pnl": "Loss",
-      "netFinal": -1547923.0,
-      "operatingIncomePnl": -1547923.0,
+      "netFinal": -2089660.0,
+      "operatingIncomePnl": -2089660.0,
       "action": "Push recovery plan"
     },
     {
@@ -5163,8 +5163,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 279323077.0,
       "pnl": "Loss",
-      "netFinal": -19395724.0,
-      "operatingIncomePnl": -19395724.0,
+      "netFinal": -26132777.0,
+      "operatingIncomePnl": -26132777.0,
       "action": "Push recovery plan"
     },
     {
@@ -5229,8 +5229,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 52940543.0,
       "pnl": "Loss",
-      "netFinal": -940758.0,
-      "operatingIncomePnl": -940758.0,
+      "netFinal": -1270005.0,
+      "operatingIncomePnl": -1270005.0,
       "action": "Push recovery plan"
     },
     {
@@ -5295,8 +5295,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 1507407939.0,
       "pnl": "Loss",
-      "netFinal": -7736840.0,
-      "operatingIncomePnl": -7736840.0,
+      "netFinal": -7977206.0,
+      "operatingIncomePnl": -7977206.0,
       "action": "Push recovery plan"
     },
     {
@@ -5328,8 +5328,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 987497322.0,
       "pnl": "Loss",
-      "netFinal": -63438977.0,
-      "operatingIncomePnl": -63438977.0,
+      "netFinal": -82735023.0,
+      "operatingIncomePnl": -82735023.0,
       "action": "Push recovery plan"
     },
     {
@@ -5394,8 +5394,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 582208130.0,
       "pnl": "Loss",
-      "netFinal": -38926564.0,
-      "operatingIncomePnl": -38926564.0,
+      "netFinal": -51884340.0,
+      "operatingIncomePnl": -51884340.0,
       "action": "Push recovery plan"
     },
     {
@@ -5427,8 +5427,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 880269376.0,
       "pnl": "Loss",
-      "netFinal": -57025553.0,
-      "operatingIncomePnl": -57025553.0,
+      "netFinal": -72982512.0,
+      "operatingIncomePnl": -72982512.0,
       "action": "Push recovery plan"
     }
   ],
@@ -5440,7 +5440,7 @@
       "bep": 9,
       "loss": 4,
       "bepOperational": 0,
-      "lossOperational": 3,
+      "lossOperational": 2,
       "total2025": 201452837017.0,
       "total2026": 64968323156.0,
       "avgHealth": 47.6
@@ -5476,7 +5476,7 @@
       "bep": 5,
       "loss": 5,
       "bepOperational": 0,
-      "lossOperational": 5,
+      "lossOperational": 4,
       "total2025": 165070858423.0,
       "total2026": 55817279165.0,
       "avgHealth": 48.0
@@ -5512,7 +5512,7 @@
       "bep": 6,
       "loss": 4,
       "bepOperational": 0,
-      "lossOperational": 5,
+      "lossOperational": 2,
       "total2025": 114764533988.0,
       "total2026": 37386701660.0,
       "avgHealth": 49.4
@@ -5524,7 +5524,7 @@
       "bep": 7,
       "loss": 4,
       "bepOperational": 0,
-      "lossOperational": 3,
+      "lossOperational": 4,
       "total2025": 103715344357.0,
       "total2026": 33988133102.0,
       "avgHealth": 48.0
@@ -5536,7 +5536,7 @@
       "bep": 5,
       "loss": 4,
       "bepOperational": 0,
-      "lossOperational": 2,
+      "lossOperational": 1,
       "total2025": 102924925325.0,
       "total2026": 33767052692.0,
       "avgHealth": 51.1
@@ -5548,7 +5548,7 @@
       "bep": 4,
       "loss": 6,
       "bepOperational": 1,
-      "lossOperational": 7,
+      "lossOperational": 6,
       "total2025": 102837798683.0,
       "total2026": 32088035958.0,
       "avgHealth": 50.0
@@ -5560,7 +5560,7 @@
       "bep": 6,
       "loss": 1,
       "bepOperational": 0,
-      "lossOperational": 0,
+      "lossOperational": 1,
       "total2025": 101430967759.0,
       "total2026": 33582215133.0,
       "avgHealth": 51.0
@@ -5572,7 +5572,7 @@
       "bep": 3,
       "loss": 2,
       "bepOperational": 0,
-      "lossOperational": 1,
+      "lossOperational": 0,
       "total2025": 82435802796.0,
       "total2026": 27601750732.0,
       "avgHealth": 52.2
@@ -5620,8 +5620,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 6698187661.0,
       "pnl": "Profit",
-      "netFinal": 369190257.368794,
-      "operatingIncomePnl": 878416745.0,
+      "netFinal": 669977743.568517,
+      "operatingIncomePnl": 1340357384.0,
       "action": "Traffic + cost review"
     },
     {
@@ -5653,8 +5653,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 5921559049.0,
       "pnl": "Profit",
-      "netFinal": 176427922.130612,
-      "operatingIncomePnl": 579910604.0,
+      "netFinal": 183963181.06416,
+      "operatingIncomePnl": 697235306.0,
       "action": "Traffic + cost review"
     },
     {
@@ -5686,8 +5686,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 3555317739.0,
       "pnl": "Loss",
-      "netFinal": -1347593230.66995,
-      "operatingIncomePnl": -1208145118.0,
+      "netFinal": -1831992285.68204,
+      "operatingIncomePnl": -1620015120.0,
       "action": "Assign owner + review cost"
     },
     {
@@ -5719,8 +5719,8 @@
       "annualBepStatus": "BELOW BEP",
       "bestMonthSales": 2340288541.0,
       "pnl": "Loss",
-      "netFinal": -260052500.633046,
-      "operatingIncomePnl": -113810811.0,
+      "netFinal": -322136470.834258,
+      "operatingIncomePnl": -130918479.0,
       "action": "Traffic + cost review"
     },
     {
@@ -5752,8 +5752,8 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 4713562712.0,
       "pnl": "Profit",
-      "netFinal": 338151892.847122,
-      "operatingIncomePnl": 617763212.0,
+      "netFinal": 438381628.55192,
+      "operatingIncomePnl": 805924133.0,
       "action": "Traffic + cost review"
     },
     {
@@ -5785,45 +5785,45 @@
       "annualBepStatus": "BEP REACHED",
       "bestMonthSales": 7043816556.0,
       "pnl": "Profit",
-      "netFinal": 588215457.878869,
-      "operatingIncomePnl": 1133763316.0,
+      "netFinal": 706512154.992471,
+      "operatingIncomePnl": 1409149030.0,
       "action": "Traffic + cost review"
     }
   ],
   "pnl": {
-    "periodLabel": "Profitability Check YTD Maret 2026",
+    "periodLabel": "Profitability Check YTD April 2026",
     "grand": {
-      "netSales": 676718681965,
-      "grossProfit": 62345891992,
-      "gpPct": 0.0921297041940162,
-      "totalOpex": -40571985145,
-      "operatingIncome": 21773906847,
-      "netBeforeHo": 21054635626,
-      "hoCost": -2552469727,
-      "netAfterHo": 18502165899,
-      "financeCost": -11748090877.1691,
-      "netAfterFinance": 9306544748.83089,
-      "hoFinanceCost": -19363312124.7434,
-      "netFinal": 1691323501.25664
+      "netSales": 943999460727,
+      "grossProfit": 72996554237,
+      "gpPct": 0.0773269024759647,
+      "totalOpex": -53505799120,
+      "operatingIncome": 19490755117,
+      "netBeforeHo": 18529180606,
+      "hoCost": -3688926173,
+      "netAfterHo": 14840254433,
+      "financeCost": -15534067770.6427,
+      "netAfterFinance": 2995112835.35733,
+      "hoFinanceCost": -26989900450.4908,
+      "netFinal": -8460719844.49081
     },
-    "erafoneNetFinal": 6335833779.56326,
-    "eraMoreNetFinal": -711258748.001027,
+    "erafoneNetFinal": 9933293250.21173,
+    "eraMoreNetFinal": -646989869.32394,
     "costDrivers": [
       [
         "Selling salary",
-        -18694839350
+        -24306783454
       ],
       [
         "ROU depreciation",
-        -10534675412
+        -14098204643
       ],
       [
         "Credit card",
-        -7643806139
+        -9792945424
       ],
       [
         "Fixed asset dep.",
-        -5908444053
+        -7873346293
       ]
     ],
     "analysis": {
@@ -5836,16 +5836,16 @@
         "eraMoreTotal": 0
       },
       "topProfit": {
-        "rank": "Rank 2",
-        "remark": "This store is PROFIT because their Sales is ABOVE , their GP% is ABOVE and their OPEX is ABOVE",
-        "regionTotal": 21,
+        "rank": "Rank 5",
+        "remark": "This store is PROFIT because their Sales is BELOW , their GP% is ABOVE and their OPEX is BELOW",
+        "regionTotal": 23,
         "mallTotal": 0,
         "streetTotal": 0
       },
       "topLoss": {
         "rank": "Rank 15",
         "remark": "This store is LOSS because their Sales is BELOW , their GP% is BELOW and their OPEX is BELOW",
-        "regionTotal": 7,
+        "regionTotal": 9,
         "mallTotal": 0,
         "streetTotal": 0
       },
@@ -5853,56 +5853,56 @@
         {
           "rank": "Rank 1",
           "remark": "This store is PROFIT because their Sales is ABOVE , their GP% is ABOVE and their OPEX is BELOW",
-          "regionTotal": 11,
+          "regionTotal": 9,
           "mallTotal": 0,
           "streetTotal": 0
         },
         {
           "rank": "Rank 2",
           "remark": "This store is PROFIT because their Sales is ABOVE , their GP% is ABOVE and their OPEX is ABOVE",
-          "regionTotal": 21,
+          "regionTotal": 20,
           "mallTotal": 0,
           "streetTotal": 0
         },
         {
           "rank": "Rank 3",
           "remark": "This store is PROFIT because their Sales is ABOVE , their GP% is BELOW and their OPEX is BELOW",
-          "regionTotal": 4,
+          "regionTotal": 5,
           "mallTotal": 0,
           "streetTotal": 0
         },
         {
           "rank": "Rank 4",
           "remark": "This store is PROFIT because their Sales is ABOVE , their GP% is BELOW and their OPEX is ABOVE",
-          "regionTotal": 15,
+          "regionTotal": 17,
           "mallTotal": 0,
           "streetTotal": 0
         },
         {
           "rank": "Rank 5",
           "remark": "This store is PROFIT because their Sales is BELOW , their GP% is ABOVE and their OPEX is BELOW",
-          "regionTotal": 18,
+          "regionTotal": 23,
           "mallTotal": 0,
           "streetTotal": 0
         },
         {
           "rank": "Rank 6",
           "remark": "This store is PROFIT because their Sales is BELOW , their GP% is ABOVE and their OPEX is ABOVE",
-          "regionTotal": 3,
+          "regionTotal": 2,
           "mallTotal": 0,
           "streetTotal": 0
         },
         {
           "rank": "Rank 7",
           "remark": "This store is PROFIT because their Sales is BELOW , their GP% is BELOW and their OPEX is BELOW",
-          "regionTotal": 20,
+          "regionTotal": 13,
           "mallTotal": 0,
           "streetTotal": 0
         },
         {
           "rank": "Rank 8",
           "remark": "This store is PROFIT because their Sales is BELOW , their GP% is BELOW and their OPEX is ABOVE",
-          "regionTotal": 2,
+          "regionTotal": 3,
           "mallTotal": 0,
           "streetTotal": 0
         },
@@ -5937,28 +5937,28 @@
         {
           "rank": "Rank 13",
           "remark": "This store is LOSS because their Sales is BELOW , their GP% is ABOVE and their OPEX is BELOW",
-          "regionTotal": 4,
+          "regionTotal": 2,
           "mallTotal": 0,
           "streetTotal": 0
         },
         {
           "rank": "Rank 14",
           "remark": "This store is LOSS because their Sales is BELOW , their GP% is ABOVE and their OPEX is ABOVE",
-          "regionTotal": 1,
+          "regionTotal": 2,
           "mallTotal": 0,
           "streetTotal": 0
         },
         {
           "rank": "Rank 15",
           "remark": "This store is LOSS because their Sales is BELOW , their GP% is BELOW and their OPEX is BELOW",
-          "regionTotal": 7,
+          "regionTotal": 9,
           "mallTotal": 0,
           "streetTotal": 0
         },
         {
           "rank": "Rank 16",
           "remark": "This store is LOSS because their Sales is BELOW , their GP% is BELOW and their OPEX is ABOVE",
-          "regionTotal": 1,
+          "regionTotal": 2,
           "mallTotal": 0,
           "streetTotal": 0
         }
@@ -5968,9 +5968,9 @@
   "source": {
     "salesWorkbook": "SALES/Sales vs Stock 01 - 07 Mei 2026 R5_Master..xlsx",
     "salesWorkbookActive": "SALES/Sales vs Stock 01 - 07 Mei 2026 R5_Master..xlsx",
-    "pnlWorkbook": "PNL EAR YTD MARET 2026/ERAFONE/PNL EAR YTD MAR 26 REGION 5.xlsx",
-    "pnlPeriod": "Maret 2026",
+    "pnlWorkbook": "PNL EAR YTD APRIL 2026/PNL EAR YTD APR 26 REGION 5.xlsx",
+    "pnlPeriod": "April 2026",
     "summaryWorkbook": "ERA_ANALYTICS_Region5_Summary.xlsx",
-    "generatedAt": "2026-06-25T22:55:58"
+    "generatedAt": "2026-06-29T16:33:12"
   }
 }
