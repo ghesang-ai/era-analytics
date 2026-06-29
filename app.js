@@ -1161,26 +1161,44 @@ function renderAll(data) {
 let simData = [];       // store list from simulasi_data.json
 let simActive = [];     // stores currently shown in simulator
 
-fetch("./outputs/simulasi_data.json")
-  .then(r => r.json())
-  .then(data => {
-    simData = data.stores;
-    const sel = document.getElementById("simStoreSelect");
-    if (!sel) return;
-    simData.forEach(s => {
-      const opt = document.createElement("option");
-      opt.value = s.code;
-      opt.textContent = `${s.code} — ${s.name}`;
-      sel.appendChild(opt);
-    });
-    // Auto-load E678 on init
-    const e678 = simData.find(s => s.code === "E678");
-    if (e678 && !simActive.find(s => s.code === "E678")) {
-      simActive.push(JSON.parse(JSON.stringify(e678)));
-      renderSimCards();
-    }
-  })
-  .catch(() => {});
+simData = [
+  {
+    code: "E678",
+    name: "ERAFONE MB BENDUNGAN HILIR",
+    type: "MULTIBRAND",
+    channel: "Erafone",
+    format: "STREET",
+    area: "KODYA JAKARTA PUSAT",
+    actualPeriod: "YTD April 2026",
+    actualMonths: 4,
+    actual: {
+      netSales: 2673363349,
+      grossProfit: 319876959,
+      gpPct: 11.97,
+      opex: 292415400,
+      operatingIncome: 56867967,
+      hoFinanceCost: 81179995,
+      netFinal: -24312029
+    },
+    notes: "Operasional PROFIT tapi Net Final LOSS karena HO cost tinggi. Status SSSG."
+  }
+];
+
+(function initSim() {
+  const sel = document.getElementById("simStoreSelect");
+  if (!sel) return;
+  simData.forEach(s => {
+    const opt = document.createElement("option");
+    opt.value = s.code;
+    opt.textContent = `${s.code} — ${s.name}`;
+    sel.appendChild(opt);
+  });
+  const e678 = simData.find(s => s.code === "E678");
+  if (e678) {
+    simActive.push(JSON.parse(JSON.stringify(e678)));
+    renderSimCards();
+  }
+})();
 
 function addSimStore() {
   const sel = document.getElementById("simStoreSelect");
