@@ -1684,3 +1684,168 @@ td {
   font-size: 15px;
   font-weight: 700;
 }
+
+/* ── Simulasi Redesign ─────────────────────────────────────── */
+.sim-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.sim-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px 0;
+}
+.sim-card-header-left { display: flex; gap: 6px; }
+.sim-badge {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--accent, #e11d27);
+  color: #fff;
+  letter-spacing: .03em;
+}
+.sim-badge-muted {
+  background: rgba(255,255,255,.08);
+  color: var(--muted);
+}
+.sim-close-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 15px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  line-height: 1;
+}
+.sim-close-btn:hover { background: rgba(255,255,255,.06); }
+.sim-store-title {
+  font-size: 17px;
+  font-weight: 700;
+  padding: 8px 20px 2px;
+  letter-spacing: -.01em;
+}
+.sim-store-sub {
+  font-size: 12px;
+  color: var(--muted);
+  padding: 0 20px 16px;
+}
+.sim-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-top: 1px solid var(--border);
+}
+.sim-left {
+  padding: 20px;
+  border-right: 1px solid var(--border);
+}
+.sim-right { padding: 20px; }
+.sim-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.sim-actual-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.sim-actual-item {
+  background: rgba(255,255,255,.04);
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.sim-actual-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.sim-actual-val { font-size: 14px; font-weight: 700; }
+.sim-divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+.sim-sliders { display: flex; flex-direction: column; gap: 14px; }
+.sim-slider-row { display: flex; flex-direction: column; gap: 6px; }
+.sim-slider-header { display: flex; justify-content: space-between; align-items: center; }
+.sim-slider-name { font-size: 12px; font-weight: 600; color: var(--fg); }
+.sim-slider-chip {
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--accent, #e11d27);
+  color: #fff;
+  padding: 2px 10px;
+  border-radius: 20px;
+  min-width: 60px;
+  text-align: center;
+}
+.sim-range {
+  width: 100%;
+  accent-color: var(--accent, #e11d27);
+  cursor: pointer;
+  height: 4px;
+}
+.sim-slider-bounds {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--muted);
+}
+
+/* Waterfall */
+.sim-waterfall {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+.sim-wf-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 14px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border);
+}
+.sim-wf-row:last-child { border-bottom: none; }
+.sim-wf-top { background: rgba(255,255,255,.03); }
+.sim-wf-deduct { padding-left: 24px; }
+.sim-wf-subtotal { background: rgba(255,255,255,.05); font-weight: 600; }
+.sim-wf-final {
+  background: rgba(255,255,255,.07);
+  font-weight: 700;
+  font-size: 14px;
+}
+.sim-wf-lbl { color: var(--muted); font-size: 12px; }
+.sim-wf-final .sim-wf-lbl { color: var(--fg); font-weight: 700; font-size: 13px; }
+.sim-wf-val { font-weight: 600; font-size: 13px; }
+
+/* Verdict */
+.sim-verdict {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border);
+  margin-bottom: 12px;
+  transition: background .2s, border-color .2s;
+}
+.sim-verdict-icon { font-size: 28px; line-height: 1; }
+.sim-verdict-label { font-size: 16px; font-weight: 800; letter-spacing: -.01em; }
+.sim-verdict-sub { font-size: 12px; color: var(--muted); margin-top: 3px; line-height: 1.5; }
+.sim-notes {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.6;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgba(255,255,255,.03);
+  border-left: 3px solid var(--accent, #e11d27);
+}
