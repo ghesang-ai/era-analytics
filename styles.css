@@ -1653,3 +1653,34 @@ td {
 
 .positive { color: #16a34a; }
 .negative { color: #dc2626; }
+
+/* ── Simulasi ──────────────────────────────────────────────── */
+.sim-slider-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 500;
+}
+.sim-slider-wrap input[type="range"] {
+  accent-color: var(--accent, #e11d27);
+  height: 4px;
+  cursor: pointer;
+}
+.sim-metric {
+  background: var(--bg-alt, rgba(255,255,255,.04));
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.sim-metric-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.sim-metric-val {
+  font-size: 15px;
+  font-weight: 700;
+}

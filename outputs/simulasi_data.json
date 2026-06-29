@@ -1,0 +1,24 @@
+{
+  "stores": [
+    {
+      "code": "E678",
+      "name": "ERAFONE MB BENDUNGAN HILIR",
+      "type": "MULTIBRAND",
+      "channel": "Erafone",
+      "format": "STREET",
+      "area": "KODYA JAKARTA PUSAT",
+      "actualPeriod": "YTD April 2026",
+      "actualMonths": 4,
+      "actual": {
+        "netSales": 2673363349,
+        "grossProfit": 319876959,
+        "gpPct": 11.97,
+        "opex": 292415400,
+        "operatingIncome": 56867967,
+        "hoFinanceCost": 81179995,
+        "netFinal": -24312029
+      },
+      "notes": "Operasional PROFIT tapi Net Final LOSS karena HO cost tinggi. Status SSSG (Same Store Sales Growth)."
+    }
+  ]
+}

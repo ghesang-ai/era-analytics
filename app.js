@@ -1156,6 +1156,182 @@ function renderAll(data) {
   bindEvents();
 }
 
+// ── SIMULASI P&L ──────────────────────────────────────────────────────────────
+
+let simData = [];       // store list from simulasi_data.json
+let simActive = [];     // stores currently shown in simulator
+
+fetch("./outputs/simulasi_data.json")
+  .then(r => r.json())
+  .then(data => {
+    simData = data.stores;
+    const sel = document.getElementById("simStoreSelect");
+    if (!sel) return;
+    simData.forEach(s => {
+      const opt = document.createElement("option");
+      opt.value = s.code;
+      opt.textContent = `${s.code} — ${s.name}`;
+      sel.appendChild(opt);
+    });
+    // Auto-load E678 on init
+    const e678 = simData.find(s => s.code === "E678");
+    if (e678 && !simActive.find(s => s.code === "E678")) {
+      simActive.push(JSON.parse(JSON.stringify(e678)));
+      renderSimCards();
+    }
+  })
+  .catch(() => {});
+
+function addSimStore() {
+  const sel = document.getElementById("simStoreSelect");
+  if (!sel) return;
+  const code = sel.value;
+  if (!code) return;
+  if (simActive.find(s => s.code === code)) return;
+  const store = simData.find(s => s.code === code);
+  if (store) {
+    simActive.push(JSON.parse(JSON.stringify(store)));
+    renderSimCards();
+  }
+}
+
+function removeSimStore(code) {
+  simActive = simActive.filter(s => s.code !== code);
+  renderSimCards();
+}
+
+function calcSim(code) {
+  const store = simActive.find(s => s.code === code);
+  if (!store) return;
+
+  const months = store.actualMonths;
+  const remaining = 12 - months;
+
+  // Read slider inputs
+  const salesTarget  = parseFloat(document.getElementById(`sim-sales-${code}`).value)  * 1e9;
+  const gpPct        = parseFloat(document.getElementById(`sim-gp-${code}`).value)      / 100;
+  const opexEff      = parseFloat(document.getElementById(`sim-opex-${code}`).value)    / 100;
+  const hoTarget     = parseFloat(document.getElementById(`sim-ho-${code}`).value)       * 1e6;
+
+  // Project remaining months
+  const projSales    = salesTarget - store.actual.netSales;
+  const projGP       = projSales * gpPct;
+  const projOpex     = (store.actual.opex / months) * remaining * (1 - opexEff);
+  const projOpInc    = projGP - projOpex;
+  const projHO       = hoTarget * (remaining / 12);
+
+  // Full year totals
+  const fyNetSales   = store.actual.netSales + projSales;
+  const fyGP         = store.actual.grossProfit + projGP;
+  const fyGPPct      = (fyGP / fyNetSales) * 100;
+  const fyOpex       = store.actual.opex + projOpex;
+  const fyOpInc      = store.actual.operatingIncome + projOpInc;
+  const fyHO         = store.actual.hoFinanceCost + projHO;
+  const fyNetFinal   = fyOpInc - fyHO;
+
+  const isProfit = fyNetFinal > 0;
+  const gap = Math.abs(fyNetFinal);
+
+  // Update result display
+  const fmt = v => {
+    const abs = Math.abs(v);
+    const sign = v < 0 ? '-' : '';
+    if (abs >= 1e9) return `${sign}Rp${(abs/1e9).toFixed(2)} M`;
+    if (abs >= 1e6) return `${sign}Rp${(abs/1e6).toFixed(1)} jt`;
+    return `${sign}Rp${Math.round(abs).toLocaleString('id')}`;
+  };
+
+  const el = document.getElementById(`sim-result-${code}`);
+  if (!el) return;
+  el.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;">
+      <div class="sim-metric"><div class="sim-metric-label">Net Sales FY</div><div class="sim-metric-val">${fmt(fyNetSales)}</div></div>
+      <div class="sim-metric"><div class="sim-metric-label">Gross Profit</div><div class="sim-metric-val">${fmt(fyGP)} <small style="color:var(--muted)">${fyGPPct.toFixed(1)}%</small></div></div>
+      <div class="sim-metric"><div class="sim-metric-label">Total OPEX</div><div class="sim-metric-val negative">${fmt(fyOpex)}</div></div>
+      <div class="sim-metric"><div class="sim-metric-label">Operating Income</div><div class="sim-metric-val ${fyOpInc>0?'positive':'negative'}">${fmt(fyOpInc)}</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;padding:16px;border-radius:10px;background:${isProfit?'rgba(22,163,74,.1)':'rgba(220,38,38,.1)'};border:1.5px solid ${isProfit?'#16a34a':'#dc2626'};">
+      <div style="font-size:32px;">${isProfit?'✅':'❌'}</div>
+      <div>
+        <div style="font-size:18px;font-weight:700;color:${isProfit?'#16a34a':'#dc2626'};">${isProfit ? 'ESTIMASI PROFIT' : 'ESTIMASI LOSS'}</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:2px;">Net Final Full Year 2026: <strong style="color:${isProfit?'#16a34a':'#dc2626'};">${fmt(fyNetFinal)}</strong> ${isProfit ? '' : `· Butuh tambahan ${fmt(gap)} untuk BEP`}</div>
+      </div>
+    </div>`;
+}
+
+function renderSimCards() {
+  const container = document.getElementById("simCards");
+  if (!container) return;
+
+  if (simActive.length === 0) {
+    container.innerHTML = `<div style="color:var(--muted);font-size:13px;padding:20px 0;">Belum ada toko yang disimulasi. Pilih toko lalu klik "+ Tambah Toko".</div>`;
+    return;
+  }
+
+  container.innerHTML = simActive.map(s => {
+    const a = s.actual;
+    const months = s.actualMonths;
+    const defSalesTarget = ((a.netSales / months) * 12 / 1e9).toFixed(2);
+    const defHO = ((a.hoFinanceCost / months * 12) / 1e6).toFixed(0);
+    return `
+    <div class="sim-card" style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
+        <div>
+          <div style="font-size:15px;font-weight:700;">${s.code} — ${s.name}</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px;">${s.type} · ${s.area} · Aktual: ${s.actualPeriod} (${months} bulan)</div>
+        </div>
+        <button onclick="removeSimStore('${s.code}')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;">✕</button>
+      </div>
+
+      <!-- Aktual strip -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px;padding:12px;border-radius:8px;background:var(--bg-alt,rgba(255,255,255,.04));">
+        <div><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;">Net Sales Aktual</div><div style="font-size:13px;font-weight:600;">${formatIdrCompact(a.netSales)}</div></div>
+        <div><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;">GP% Aktual</div><div style="font-size:13px;font-weight:600;">${a.gpPct.toFixed(1)}%</div></div>
+        <div><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;">OPEX Aktual</div><div style="font-size:13px;font-weight:600;color:#dc2626;">${formatIdrCompact(a.opex)}</div></div>
+        <div><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;">Net Final Aktual</div><div style="font-size:13px;font-weight:600;color:${a.netFinal>=0?'#16a34a':'#dc2626'};">${formatIdrCompact(a.netFinal)}</div></div>
+      </div>
+
+      <!-- Sliders -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px;">
+        <label class="sim-slider-wrap">
+          <span>Target Net Sales Full Year (Miliar)</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <input type="range" id="sim-sales-${s.code}" min="${(a.netSales/months*12/1e9*.6).toFixed(2)}" max="${(a.netSales/months*12/1e9*1.6).toFixed(2)}" step="0.05" value="${defSalesTarget}" oninput="document.getElementById('sv-sales-${s.code}').textContent=parseFloat(this.value).toFixed(2)+' M';calcSim('${s.code}')" style="flex:1;">
+            <span id="sv-sales-${s.code}" style="min-width:56px;font-weight:600;font-size:13px;">${defSalesTarget} M</span>
+          </div>
+        </label>
+        <label class="sim-slider-wrap">
+          <span>Target GP% (%)</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <input type="range" id="sim-gp-${s.code}" min="8" max="18" step="0.1" value="${a.gpPct.toFixed(1)}" oninput="document.getElementById('sv-gp-${s.code}').textContent=parseFloat(this.value).toFixed(1)+'%';calcSim('${s.code}')" style="flex:1;">
+            <span id="sv-gp-${s.code}" style="min-width:44px;font-weight:600;font-size:13px;">${a.gpPct.toFixed(1)}%</span>
+          </div>
+        </label>
+        <label class="sim-slider-wrap">
+          <span>Efisiensi OPEX (%)</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <input type="range" id="sim-opex-${s.code}" min="0" max="30" step="1" value="0" oninput="document.getElementById('sv-opex-${s.code}').textContent=this.value+'%';calcSim('${s.code}')" style="flex:1;">
+            <span id="sv-opex-${s.code}" style="min-width:44px;font-weight:600;font-size:13px;">0%</span>
+          </div>
+        </label>
+        <label class="sim-slider-wrap">
+          <span>Est. HO Cost Full Year (Juta)</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <input type="range" id="sim-ho-${s.code}" min="0" max="${Math.round(a.hoFinanceCost/months*12/1e6*2)}" step="5" value="${defHO}" oninput="document.getElementById('sv-ho-${s.code}').textContent='Rp'+this.value+' jt';calcSim('${s.code}')" style="flex:1;">
+            <span id="sv-ho-${s.code}" style="min-width:64px;font-weight:600;font-size:13px;">Rp${defHO} jt</span>
+          </div>
+        </label>
+      </div>
+
+      <!-- Result -->
+      <div id="sim-result-${s.code}"></div>
+    </div>`;
+  }).join("");
+
+  // Auto-calculate initial state for each card
+  simActive.forEach(s => calcSim(s.code));
+}
+
 fetch(BRAND_URLS.EAR)
   .then((response) => {
     if (!response.ok) throw new Error("Dashboard data not found");

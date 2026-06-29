@@ -45,6 +45,7 @@
             <a href="#upload-data">Upload Data</a>
             <a href="#reports">Reports</a>
             <a href="#settings">Settings</a>
+            <a href="#simulasi">Simulasi</a>
           </nav>
         </div>
 
@@ -531,6 +532,24 @@
         <section id="settings" class="footer-note">
           <strong>Settings</strong>
           <span>Rule scoring, bobot cluster, mapping store, dan owner assignment.</span>
+        </section>
+
+        <!-- ── SIMULASI ─────────────────────────────────────────────────── -->
+        <section id="simulasi" style="padding:32px 28px;max-width:900px;">
+          <div style="margin-bottom:24px;">
+            <span style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);">Manage</span>
+            <h2 style="font-size:22px;font-weight:700;margin:4px 0 6px;">Simulasi P&L Toko 2026</h2>
+            <p style="font-size:13px;color:var(--muted);">Proyeksikan apakah toko bisa Profit atau Loss di akhir 2026 dengan mengubah asumsi Net Sales, GP%, dan efisiensi OPEX.</p>
+          </div>
+
+          <!-- Store selector -->
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+            <select id="simStoreSelect" style="padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--fg);font-size:13px;min-width:280px;"></select>
+            <button onclick="addSimStore()" style="padding:8px 16px;border-radius:8px;background:var(--accent);color:#fff;border:none;font-size:13px;font-weight:600;cursor:pointer;">+ Tambah Toko</button>
+          </div>
+
+          <!-- Simulasi cards -->
+          <div id="simCards"></div>
         </section>
       </main>
     </div>
